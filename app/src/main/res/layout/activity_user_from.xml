@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Activity.UserFrom">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-30dp">
+
+        <TableRow
+            android:id="@+id/first_row"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="20dp"
+            android:paddingTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.068"
+            tools:layout_editor_absoluteX="0dp">
+
+            <TextView
+                android:id="@+id/matricol_label"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:text="@string/matricol_user_form"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/matricol_value"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="80dp"
+                android:textSize="16sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/second_row"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/first_row"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.068"
+            tools:layout_editor_absoluteX="0dp">
+
+
+            <TextView
+                android:id="@+id/nume_label"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:text="@string/Nume_Angajat"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/nume_value"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="80dp"
+                android:textSize="16sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/third_row"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/second_row"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.068"
+            tools:layout_editor_absoluteX="0dp">
+
+            <TextView
+                android:id="@+id/prenume_label"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:text="@string/Prenume_Angajat"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/prenume_value"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="80dp"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/fourth_row"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/third_row"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.068"
+            tools:layout_editor_absoluteX="0dp">
+
+            <TextView
+                android:id="@+id/functie_label"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:text="@string/Functie_Angajat"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/functie_value"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="80dp"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/fifth_row"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/fourth_row"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.068"
+            tools:layout_editor_absoluteX="0dp">
+
+            <TextView
+                android:id="@+id/parola_label"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:text="@string/Parola_Angajat"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/parola_value"
+                android:layout_width="130dp"
+                android:layout_height="match_parent"
+                android:inputType="textPassword"
+                android:paddingLeft="80dp"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <Button
+            android:id="@+id/Save"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/save_angajat"
+            android:layout_below="@id/fifth_row"
+            android:layout_alignParentRight="true"
+            />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/Cancel"
+            android:text="@string/cancel_angajat"
+            android:layout_height="50dp"
+            android:layout_below="@id/fifth_row"
+            android:layout_alignParentLeft="true"
+
+            />
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

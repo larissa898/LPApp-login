@@ -1,0 +1,58 @@
+package com.example.larisa.leavingpermissionapp.Activity;
+
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.example.larisa.leavingpermissionapp.R;
+
+public class LeavingPermissionList extends AppCompatActivity {
+
+    private Button CancelList;
+    private Button AddButton;
+    private TextView CurrentDay;
+    private int  day;
+    private int month;
+    private int year;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_leaving_permission_list);
+
+        CurrentDay = findViewById(R.id.textViewDayCurrent);
+
+        day =  getIntent().getIntExtra("day",0);
+        month = getIntent().getIntExtra("month",0);
+        year = getIntent().getIntExtra("year", 0);
+
+        CurrentDay.setText(day + " "+ (month+1) + " " + year);
+
+        AddButton = findViewById(R.id.buttonAddList);
+        AddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LeavingPermissionList.this, RaportActivity.class);
+                intent.putExtra("day", day);
+                intent.putExtra("month", month);
+                intent.putExtra("year", year);
+                Log.d("luna", String.valueOf(month));
+                startActivity(intent);
+
+            }
+        });
+
+        CancelList = findViewById(R.id.buttonCancelList);
+        CancelList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+}

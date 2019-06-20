@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">LeavingPermissionApp</string>
+    <string name="NumarMatricol">NumarMatricol</string>
+    <string name="password">password</string>
+    <string name="LoginButton">Login</string>
+    <string name="CancelButton">Cancel</string>
+    <string name="Cancel">Cancel</string>
+    <string name="SelectZi">Selecteaza ziua</string>
+    <string name="CancelList">Cancel</string>
+    <string name="AddItemList">Add</string>
+    <string name="matricol_user_form">Numar Matricol</string>
+    <string name="Nume_Angajat">Nume Angajat</string>
+    <string name="Prenume_Angajat">Prenume Angajat</string>
+    <string name="Functie_Angajat">Functie Angajat</string>
+    <string name="Parola_Angajat">Parola</string>
+    <string name="save_angajat">Save</string>
+    <string name="cancel_angajat">Cancel</string>
+    <string name="nume">Nume Angajat</string>
+    <string name="ok_button">OK</string>
+    <string name="add_employee">Add new employee</string>
+    <string name="From">De la:</string>
+    <string name="To">Pana la:</string>
+    <string name="Total">Total ore</string>
+    <string name="CancelButtonRaport">Cancel</string>
+</resources>
