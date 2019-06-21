@@ -50,7 +50,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/editText"
         app:layout_constraintTop_toBottomOf="@+id/editText"
-        android:background="@color/colorAccent"
         app:layout_constraintVertical_bias="0.055" />
 
     <Button
@@ -69,7 +68,6 @@
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button"
-        android:background="@color/colorAccent"
         app:layout_constraintVertical_bias="0.119" />
 
 </android.support.constraint.ConstraintLayout>

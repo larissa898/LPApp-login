@@ -18,6 +18,9 @@ public class LeavingPermissionList extends AppCompatActivity {
     private int  day;
     private int month;
     private int year;
+    private int actualDay;
+    private int actualMonth;
+    private int actualYear;
 
 
     @Override
@@ -28,26 +31,35 @@ public class LeavingPermissionList extends AppCompatActivity {
         CurrentDay = findViewById(R.id.textViewDayCurrent);
 
         day =  getIntent().getIntExtra("day",0);
+        actualDay =  getIntent().getIntExtra("actualDay",0);
+        actualMonth =  getIntent().getIntExtra("actualMonth",0);
+        actualYear =  getIntent().getIntExtra("actualYear",0);
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
 
         CurrentDay.setText(day + " "+ (month+1) + " " + year);
 
         AddButton = findViewById(R.id.buttonAddList);
-        AddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LeavingPermissionList.this, RaportActivity.class);
-                intent.putExtra("day", day);
-                intent.putExtra("month", month);
-                intent.putExtra("year", year);
-                Log.d("luna", String.valueOf(month));
-                startActivity(intent);
-
-            }
-        });
-
         CancelList = findViewById(R.id.buttonCancelList);
+
+        if(day < actualDay ||  month < actualMonth || year < actualYear){
+            AddButton.setEnabled(false);
+
+        }else{
+            AddButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(LeavingPermissionList.this, RaportActivity.class);
+                    intent.putExtra("day", day);
+                    intent.putExtra("month", month);
+                    intent.putExtra("year", year);
+                    Log.d("luna", String.valueOf(month));
+                    startActivity(intent);
+
+                }
+            });
+        }
+
         CancelList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,4 +1,4 @@
-package com.example.larisa.leavingpermissionapp;
+package com.example.larisa.leavingpermissionapp.Model;
 
 public class User {
     private int matricol;
@@ -30,7 +30,7 @@ public class User {
         this.matricol = matricol;
     }
 
-    public String getUserNume() {
+    public  String getUserNume() {
         return userNume;
     }
 

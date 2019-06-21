@@ -9,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-
-import androidx.annotation.NonNull;
 import com.example.larisa.leavingpermissionapp.Activity.UserFrom;
 import com.example.larisa.leavingpermissionapp.R;
-import com.example.larisa.leavingpermissionapp.User;
+import com.example.larisa.leavingpermissionapp.Model.User;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,15 +27,15 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     }
 
 
-    @NonNull
+
     @Override
-    public RecycleViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecycleViewAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_row, parent, false);
         return new ViewHolder(v, context) ;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder( RecycleViewAdapter.ViewHolder holder, int position) {
 
         User user = users.get(position);
         holder.numeAngajat.setText(user.getUserNume() +  "" + user.getÚserPrenume());

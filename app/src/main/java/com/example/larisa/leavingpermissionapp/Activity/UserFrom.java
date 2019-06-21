@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Database.Database;
 import com.example.larisa.leavingpermissionapp.R;
-import com.example.larisa.leavingpermissionapp.User;
+import com.example.larisa.leavingpermissionapp.Model.User;
 
 public class UserFrom extends AppCompatActivity {
     private Database db;

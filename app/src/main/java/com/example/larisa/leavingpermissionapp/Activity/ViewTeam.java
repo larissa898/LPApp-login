@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
 import com.example.larisa.leavingpermissionapp.Database.Database;
 import com.example.larisa.leavingpermissionapp.R;
-import com.example.larisa.leavingpermissionapp.User;
+import com.example.larisa.leavingpermissionapp.Model.User;
 
 import java.util.ArrayList;
 import java.util.List;

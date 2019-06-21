@@ -8,16 +8,19 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -28,6 +31,10 @@ public class CalendarActivity extends AppCompatActivity {
     private Button CancelCalendar;
     private CalendarView calendarView;
     private boolean mHasDoubleClicked = false;
+    private TextView Angajat;
+    int actualDay;
+    int actualMonth;
+    int actualYear;
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -36,14 +43,19 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
+        Calendar cal = Calendar.getInstance();
+
+        actualDay = cal.get(Calendar.DATE);
+        actualMonth = cal.get(Calendar.MONTH);
+        actualYear = cal.get(Calendar.YEAR);
         CancelCalendar = findViewById(R.id.CancelButtonCalendar);
         calendarView = findViewById(R.id.calendarViewID);
+        Angajat = findViewById(R.id.NumeAngajatCalendar);
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange( CalendarView view, int year, int month, int dayOfMonth) {
-                Log.d("luna", String.valueOf(month));
                 String dateString = String.format("%d-%d-%d", year, month, dayOfMonth+3);
                 Date date = null;
                 try {
@@ -55,35 +67,40 @@ public class CalendarActivity extends AppCompatActivity {
                 view.getFirstDayOfWeek();
                 final long pressTime = System.currentTimeMillis();
 
-                // If double click...
-                if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
-                    if ( dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday"))){
-                        Toast.makeText(getApplicationContext(), "Weekend" , Toast.LENGTH_SHORT).show();
-                    }else{
+                    // If double click...
+                    if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                        if ( dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday"))){
+                            Toast.makeText(getApplicationContext(), "It's weekend, choose a working day" , Toast.LENGTH_SHORT).show();
+                        }else{
 
-                        mHasDoubleClicked = true;
-                        Intent intent = new Intent(CalendarActivity.this, LeavingPermissionList.class);
-                        intent.putExtra("day", dayOfMonth);
-                        intent.putExtra("month", month);
-                        intent.putExtra("year", year);
-                        Log.d("luna", String.valueOf(month));
-                        startActivity(intent);
-                    }
-                }
-                else {     // If not double click....
-                    mHasDoubleClicked = false;
-                    @SuppressLint("HandlerLeak") final Handler myHandler = new Handler() {
-                        public void handleMessage(Message m) {
-                            if (!mHasDoubleClicked && (dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday")))) {
-                                Toast.makeText(getApplicationContext(), "Weekend" , Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(), "Press Double-Click to register", Toast.LENGTH_SHORT).show();
-                            }
+                            mHasDoubleClicked = true;
+                            Intent intent = new Intent(CalendarActivity.this, LeavingPermissionList.class);
+                            intent.putExtra("day", dayOfMonth);
+                            intent.putExtra("month", month);
+                            intent.putExtra("year", year);
+                            intent.putExtra("actualDay", actualDay);
+                            intent.putExtra("actualMonth", actualMonth);
+                            intent.putExtra("actualYear", actualYear);
+                            startActivity(intent);
                         }
-                    };
-                    Message m = new Message();
-                    myHandler.sendMessageDelayed(m,DOUBLE_PRESS_INTERVAL);
-                }
+                    }
+                    else {     // If not double click....
+                        mHasDoubleClicked = false;
+                        @SuppressLint("HandlerLeak") final Handler myHandler = new Handler() {
+                            public void handleMessage(Message m) {
+                                if (!mHasDoubleClicked && (dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday")))) {
+                                    Toast.makeText(getApplicationContext(), "It's weekend, choose a working day" , Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "Press Double-Click to make a request", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        };
+                        Message m = new Message();
+                        myHandler.sendMessageDelayed(m,DOUBLE_PRESS_INTERVAL);
+                    }
+
+
+
                 lastPressTime = pressTime;
             }
         });

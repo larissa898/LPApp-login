@@ -18,8 +18,15 @@
     <string name="nume">Nume Angajat</string>
     <string name="ok_button">OK</string>
     <string name="add_employee">Add new employee</string>
-    <string name="From">De la:</string>
-    <string name="To">Pana la:</string>
     <string name="Total">Total ore</string>
     <string name="CancelButtonRaport">Cancel</string>
+    <string name="TotalOre">Total Ore:</string>
+    <string name="a">a</string>
+    <string name="b">b</string>
+    <string name="m">m</string>
+    <string name="From">De la:</string>
+    <string name="To">Pana la:</string>
+    <string name="CancelRaport">Cancel</string>
+    <string name="Totalore">Final:</string>
+    <string name="Confirm">Confirm</string>
 </resources>
