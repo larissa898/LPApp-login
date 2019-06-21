@@ -27,7 +27,11 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_TABLE_USERS = "CREATE TABLE " + Utils.TABLE_USERS + " (" + Utils.USERS_MATRICOL + " INTEGER PRIMARY KEY, " + Utils.USERS_NUME + " TEXT," + Utils.USERS_PRENUME +
                 " TEXT," + Utils.USERS_PAROLA + " TEXT," + Utils.USERS_FUNCTIE + " TEXT);";
+<<<<<<< Updated upstream
          String CREATE_TABLE_LP = "CREATE TABLE " + Utils.TABLE_LEAVING_PERM + "(" + Utils.LP_ID + " INTEGER PRIMARY KEY," + Utils.USERS_MATRICOL  + " INTEGER," + Utils.LP_FROM + "TEXT, " + Utils.LP_TO + "TEXT, " + Utils.LP_DATE  + " TEXT,"+ "FOREIGN KEY (" + Utils.USERS_MATRICOL + ") " + "REFERENCES " + Utils.TABLE_USERS + "(" + Utils.USERS_MATRICOL + "));";
+=======
+        String CREATE_TABLE_LP = "CREATE TABLE " + Utils.TABLE_LEAVING_PERM + "(" + Utils.LP_ID + " INTEGER PRIMARY KEY," + Utils.USERS_MATRICOL  + " INTEGER," + Utils.LP_FROM + "TEXT, " + Utils.LP_TO + "TEXT, " + Utils.LP_DATE  + " TEXT,"+ "FOREIGN KEY (" + Utils.USERS_MATRICOL + ") " + "REFERENCES " + Utils.TABLE_USERS + "(" + Utils.USERS_MATRICOL + "));";
+>>>>>>> Stashed changes
         sqLiteDatabase.execSQL(CREATE_TABLE_USERS);
         sqLiteDatabase.execSQL(CREATE_TABLE_LP);
     }

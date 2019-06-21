@@ -28,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
         db = new Database(this);
 
         final User user = new User();
-        user.setMatricol(1234);
-        user.setUserNume("Maria");
-        user.setÚserPrenume("Popescu");
-        user.setFunctie("Inginer de sistem");
-        user.setParola("parola");
+        user.setMatricol(1235);
+        user.setUserNume("Lucaci");
+        user.setÚserPrenume("Bogdan-Ionut");
+        user.setFunctie("Team Leader");
+        user.setParola("parola123");
 
         //db.insertDB(user);
 
