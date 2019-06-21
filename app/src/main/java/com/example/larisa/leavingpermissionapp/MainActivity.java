@@ -36,13 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
         //db.insertDB(user);
 
-
         login = findViewById(R.id.button);
         cancel =  findViewById(R.id.button2);
         userNM =  findViewById(R.id.editTextNM);
         password=  findViewById(R.id.editText);
-
-
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,14 +54,11 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
                             startActivity(intent);
                             finish();
-
                 }else{
                     Toast.makeText(MainActivity.this,"Wrong Credentials",Toast.LENGTH_LONG).show();
                     userNM.setText("");
                     password.setText("");
                 }
-
-
             }
         });
 

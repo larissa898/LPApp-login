@@ -22,13 +22,14 @@ public class LeavingPermissionList extends AppCompatActivity {
     private int actualMonth;
     private int actualYear;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaving_permission_list);
 
         CurrentDay = findViewById(R.id.textViewDayCurrent);
+        AddButton = findViewById(R.id.buttonAddList);
+        CancelList = findViewById(R.id.buttonCancelList);
 
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
@@ -38,9 +39,6 @@ public class LeavingPermissionList extends AppCompatActivity {
         year = getIntent().getIntExtra("year", 0);
 
         CurrentDay.setText(day + " "+ (month+1) + " " + year);
-
-        AddButton = findViewById(R.id.buttonAddList);
-        CancelList = findViewById(R.id.buttonCancelList);
 
         if(day < actualDay ||  month < actualMonth || year < actualYear){
             AddButton.setEnabled(false);
@@ -55,7 +53,6 @@ public class LeavingPermissionList extends AppCompatActivity {
                     intent.putExtra("year", year);
                     Log.d("luna", String.valueOf(month));
                     startActivity(intent);
-
                 }
             });
         }
