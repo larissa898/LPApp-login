@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "374833103687",
+    "firebase_url": "https://lpapp-660c2.firebaseio.com",
+    "project_id": "lpapp-660c2",
+    "storage_bucket": "lpapp-660c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374833103687:android:bb4fb47b3a2ef932",
+        "android_client_info": {
+          "package_name": "com.example.larisa.leavingpermissionapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374833103687-a2lp1eq7ofvp6psnfik7ntse443r22gt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.larisa.leavingpermissionapp",
+            "certificate_hash": "2fe57ebfcbbac704f17034d3ef6fb463ebae9285"
+          }
+        },
+        {
+          "client_id": "374833103687-mkcos71s1ob1ooq29b55o9q2ksq5q8ak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLEhCKm1TDX9UDgU7-9VMUMLmpMvWFAdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374833103687-mkcos71s1ob1ooq29b55o9q2ksq5q8ak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

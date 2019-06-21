@@ -29,4 +29,13 @@
     <string name="CancelRaport">Cancel</string>
     <string name="Totalore">Final:</string>
     <string name="Confirm">Confirm</string>
+    <string name="register_button">Register</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="hint_email">Enter your email</string>
+    <string name="register_password">Enter a password</string>
+    <string name="register_confirm" > Confirm your password </string>
+    <string name="register_name">Enter your last name</string>
+    <string name="register_firstName">Enter your first name</string>
+    <string name="register_function">Enter your function</string>
+    <string name="register_button">Register</string>
 </resources>
