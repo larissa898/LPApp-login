@@ -1,26 +1,18 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
 public class User {
-    private String email;
-    private String parola;
-    private String userNume;
-    private String úserPrenume;
+
+    private String nume;
+    private String prenume;
     private String functie;
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
-    public User(String email, String userNume, String úserPrenume, String functie, String parola) {
-        this.email = email;
-        this.userNume = userNume;
-        this.úserPrenume = úserPrenume;
+
+    public User( String nume, String prenume, String functie) {
+
+        this.nume = nume;
         this.functie = functie;
-        this.parola = parola;
     }
 
 
@@ -32,20 +24,20 @@ public class User {
 
 
 
-    public  String getUserNume() {
-        return userNume;
+    public  String getNume() {
+        return nume;
     }
 
-    public void setUserNume(String userNume) {
-        this.userNume = userNume;
+    public void setNume(String nume) {
+        this.nume = nume;
     }
 
-    public String getÚserPrenume() {
-        return úserPrenume;
+    public String getPrenume() {
+        return prenume;
     }
 
-    public void setÚserPrenume(String úserPrenume) {
-        this.úserPrenume = úserPrenume;
+    public void setPrenume(String prenume) {
+        this.prenume = prenume;
     }
 
     public String getFunctie() {
@@ -56,11 +48,5 @@ public class User {
         this.functie = functie;
     }
 
-    public String getParola() {
-        return parola;
-    }
 
-    public void setParola(String parola) {
-        this.parola = parola;
-    }
 }

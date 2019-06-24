@@ -1,5 +1,6 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,12 +11,14 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Matcher;
@@ -29,11 +32,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText lastName;
     private EditText firstName;
     private EditText function;
-    private  Button  registerButton;
+    private  Button  confirmButton;
     private Button cancelRegistration;
 
 
     private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +50,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         lastName = findViewById(R.id.registerLastName);
         firstName = findViewById(R.id.registerFirstName);
         function = findViewById(R.id.registerFunction);
-        registerButton = findViewById(R.id.registerButton);
+        confirmButton = findViewById(R.id.confirmRegister);
         cancelRegistration = findViewById(R.id.registerCancel);
 
         mAuth = FirebaseAuth.getInstance();
 
-        registerButton.setOnClickListener(this);
+        confirmButton.setOnClickListener(this);
         cancelRegistration.setOnClickListener(this);
 
 
@@ -161,18 +165,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    User user = new User(registerEmail,registerPassword,registerLastName, registerLastName,registerFunction);
+                    User user = new User(registerLastName, registerFirstName,registerFunction);
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).
                             addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful())
+
                                     {
-                                        Toast.makeText(RegisterActivity.this, "User has been successfully created and stored in the database", Toast.LENGTH_SHORT).show();
+                                        FirebaseUser user =  mAuth.getCurrentUser();
+                                        user.sendEmailVerification();
+
+                                        Toast.makeText(RegisterActivity.this, "User has been successfully created, please verify your email adress", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
                 }
                 else
                 {
@@ -188,7 +198,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch(v.getId())
         {
-            case R.id.registerButton:
+            case R.id.confirmRegister:
                 registerUser();
                 break;
             case R.id.registerCancel:
