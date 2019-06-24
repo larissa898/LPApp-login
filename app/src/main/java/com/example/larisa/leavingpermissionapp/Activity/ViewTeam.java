@@ -34,7 +34,7 @@ public class ViewTeam extends AppCompatActivity {
 
         usersList = new ArrayList<>();
         users = new ArrayList<>();
-        usersList = db.getAllItems();
+        /*usersList = db.getAllItems();*/
 
         for(User u :usersList)
         {
