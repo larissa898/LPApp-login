@@ -1,8 +1,14 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +16,14 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.example.larisa.leavingpermissionapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -18,13 +32,13 @@ import java.util.List;
 
 public class RaportActivity extends AppCompatActivity {
 
+    private DatabaseReference mDatabase;
     private Button Confirm;
     private Spinner From;
     private Spinner To;
     private TextView date;
     private TextView Nume;
     private TextView Prenume;
-    private TextView NrMat;
     private Button CancelRaport;
     private TextView TotalOre;
     private int  day;
@@ -34,6 +48,7 @@ public class RaportActivity extends AppCompatActivity {
     String second="";
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,6 +61,20 @@ public class RaportActivity extends AppCompatActivity {
                 "14:00", "14:30","15:00", "15:30", "16:00", "16:30","17:00", "17:30",
                 "18:00", "18:30", "19:00"};
 
+        final String[] strMonths = {"January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"};
+
+
         Confirm = findViewById(R.id.ConfirmButtonRaport);
         From = findViewById(R.id.spinnerFrom);
         To = findViewById(R.id.spinnerTo);
@@ -53,24 +82,50 @@ public class RaportActivity extends AppCompatActivity {
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
         Prenume = findViewById(R.id.textViewPrenume);
-        NrMat = findViewById(R.id.textViewNrMat);
         CancelRaport = findViewById(R.id.buttonCancelRaport);
-
         day =  getIntent().getIntExtra("day",0);
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
-        date.setText(day + " "+ month + " " + year );
+
+        date.setText(day + " "+ strMonths[month] + " " + year );
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
+
+        Query query =  functionRef.child(userId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists())
+                {
+                    String prenume = dataSnapshot.child("prenume").getValue(String.class);
+                    String nume = dataSnapshot.child("nume").getValue(String.class);
+                    Prenume.setText(prenume);
+                    Nume.setText(nume);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);//set the spinners adapter to the previously created one.
 
         From.setAdapter(adapter);
 
-
         Confirm.setEnabled(false);
+
         From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 first = From.getSelectedItem().toString();
+                
 
                 String[] hourMinFrom = first.split(":");
                 int FromMinutes  = Integer.valueOf(hourMinFrom[1]);

@@ -38,7 +38,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     public void onBindViewHolder( RecycleViewAdapter.ViewHolder holder, int position) {
 
         User user = users.get(position);
-        holder.numeAngajat.setText(user.getUserNume() +  "" + user.getÚserPrenume());
+        holder.numeAngajat.setText(user.getNume() +  "" + user.getPrenume());
 
     }
 

@@ -34,13 +34,13 @@ public class ViewTeam extends AppCompatActivity {
 
         usersList = new ArrayList<>();
         users = new ArrayList<>();
-        usersList = db.getAllItems();
+        /*usersList = db.getAllItems();*/
 
         for(User u :usersList)
         {
             User user = new User();
-            user.setUserNume(u.getUserNume());
-            user.setÚserPrenume(u.getÚserPrenume());
+            user.setNume(u.getNume());
+            user.setPrenume(u.getPrenume());
             users.add(user);
         }
 

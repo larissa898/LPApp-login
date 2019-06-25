@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +25,12 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String CREATE_TABLE_USERS = "CREATE TABLE " + Utils.TABLE_USERS + " (" + Utils.USERS_MATRICOL + " INTEGER PRIMARY KEY, " + Utils.USERS_NUME + " TEXT," + Utils.USERS_PRENUME +
+        /*String CREATE_TABLE_USERS = "CREATE TABLE " + Utils.TABLE_USERS + " (" + Utils.USERS_MATRICOL + " INTEGER PRIMARY KEY, " + Utils.USERS_NUME + " TEXT," + Utils.USERS_PRENUME +
                 " TEXT," + Utils.USERS_PAROLA + " TEXT," + Utils.USERS_FUNCTIE + " TEXT);";
-
-         String CREATE_TABLE_LP = "CREATE TABLE " + Utils.TABLE_LEAVING_PERM + "(" + Utils.LP_ID + " INTEGER PRIMARY KEY," + Utils.USERS_MATRICOL  + " INTEGER," + Utils.LP_FROM +
-                 "TEXT, " + Utils.LP_TO + "TEXT, " + Utils.LP_DATE  + " TEXT,"+ "FOREIGN KEY (" + Utils.USERS_MATRICOL + ") " + "REFERENCES " + Utils.TABLE_USERS + "(" + Utils.USERS_MATRICOL + "));";
-
+         String CREATE_TABLE_LP = "CREATE TABLE " + Utils.TABLE_LEAVING_PERM + "(" + Utils.LP_ID + " INTEGER PRIMARY KEY," + Utils.USERS_MATRICOL  + " INTEGER," + Utils.LP_FROM + "TEXT, " + Utils.LP_TO + "TEXT, " + Utils.LP_DATE  + " TEXT,"+ "FOREIGN KEY (" + Utils.USERS_MATRICOL + ") " + "REFERENCES " + Utils.TABLE_USERS + "(" + Utils.USERS_MATRICOL + "));";
         sqLiteDatabase.execSQL(CREATE_TABLE_USERS);
         sqLiteDatabase.execSQL(CREATE_TABLE_LP);
+        */
     }
 
     @Override
@@ -41,7 +41,8 @@ public class Database extends SQLiteOpenHelper {
 
 
     public void insertDB(User user)
-    {
+    {/*
+
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -50,12 +51,14 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(Utils.USERS_PRENUME,user.getÚserPrenume());
         contentValues.put(Utils.USERS_FUNCTIE, user.getFunctie());
         contentValues.put(Utils.USERS_PAROLA, user.getParola());
-
         db.insert(Utils.TABLE_USERS, null,contentValues);
+*/
 
     }
+       /*
     public User getUser (int id)
     {
+
         SQLiteDatabase db = getReadableDatabase();
         User user = new User ();
         Cursor cursor = db.query(Utils.TABLE_USERS, new String[]{Utils.USERS_MATRICOL, Utils.USERS_NUME, Utils.USERS_PRENUME, Utils.USERS_FUNCTIE, Utils.USERS_PAROLA},Utils.USERS_MATRICOL + "=?", new String[]{String.valueOf(id)}, null, null, null);
@@ -70,9 +73,14 @@ public class Database extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        return user;
-    }
 
+        return user;
+
+
+
+    }
+*/
+       /*
     public List<User> getAllItems()
     {
         SQLiteDatabase db = getReadableDatabase();
@@ -90,6 +98,7 @@ public class Database extends SQLiteOpenHelper {
                 user.setFunctie(cursor.getString(cursor.getColumnIndex(Utils.USERS_FUNCTIE)));
                 user.setParola(cursor.getString(cursor.getColumnIndex(Utils.USERS_PAROLA)));
                 users.add(user);
+
             }
         }while (cursor.moveToNext());
 
@@ -98,6 +107,8 @@ public class Database extends SQLiteOpenHelper {
 
 
     }
+    */
+       /*
     public String getLastMatricol()
     {
         SQLiteDatabase db = getReadableDatabase();
@@ -113,19 +124,24 @@ public class Database extends SQLiteOpenHelper {
         return matricol;
 
     }
+    */
+       /*
 
     //checking the NM and password
     public Boolean CheckCredential(String numarMatricol, String password){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(Utils.TABLE_USERS,  new String[]{Utils.USERS_MATRICOL, Utils.USERS_PAROLA},Utils.USERS_MATRICOL + "=?" + " AND "  + Utils.USERS_PAROLA + "=?" , new String[]{numarMatricol,password}, null, null, null, null);
+
         if(cursor.moveToFirst() ) {
+
+            Log.d("aaaaaaaaaaaaaaa", cursor.getString(1) );
             return true;
         }
         else {
             return false;
         }
     }
-
+*/
 
 
 }
