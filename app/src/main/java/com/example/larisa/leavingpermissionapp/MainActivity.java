@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
+import com.example.larisa.leavingpermissionapp.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,6 +25,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Button login;
@@ -115,24 +119,29 @@ public class MainActivity extends AppCompatActivity {
                                 {
                                     //check if the user is a team leader or not
 
-                                    DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference();
-                                    Query query =  functionRef.orderByChild(userId).orderByChild("functie").equalTo("Team Leader");
+                                    DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
+                                    Query query =  functionRef.child(userId);
                                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             if(dataSnapshot.exists())
-                                            {
-                                               Log.d("Query", "This is a team leader");
-                                                Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                                                startActivity(intent);
+                                            {   String functie = dataSnapshot.child("functie").getValue(String.class);
+                                                Log.d("Functia este", functie);
+                                                if(functie.equals("Team Leader"))
+                                                {
+                                                    Log.d("Query", "This is a team leader");
+                                                    Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                                                    startActivity(intent);
+                                                }
+                                                else
 
-                                            }
-                                            else
+                                                {
+                                                    Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                                                    startActivity(intent);
 
-                                            {
-                                                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                                                startActivity(intent);
+                                                }
                                             }
+
                                         }
 
                                         @Override
@@ -180,6 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
 
     }
 }

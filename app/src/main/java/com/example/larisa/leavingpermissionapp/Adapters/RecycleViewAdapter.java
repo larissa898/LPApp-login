@@ -38,7 +38,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     public void onBindViewHolder( RecycleViewAdapter.ViewHolder holder, int position) {
 
         User user = users.get(position);
-        holder.numeAngajat.setText(user.getUserNume() +  "" + user.getÚserPrenume());
+        holder.numeAngajat.setText(user.getNume() +  "" + user.getPrenume());
 
     }
 
@@ -61,14 +61,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
             checkBox = v.findViewById(R.id.checkAngajat);
             addEmployee = v.findViewById(R.id.Add_new_employee);
 
-            addEmployee.setOnClickListener(new View.OnClickListener() {
+           /* addEmployee.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(ctx, UserFrom.class);
                     ctx.startActivity(intent);
 
                 }
-            });
+            });*/
 
 
 

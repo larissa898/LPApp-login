@@ -9,11 +9,16 @@ public class User {
 
 
 
+
     public User( String nume, String prenume, String functie) {
 
         this.nume = nume;
         this.functie = functie;
+        this.prenume = prenume;
     }
+
+
+
 
 
     public User() {

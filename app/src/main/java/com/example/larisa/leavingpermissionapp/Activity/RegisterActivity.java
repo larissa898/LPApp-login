@@ -8,7 +8,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.MainActivity;
@@ -48,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         password = findViewById(R.id.registerPassword);
         confirmPassword = findViewById(R.id.confirmPassword);
         lastName = findViewById(R.id.registerLastName);
-        firstName = findViewById(R.id.registerFirstName);
+        firstName = findViewById(R.id.registerLastName);
         function = findViewById(R.id.registerFunction);
         confirmButton = findViewById(R.id.confirmRegister);
         cancelRegistration = findViewById(R.id.registerCancel);
