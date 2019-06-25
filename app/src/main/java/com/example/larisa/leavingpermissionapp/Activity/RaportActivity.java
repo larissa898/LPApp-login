@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.example.larisa.leavingpermissionapp.R;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +64,7 @@ public class RaportActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);//set the spinners adapter to the previously created one.
 
         From.setAdapter(adapter);
+
 
         Confirm.setEnabled(false);
         From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
