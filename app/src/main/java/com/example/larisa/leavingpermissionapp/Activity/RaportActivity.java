@@ -61,8 +61,10 @@ public class RaportActivity extends AppCompatActivity {
         day =  getIntent().getIntExtra("day",0);
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
-        date.setText(day + " "+ month + " " + year );
 
+
+
+       Log.d("Date is", String.valueOf(day) + String.valueOf(month) + String.valueOf(year)) ;
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);//set the spinners adapter to the previously created one.
 
         From.setAdapter(adapter);

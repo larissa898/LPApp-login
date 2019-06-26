@@ -1,20 +1,27 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
+import java.util.List;
+
 public class User {
 
     private String nume;
     private String prenume;
     private String functie;
+    private List<LP> lps;
 
 
+    public User(String nume, String prenume, String functie) {
+        this.nume = nume;
+        this.prenume = prenume;
+        this.functie = functie;
+    }
 
-
-
-    public User( String nume, String prenume, String functie) {
+    public User(String nume, String prenume, String functie, List<LP> lps) {
 
         this.nume = nume;
         this.functie = functie;
         this.prenume = prenume;
+        this.lps = lps;
     }
 
 
@@ -53,5 +60,11 @@ public class User {
         this.functie = functie;
     }
 
+    public List<LP> getLps() {
+        return lps;
+    }
 
+    public void setLps(List<LP> lps) {
+        this.lps = lps;
+    }
 }
