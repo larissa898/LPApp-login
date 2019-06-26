@@ -7,6 +7,7 @@ public class User {
     private String nume;
     private String prenume;
     private String functie;
+
     private List<LP> lps;
 
 

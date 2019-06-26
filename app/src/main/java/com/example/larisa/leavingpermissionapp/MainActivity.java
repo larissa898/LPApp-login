@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             if(dataSnapshot.exists())
                                             {   String functie = dataSnapshot.child("functie").getValue(String.class);
-                                                Log.d("Functia este", functie);
+
                                                 if(functie.equals("Team Leader"))
                                                 {
                                                     Log.d("Query", "This is a team leader");

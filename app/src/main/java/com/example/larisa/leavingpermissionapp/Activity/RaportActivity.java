@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +43,8 @@ public class RaportActivity extends AppCompatActivity {
     private TextView Nume;
     private TextView Prenume;
     private Button CancelRaport;
+    public int minnn;
+    public int ora;
     private TextView TotalOre;
     private int  day;
     private int month;
@@ -90,11 +95,11 @@ public class RaportActivity extends AppCompatActivity {
         date.setText(day + " "+ strMonths[month] + " " + year );
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
+        final DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
 
-        Query query =  functionRef.child(userId);
+        final Query query =  functionRef.child(userId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -165,7 +170,7 @@ public class RaportActivity extends AppCompatActivity {
 
                         String[] hourMinTo = second.split(":");
                         int hourResult=0;
-                        int minResult=0;
+                        int  minResult=0;
 
 
                         if( Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])){
@@ -185,11 +190,18 @@ public class RaportActivity extends AppCompatActivity {
                          } else {
                             TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
                              Confirm.setEnabled(true);
+                             //final int minutes = minResult;
+                             minnn=minResult;
+                             ora = hourResult;
+
                          }
+
                     }
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
+
                 });
+
             }
 
             @Override
@@ -199,8 +211,43 @@ public class RaportActivity extends AppCompatActivity {
         });
 
         Confirm.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists())
+
+                        {
+                            Log.d("data", "exists");
+
+                            Float total ;
+                            if(minnn == 30){
+                                total = Float.valueOf(String.valueOf(ora+ ".5") );
+
+
+                            }
+                            else
+                            {
+                                total = Float.valueOf(String.valueOf(ora) );
+                            }
+
+
+                            LP lp = new LP(date.getText().toString(),From.getSelectedItem().toString(),To.getSelectedItem().toString(),total );
+                           // FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue("LP");
+                            //FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").setValue(date.getText().toString());
+                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).setValue(lp);
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
                 startActivity(intent);
             }

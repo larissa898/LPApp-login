@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText function;
     private  Button  confirmButton;
     private Button cancelRegistration;
-    private List <LP> lps;
+    private List <LP> LPs;
 
     private FirebaseAuth mAuth;
 
@@ -62,12 +62,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
 
-
-
-
-
-
-
     }
     public void registerUser()
     {
@@ -77,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         final String registerLastName = lastName.getText().toString().trim();
         final String registerFirstName = firstName.getText().toString().trim();
         final String registerFunction = function.getText().toString().trim();
-        lps = new ArrayList<>();
+
 
         // validate Email field
         if(registerEmail.isEmpty())
@@ -184,9 +178,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     }
                                 }
                             });
+                    //FirebaseDatabase.getInstance().getReference("Users")
+                         //   .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").setValue("no LPs");
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
-                    FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP");
+
                 }
                 else
                 {
