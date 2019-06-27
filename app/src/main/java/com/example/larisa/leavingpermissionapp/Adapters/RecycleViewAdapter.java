@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.larisa.leavingpermissionapp.Activity.ItemClickListener;
 import com.example.larisa.leavingpermissionapp.Activity.UserFrom;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Model.User;
@@ -41,6 +43,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
 
         User user = users.get(position);
         holder.numeAngajat.setText(user.getNume() +  "  " + user.getPrenume());
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int pos) {
+                CheckBox ck = (CheckBox) v;
+            }
+        });
+
 
     }
 
@@ -48,11 +57,12 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     public int getItemCount() {
         return users.size();
     }
-    public class ViewHolder extends RecyclerView.ViewHolder
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
 
         public TextView numeAngajat;
         public CheckBox checkBox;
+        ItemClickListener itemClickListener;
 
 
         public ViewHolder(View v, final Context ctx)
@@ -61,20 +71,23 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
             context = ctx;
             numeAngajat = v.findViewById(R.id.numeAngajat);
             checkBox = v.findViewById(R.id.checkAngajat);
-//            addEmployee = v.findViewById(R.id.Add_new_employee);
-
-           /* addEmployee.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(ctx, UserFrom.class);
-                    ctx.startActivity(intent);
-
-                }
-            });*/
+            checkBox.setOnClickListener(this);
+//
 
 
 
 
+
+
+        }
+        public  void setItemClickListener(ItemClickListener ic)
+        {
+            this.itemClickListener  = ic;
+        }
+
+        @Override
+        public void onClick(View v) {
+            this.itemClickListener.onItemClick(v, getLayoutPosition());
         }
     }
 }

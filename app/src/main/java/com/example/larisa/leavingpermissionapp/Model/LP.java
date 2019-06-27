@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class LP {
 
+
     private String from;
     private String to;
     private Float total;

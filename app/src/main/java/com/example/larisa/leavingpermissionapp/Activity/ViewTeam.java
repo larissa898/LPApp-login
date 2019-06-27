@@ -10,12 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
 import com.example.larisa.leavingpermissionapp.Database.Database;
 import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Model.User;
+import com.example.larisa.leavingpermissionapp.TestCalendar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,7 @@ public class ViewTeam extends AppCompatActivity {
     private List <User> users;
     private Database db;
     private Button confirmButton;
+    private TextView welcomText;
 
 
 
@@ -46,6 +49,7 @@ public class ViewTeam extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         confirmButton = findViewById(R.id.confirmButton);
+        welcomText = findViewById(R.id.welcomeText);
 
         usersList = new ArrayList<>();
 
@@ -63,6 +67,10 @@ public class ViewTeam extends AppCompatActivity {
                         User user  = snapshot.getValue(User.class);
                         usersList.add(user);
                     }
+
+
+
+
                     recycleViewAdapter = new RecycleViewAdapter(ViewTeam.this, usersList);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
@@ -80,7 +88,7 @@ public class ViewTeam extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
+             Intent intent = new Intent(ViewTeam.this, TestCalendar.class);
              startActivity(intent);
 
 

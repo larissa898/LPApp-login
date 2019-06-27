@@ -18,7 +18,8 @@ public class FinalCalendar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
-        //calendarView.setDateTextAppearance();
+
+        //calendarView.setDateTextAppearance(R.style.AppTheme);
 
 
     }

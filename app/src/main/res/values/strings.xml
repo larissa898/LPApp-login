@@ -41,4 +41,5 @@
     <string name="register_form_button">Register</string>
     <string name="hint_email_login">Email</string>
     <string name="confirm_button">Confirm</string>
+    <string name="lista_angajati">Selectati angajatii pentru a putea vizualiza LP-urile.</string>
 </resources>

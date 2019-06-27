@@ -27,9 +27,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -98,9 +102,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        String time = df.format(Calendar.getInstance().getTime());
-        Log.d("The time is" ,time );
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
