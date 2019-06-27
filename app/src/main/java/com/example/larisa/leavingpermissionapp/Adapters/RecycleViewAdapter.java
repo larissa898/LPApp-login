@@ -46,7 +46,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     public int getItemCount() {
         return users.size();
     }
-    public class ViewHolder extends RecyclerView.ViewHolder
+    public static class ViewHolder extends RecyclerView.ViewHolder
     {
 
         public EditText numeAngajat;

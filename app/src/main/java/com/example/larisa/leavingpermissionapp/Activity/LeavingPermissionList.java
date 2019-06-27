@@ -52,7 +52,7 @@ public class LeavingPermissionList extends AppCompatActivity {
 
         CurrentDay.setText(day + " "+ strMonths[month] + " " + year);
 
-        if(day < actualDay ||  month < actualMonth || year < actualYear){
+        if(day < actualDay  &&  month < actualMonth && year < actualYear){
             AddButton.setEnabled(false);
 
         }else{

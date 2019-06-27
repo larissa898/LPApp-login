@@ -33,7 +33,7 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="hint_email">Enter your email</string>
     <string name="register_password">Enter a password</string>
-    <string name="register_confirm" > Confirm your password </string>
+    <string name="register_confirm"> Confirm your password </string>
     <string name="register_name">Enter your last name</string>
     <string name="register_firstName">Enter your first name</string>
     <string name="register_function">Enter your function</string>
