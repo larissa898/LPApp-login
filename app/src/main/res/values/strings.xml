@@ -39,4 +39,5 @@
     <string name="register_function">Enter your function</string>
     <string name="register_cancel">Cancel</string>
     <string name="register_form_button">Register</string>
+    <string name="Back">Back</string>
 </resources>

@@ -42,7 +42,7 @@ public class RaportActivity extends AppCompatActivity {
     private TextView date;
     private TextView Nume;
     private TextView Prenume;
-    private Button CancelRaport;
+    private Button Beckraport;
     public int minnn;
     public int ora;
     private TextView TotalOre;
@@ -87,7 +87,7 @@ public class RaportActivity extends AppCompatActivity {
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
         Prenume = findViewById(R.id.textViewPrenume);
-        CancelRaport = findViewById(R.id.buttonCancelRaport);
+        Beckraport = findViewById(R.id.buttonBackRaport);
         day =  getIntent().getIntExtra("day",0);
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
@@ -253,10 +253,11 @@ public class RaportActivity extends AppCompatActivity {
             }
         });
 
-        CancelRaport.setOnClickListener(new View.OnClickListener() {
+        Beckraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(RaportActivity.this, CalendarActivity.class);
+                startActivity(intent);
             }
         });
 

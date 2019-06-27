@@ -72,7 +72,8 @@ public class LeavingPermissionList extends AppCompatActivity {
         CancelList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(LeavingPermissionList.this, CalendarActivity.class);
+                startActivity(intent);
             }
         });
     }
