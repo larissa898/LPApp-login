@@ -8,6 +8,7 @@ public class User {
     private String prenume;
     private String functie;
 
+
     private List<LP> lps;
 
 
@@ -15,6 +16,7 @@ public class User {
         this.nume = nume;
         this.prenume = prenume;
         this.functie = functie;
+
     }
 
     public User(String nume, String prenume, String functie, List<LP> lps) {
@@ -68,4 +70,5 @@ public class User {
     public void setLps(List<LP> lps) {
         this.lps = lps;
     }
+
 }

@@ -3,28 +3,26 @@ package com.example.larisa.leavingpermissionapp.Model;
 import java.util.Date;
 
 public class LP {
-    private String currentDate;
+
     private String from;
     private String to;
     private Float total;
+    private String status;
 
 
-    public LP(String currentDate, String from, String to, Float total) {
-        this.currentDate = currentDate;
+    public LP( String from, String to, Float total, String status) {
+
         this.from = from;
         this.to = to;
         this.total = total;
+        this.status = status;
     }
 
 
 
-    public String getCurrentDate() {
-        return currentDate;
-    }
 
-    public void setCurrentDate(String currentDate) {
-        this.currentDate = currentDate;
-    }
+
+
 
     public String getFrom() {
         return from;
@@ -56,8 +54,11 @@ public class LP {
     }
 
 
+    public String getStatus() {
+        return status;
+    }
 
-
-
-
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

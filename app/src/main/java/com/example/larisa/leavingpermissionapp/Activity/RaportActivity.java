@@ -29,7 +29,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -49,6 +52,7 @@ public class RaportActivity extends AppCompatActivity {
     private int  day;
     private int month;
     private int year;
+    private String status = "neconfirmat";
     String first="";
     String second="";
 
@@ -212,10 +216,12 @@ public class RaportActivity extends AppCompatActivity {
 
         Confirm.setOnClickListener(new View.OnClickListener() {
 
+            DateFormat df = new SimpleDateFormat("HH:mm:ss");
+            String time = df.format(Calendar.getInstance().getTime());
 
             @Override
             public void onClick(View v) {
-                query.addValueEventListener(new ValueEventListener() {
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists())
@@ -235,10 +241,8 @@ public class RaportActivity extends AppCompatActivity {
                             }
 
 
-                            LP lp = new LP(date.getText().toString(),From.getSelectedItem().toString(),To.getSelectedItem().toString(),total );
-                           // FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue("LP");
-                            //FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").setValue(date.getText().toString());
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).setValue(lp);
+                            LP lp = new LP(From.getSelectedItem().toString(),To.getSelectedItem().toString(),total,status );
+                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
 
                         }
                     }
