@@ -31,7 +31,9 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecycleViewAdapter.ViewHolder holder, int position) {
+        LP mylist = lp.get(position);
+
 
     }
 

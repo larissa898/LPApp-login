@@ -9,7 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.example.larisa.leavingpermissionapp.Activity.LeavingPermissionList;
 import com.example.larisa.leavingpermissionapp.Activity.UserFrom;
+import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
 
 
 
+
     @Override
     public RecycleViewAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_row, parent, false);
@@ -38,7 +43,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     public void onBindViewHolder( RecycleViewAdapter.ViewHolder holder, int position) {
 
         User user = users.get(position);
-        holder.numeAngajat.setText(user.getNume() +  "" + user.getPrenume());
+        holder.numeAngajat.setText(user.getNume() +  "  " + user.getPrenume());
 
     }
 
@@ -49,9 +54,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
 
-        public EditText numeAngajat;
+        private final Context context;
+        public TextView numeAngajat;
         public CheckBox checkBox;
-        public Button addEmployee;
+
 
         public ViewHolder(View v, final Context ctx)
         {
@@ -59,7 +65,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
             context = ctx;
             numeAngajat = v.findViewById(R.id.numeAngajat);
             checkBox = v.findViewById(R.id.checkAngajat);
-            addEmployee = v.findViewById(R.id.Add_new_employee);
+//            addEmployee = v.findViewById(R.id.Add_new_employee);
 
            /* addEmployee.setOnClickListener(new View.OnClickListener() {
                 @Override
