@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.example.larisa.leavingpermissionapp.Activity.ItemClickListener;
 import com.example.larisa.leavingpermissionapp.Activity.UserFrom;
 import com.example.larisa.leavingpermissionapp.R;
@@ -23,6 +22,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
 
     private Context context;
     private List<User> users = new ArrayList<>();
+    public List<User> checkedUsers = new ArrayList<>();
 
     public RecycleViewAdapter(Context context, List<User> users)
     {
@@ -39,14 +39,23 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     }
 
     @Override
-    public void onBindViewHolder( RecycleViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecycleViewAdapter.ViewHolder holder, final int position) {
 
-        User user = users.get(position);
-        holder.numeAngajat.setText(user.getNume() +  "  " + user.getPrenume());
+        final User user = users.get(position);
+        holder.numeAngajat.setText(user.getFullName());
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
                 CheckBox ck = (CheckBox) v;
+                if(ck.isChecked())
+
+                {
+                  checkedUsers.add(users.get(position));
+                }
+                else
+                {
+                 checkedUsers.remove(users.get(position));
+                }
             }
         });
 

@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.EventLog;
+import android.widget.CalendarView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -30,8 +31,9 @@ public class TestCalendar extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(null);
         Long time = Calendar.getInstance().getTimeInMillis();
-        Event evt = new Event(Color.RED,time ,"Omg");
+        Event evt = new Event(Color.WHITE, Long.valueOf(Calendar.getInstance().getTimeInMillis()),"Omg");
         compactCalendarView.addEvent(evt);
+
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             Context context = getApplicationContext();
             @Override

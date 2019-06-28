@@ -7,9 +7,11 @@ public class User {
     private String nume;
     private String prenume;
     private String functie;
+    private String fullName;
 
 
     private List<LP> lps;
+
 
 
     public User(String nume, String prenume, String functie) {
@@ -71,4 +73,18 @@ public class User {
         this.lps = lps;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public User( String fullName,String functie) {
+        this.fullName = fullName;
+
+        this.functie = functie;
+
+    }
 }
