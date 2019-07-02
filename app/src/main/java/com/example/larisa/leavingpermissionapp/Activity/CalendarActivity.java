@@ -58,7 +58,7 @@ public class CalendarActivity extends AppCompatActivity {
     private String lpChild;
     private RecycleViewAdapterUser recyclerViewUser;
     private RecyclerView recyclerView;
-    private List<LP> LpList;
+    private List<LP> LpList ;
     private Database db;
 
 
@@ -106,8 +106,8 @@ public class CalendarActivity extends AppCompatActivity {
 
                 if (dataSnapshot.exists())
                 {
-                    String prenume = dataSnapshot.child("prenume").getValue(String.class);
-                    Angajat.setText("Buna " +  prenume + "!" );
+                    String nume = dataSnapshot.child("fullName").getValue(String.class);
+                    Angajat.setText("Buna " +  nume + "!" );
 
                 }
             }
@@ -157,7 +157,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                    if(dataSnapshot.exists()) {
+                                    if(!dataSnapshot.exists()) {
                                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                                             LP lp = snapshot.getValue(LP.class);
@@ -181,6 +181,8 @@ public class CalendarActivity extends AppCompatActivity {
                                 }
                             });
                             startActivity(intent);
+                            onRestart();
+                            finish();
                         }
                     }
                     else {     // If not double click....
@@ -204,6 +206,7 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+
         CancelCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,5 +217,7 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+
     }
+
 }

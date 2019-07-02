@@ -2,6 +2,7 @@ package com.example.larisa.leavingpermissionapp.Model;
 
 public class LP {
 
+
     private String from;
     private String to;
     private Float total;
