@@ -241,7 +241,7 @@ public class RaportActivity extends AppCompatActivity {
                             }
 
 
-                            LP lp = new LP(From.getSelectedItem().toString(),To.getSelectedItem().toString(),total,status );
+                            LP lp = new LP(From.getSelectedItem().toString(),status ,To.getSelectedItem().toString(),total);
                             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
 
                         }
@@ -253,6 +253,9 @@ public class RaportActivity extends AppCompatActivity {
                     }
                 });
                 Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
+                intent.putExtra("day", day);
+                intent.putExtra("month", month);
+                intent.putExtra("year", year);
                 startActivity(intent);
             }
         });

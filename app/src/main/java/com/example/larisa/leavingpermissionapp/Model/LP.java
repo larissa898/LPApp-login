@@ -1,7 +1,5 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
-import java.util.Date;
-
 public class LP {
 
     private String from;
@@ -10,7 +8,7 @@ public class LP {
     private String status;
 
 
-    public LP( String from, String to, Float total, String status) {
+    public LP( String from, String status , String to, Float total) {
 
         this.from = from;
         this.to = to;
@@ -19,12 +17,7 @@ public class LP {
     }
 
 
-
-
-
-
-
-    public String getFrom() {
+    public  String getFrom() {
         return from;
     }
 
@@ -32,7 +25,7 @@ public class LP {
         this.from = from;
     }
 
-    public String getTo() {
+    public  String getTo() {
         return to;
     }
 
