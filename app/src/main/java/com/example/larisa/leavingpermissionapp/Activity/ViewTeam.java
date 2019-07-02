@@ -99,7 +99,7 @@ public class ViewTeam extends AppCompatActivity {
 
 
                 }
-             Intent intent = new Intent(ViewTeam.this, TestCalendar.class);
+             Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
              startActivity(intent);
 
 
