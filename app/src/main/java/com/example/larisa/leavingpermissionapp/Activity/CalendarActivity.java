@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
+import com.example.larisa.leavingpermissionapp.Database.Database;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
@@ -55,9 +56,10 @@ public class CalendarActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private List<String > lpChildren = new ArrayList();
     private String lpChild;
-    private RecycleViewAdapterUser recycleViewAdapter;
+    private RecycleViewAdapterUser recyclerViewUser;
     private RecyclerView recyclerView;
-    private List<LP> LpList;
+    private List<LP> LpList ;
+    private Database db;
 
 
 
@@ -93,7 +95,7 @@ public class CalendarActivity extends AppCompatActivity {
         Angajat = findViewById(R.id.NumeAngajatCalendar);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
 
@@ -104,8 +106,8 @@ public class CalendarActivity extends AppCompatActivity {
 
                 if (dataSnapshot.exists())
                 {
-                    String prenume = dataSnapshot.child("prenume").getValue(String.class);
-                    Angajat.setText("Buna " +  prenume + "!" );
+                    String nume = dataSnapshot.child("fullName").getValue(String.class);
+                    Angajat.setText("Buna " +  nume + "!" );
 
                 }
             }
@@ -148,41 +150,39 @@ public class CalendarActivity extends AppCompatActivity {
                             intent.putExtra("actualMonth", actualMonth);
                             intent.putExtra("actualYear", actualYear);
 
-//                            DatabaseReference dbReference;
-//                            dbReference = FirebaseDatabase.getInstance().getReference("Users").child("LP").child(dayOfMonth + " " + strMonths[month] + " " + year);
-//                            dbReference.addValueEventListener(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                                    Log.d("aaa", String.valueOf(dataSnapshot.exists()));
-//                                    if(!dataSnapshot.exists())
-//
-//                                    {
-//                                        Log.d("Lp has child", "ss");
-//                                        for(DataSnapshot snapshot : dataSnapshot.getChildren())
-//                                        {
-//                                            lpChild =  snapshot.getValue(String.class);
-//                                            Log.d("Lp has child", lpChild);
-//                                            LP lp  = snapshot.getValue(LP.class);
-//                                            LpList.add(lp);
-//
-//
-//                                        }
-//                                        recycleViewAdapter = new RecycleViewAdapterUser(CalendarActivity.this, LpList );
-//                                        recyclerView.setAdapter(recycleViewAdapter);
-//                                        recycleViewAdapter.notifyDataSetChanged();
-//
-//                                    }
-//
-//                                }
-//
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                }
-//                            });
+                            DatabaseReference dbReference;
+                            dbReference =
+                                    FirebaseDatabase.getInstance().getReference("Users").child(userId).child("LP").child(dayOfMonth + " " + strMonths[month] + " " + year);
+                            dbReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    if(!dataSnapshot.exists()) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                                            LP lp = snapshot.getValue(LP.class);
+                                            LpList.add(lp);
+                                        }
+
+                                        recyclerViewUser = new RecycleViewAdapterUser(CalendarActivity.this, LpList);
+                                        recyclerView.setHasFixedSize(true);
+                                        recyclerView.setAdapter(recyclerViewUser);
+                                        recyclerViewUser.notifyDataSetChanged();
+
+
+                                    }
+
+                                }
+
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                             startActivity(intent);
+                            onRestart();
+                            finish();
                         }
                     }
                     else {     // If not double click....
@@ -206,12 +206,18 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+
         CancelCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
     }
 
 }

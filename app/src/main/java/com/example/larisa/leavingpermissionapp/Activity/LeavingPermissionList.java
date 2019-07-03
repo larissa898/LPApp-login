@@ -100,18 +100,18 @@ public class LeavingPermissionList extends AppCompatActivity {
 
                     for(DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
-                        for( DataSnapshot ceva : snapshot.getChildren() ) {
+                        //for( DataSnapshot ceva : snapshot.getChildren() ) {
 
-                            String pa2 = String.valueOf(ceva.getValue());
-                            Log.d("pa2", pa2);
+//                            String pa2 = String.valueOf(ceva.getValue());
+//                            Log.d("pa2", pa2);
+                            final LP lp  = snapshot.getValue(LP.class);
+                            LpList.add(lp);
 
-                        }
-
-                        LP lp  = snapshot.getValue(LP.class);
-                        LpList.add(lp);
+                       // }
 
 
                     }
+
                     recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList );
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
@@ -128,7 +128,7 @@ public class LeavingPermissionList extends AppCompatActivity {
         });
 
 
-        if(day < actualDay  &&  month < actualMonth && year < actualYear){
+        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay)){
             AddButton.setEnabled(false);
 
         }else{
@@ -155,21 +155,5 @@ public class LeavingPermissionList extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String[] strMonths = {"January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"};
-        CurrentDay.setText(day + " " + strMonths[month] + " " + year);
-    }
+
 }
