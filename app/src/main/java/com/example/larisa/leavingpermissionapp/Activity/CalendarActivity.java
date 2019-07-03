@@ -6,9 +6,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,10 +19,13 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
+import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,8 +35,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -46,6 +53,11 @@ public class CalendarActivity extends AppCompatActivity {
     int actualMonth;
     int actualYear;
     private DatabaseReference mDatabase;
+    private List<String > lpChildren = new ArrayList();
+    private String lpChild;
+    private RecycleViewAdapterUser recycleViewAdapter;
+    private RecyclerView recyclerView;
+    private List<LP> LpList;
 
 
 
@@ -55,6 +67,18 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        final String[] strMonths = {"January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"};
 
 
 
@@ -123,6 +147,41 @@ public class CalendarActivity extends AppCompatActivity {
                             intent.putExtra("actualDay", actualDay);
                             intent.putExtra("actualMonth", actualMonth);
                             intent.putExtra("actualYear", actualYear);
+
+//                            DatabaseReference dbReference;
+//                            dbReference = FirebaseDatabase.getInstance().getReference("Users").child("LP").child(dayOfMonth + " " + strMonths[month] + " " + year);
+//                            dbReference.addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                                    Log.d("aaa", String.valueOf(dataSnapshot.exists()));
+//                                    if(!dataSnapshot.exists())
+//
+//                                    {
+//                                        Log.d("Lp has child", "ss");
+//                                        for(DataSnapshot snapshot : dataSnapshot.getChildren())
+//                                        {
+//                                            lpChild =  snapshot.getValue(String.class);
+//                                            Log.d("Lp has child", lpChild);
+//                                            LP lp  = snapshot.getValue(LP.class);
+//                                            LpList.add(lp);
+//
+//
+//                                        }
+//                                        recycleViewAdapter = new RecycleViewAdapterUser(CalendarActivity.this, LpList );
+//                                        recyclerView.setAdapter(recycleViewAdapter);
+//                                        recycleViewAdapter.notifyDataSetChanged();
+//
+//                                    }
+//
+//                                }
+//
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                }
+//                            });
                             startActivity(intent);
                         }
                     }
