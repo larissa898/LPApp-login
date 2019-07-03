@@ -1,19 +1,34 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
-public class User {
-    private int matricol;
-    private String userNume;
-    private String úserPrenume;
-    private String functie;
-    private String parola;
+import java.util.List;
 
-    public User(int matricol, String userNume, String úserPrenume, String functie, String parola) {
-        this.matricol = matricol;
-        this.userNume = userNume;
-        this.úserPrenume = úserPrenume;
+public class User {
+
+    private String nume;
+    private String prenume;
+    private String functie;
+
+
+    private List<LP> lps;
+
+
+    public User(String nume, String prenume, String functie) {
+        this.nume = nume;
+        this.prenume = prenume;
         this.functie = functie;
-        this.parola = parola;
+
     }
+
+    public User(String nume, String prenume, String functie, List<LP> lps) {
+
+        this.nume = nume;
+        this.functie = functie;
+        this.prenume = prenume;
+        this.lps = lps;
+    }
+
+
+
 
 
     public User() {
@@ -22,28 +37,22 @@ public class User {
     public static void logOut() {
     }
 
-    public int getMatricol() {
-        return matricol;
+
+
+    public  String getNume() {
+        return nume;
     }
 
-    public void setMatricol(int matricol) {
-        this.matricol = matricol;
+    public void setNume(String nume) {
+        this.nume = nume;
     }
 
-    public  String getUserNume() {
-        return userNume;
+    public String getPrenume() {
+        return prenume;
     }
 
-    public void setUserNume(String userNume) {
-        this.userNume = userNume;
-    }
-
-    public String getÚserPrenume() {
-        return úserPrenume;
-    }
-
-    public void setÚserPrenume(String úserPrenume) {
-        this.úserPrenume = úserPrenume;
+    public void setPrenume(String prenume) {
+        this.prenume = prenume;
     }
 
     public String getFunctie() {
@@ -54,11 +63,12 @@ public class User {
         this.functie = functie;
     }
 
-    public String getParola() {
-        return parola;
+    public List<LP> getLps() {
+        return lps;
     }
 
-    public void setParola(String parola) {
-        this.parola = parola;
+    public void setLps(List<LP> lps) {
+        this.lps = lps;
     }
+
 }

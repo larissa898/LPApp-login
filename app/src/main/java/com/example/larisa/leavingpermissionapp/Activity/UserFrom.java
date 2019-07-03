@@ -24,7 +24,7 @@ public class UserFrom extends AppCompatActivity {
 
 
 
-
+/*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,4 +82,5 @@ public class UserFrom extends AppCompatActivity {
 
 
     }
+    */
 }

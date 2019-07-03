@@ -1,14 +1,34 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
+import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LeavingPermissionList extends AppCompatActivity {
 
@@ -20,15 +40,41 @@ public class LeavingPermissionList extends AppCompatActivity {
     private int year;
     private int actualDay;
     private int actualMonth;
+    private RecycleViewAdapterUser recycleViewAdapter;
+    private RecyclerView recyclerView;
+    private List<LP> LpList;
     private int actualYear;
+    private String lpChild;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaving_permission_list);
+         String[] strMonths = {"January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"};
+
+
+
+        recyclerView = findViewById(R.id.recyclerViewUser);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LpList = new ArrayList<>();
 
         CurrentDay = findViewById(R.id.textViewDayCurrent);
+        AddButton = findViewById(R.id.buttonAddList);
+        CancelList = findViewById(R.id.buttonCancelList);
 
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
@@ -36,13 +82,53 @@ public class LeavingPermissionList extends AppCompatActivity {
         actualYear =  getIntent().getIntExtra("actualYear",0);
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        CurrentDay.setText(day + " "+ (month+1) + " " + year);
+        CurrentDay.setText(day + " "+ strMonths[month] + " " + year);
+        DatabaseReference dbReference;
+        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").child(day + " " + strMonths[month] + " " + year);
 
-        AddButton = findViewById(R.id.buttonAddList);
-        CancelList = findViewById(R.id.buttonCancelList);
+        dbReference.addValueEventListener(new ValueEventListener() {
 
-        if(day < actualDay ||  month < actualMonth || year < actualYear){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                if(dataSnapshot.exists())
+
+                {
+
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                    {
+                        for( DataSnapshot ceva : snapshot.getChildren() ) {
+
+                            String pa2 = String.valueOf(ceva.getValue());
+                            Log.d("pa2", pa2);
+
+                        }
+
+                        LP lp  = snapshot.getValue(LP.class);
+                        LpList.add(lp);
+
+
+                    }
+                    recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList );
+                    recyclerView.setAdapter(recycleViewAdapter);
+                    recycleViewAdapter.notifyDataSetChanged();
+
+                }
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        if(day < actualDay  &&  month < actualMonth && year < actualYear){
             AddButton.setEnabled(false);
 
         }else{
@@ -55,16 +141,35 @@ public class LeavingPermissionList extends AppCompatActivity {
                     intent.putExtra("year", year);
                     Log.d("luna", String.valueOf(month));
                     startActivity(intent);
-
                 }
             });
         }
 
+
         CancelList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(LeavingPermissionList.this, CalendarActivity.class);
+                startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String[] strMonths = {"January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"};
+        CurrentDay.setText(day + " " + strMonths[month] + " " + year);
     }
 }
