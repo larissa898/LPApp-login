@@ -44,7 +44,6 @@ public class RaportActivity extends AppCompatActivity {
     private Spinner To;
     private TextView date;
     private TextView Nume;
-    private TextView Prenume;
     private Button Beckraport;
     public int minnn;
     public int ora;
@@ -90,7 +89,6 @@ public class RaportActivity extends AppCompatActivity {
         TotalOre = findViewById(R.id.TotalTextView);
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
-        Prenume = findViewById(R.id.textViewPrenume);
         Beckraport = findViewById(R.id.buttonBackRaport);
         day =  getIntent().getIntExtra("day",0);
         month = getIntent().getIntExtra("month",0);
@@ -110,9 +108,9 @@ public class RaportActivity extends AppCompatActivity {
 
                 if (dataSnapshot.exists())
                 {
-                    String prenume = dataSnapshot.child("prenume").getValue(String.class);
-                    String nume = dataSnapshot.child("nume").getValue(String.class);
-                    Prenume.setText(prenume);
+
+                    String nume = dataSnapshot.child("fullName").getValue(String.class);
+
                     Nume.setText(nume);
 
                 }
@@ -241,7 +239,7 @@ public class RaportActivity extends AppCompatActivity {
                             }
 
 
-                            LP lp = new LP(From.getSelectedItem().toString(),To.getSelectedItem().toString(),total,status );
+                            LP lp = new LP(From.getSelectedItem().toString(),status ,To.getSelectedItem().toString(),total);
                             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
 
                         }
@@ -253,6 +251,9 @@ public class RaportActivity extends AppCompatActivity {
                     }
                 });
                 Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
+                intent.putExtra("day", day);
+                intent.putExtra("month", month);
+                intent.putExtra("year", year);
                 startActivity(intent);
             }
         });
@@ -260,7 +261,7 @@ public class RaportActivity extends AppCompatActivity {
         Beckraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RaportActivity.this, CalendarActivity.class);
+                Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
                 startActivity(intent);
             }
         });

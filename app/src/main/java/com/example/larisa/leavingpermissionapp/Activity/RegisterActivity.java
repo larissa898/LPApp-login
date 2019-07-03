@@ -71,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         final String registerLastName = lastName.getText().toString().trim();
         final String registerFirstName = firstName.getText().toString().trim();
         final String registerFunction = function.getText().toString().trim();
+        final String registerFullName = registerFirstName + " " + registerLastName;
 
 
         // validate Email field
@@ -162,7 +163,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    User user = new User(registerLastName, registerFirstName,registerFunction);
+                    User user = new User(registerFullName,registerFunction);
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).
                             addOnCompleteListener(new OnCompleteListener<Void>() {
