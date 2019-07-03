@@ -1,8 +1,9 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class LP {
+public class LP implements Serializable {
 
 
     private String from;

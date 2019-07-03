@@ -1,5 +1,6 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.CalendarView;
 
+import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
@@ -17,6 +19,7 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.Calendar;
 import java.util.Formatter;
+import java.util.HashMap;
 
 public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
@@ -30,6 +33,14 @@ public class FinalCalendar extends AppCompatActivity {
         var = CalendarDay.today();
 
         Log.d("The date of this calendar is of type", var.toString());
+//needs modifying
+        Intent intent = getIntent();
+        HashMap<String, LP> hashMap = (HashMap<String, LP>) intent.getSerializableExtra("Lps");
+
+       for(String key:hashMap.keySet())
+       {
+           Log.d("Keys are", key);
+       }
 
 
 
@@ -49,7 +60,7 @@ public class FinalCalendar extends AppCompatActivity {
             }
         });
 
-        //calendarView.setDateTextAppearance(R.style.AppTheme);
+
 
 
     }
