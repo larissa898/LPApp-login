@@ -14,54 +14,116 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
 import com.prolificinteractive.materialcalendarview.format.DayFormatter;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.List;
 
 public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
-    private CalendarDay var ;
+    private List<LP> sendLP = new ArrayList<>();
+
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        var = CalendarDay.today();
 
-        Log.d("The date of this calendar is of type", var.toString());
-//needs modifying
-        Intent intent = getIntent();
-        HashMap<String, LP> hashMap = (HashMap<String, LP>) intent.getSerializableExtra("Lps");
-
-       for(String key:hashMap.keySet())
-       {
-           Log.d("Keys are", key);
-       }
-
-
-
-        setContentView(R.layout.activity_final_calendar);
+        final Intent intent = getIntent();
+       final List<LP> lps= (List<LP>) intent.getSerializableExtra("Lps"); setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
-        calendarView.addDecorator(new DayViewDecorator() {
-            @Override
-            public boolean shouldDecorate(CalendarDay day) {
-
-                return day.equals(var);
-            }
-
-            @Override
-            public void decorate(DayViewFacade view) {
-                view.addSpan(new DotSpan(Color.RED));
-
-            }
-        });
+        final List<CalendarDay> EventDays = new ArrayList<>();
 
 
 
+  for (final LP lp : lps)
+  {
+      String dateFormat = lp.getData();
+      final CalendarDay newDate = dayConverter(dateFormat);
+//      SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+//      SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+//      String[] convertedDate = new String[0];
+//      try {
+//          convertedDate = (sdf2.format(sdf.parse(dateFormat))).split("-");
+//
+//
+//      } catch (ParseException e) {
+//          e.printStackTrace();
+//      }
+//      final CalendarDay newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]), Integer.valueOf(convertedDate[2]));
+
+      calendarView.addDecorator(new DayViewDecorator() {
+          @Override
+          public boolean shouldDecorate(CalendarDay day) {
+              if(newDate.equals(day))
+              {
+                  EventDays.add(day);
+              }
+              return newDate.equals(day);
+          }
+
+          @Override
+          public void decorate(DayViewFacade view) {
+              view.addSpan(new DotSpan(Color.RED));
+
+          }
+      });
+
+
+
+      calendarView.setOnDateLongClickListener(new OnDateLongClickListener() {
+          @Override
+          public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
+              if(EventDays.contains(date))
+              {
+                  Intent intent = new Intent(FinalCalendar.this, LPCalendarList.class);
+                  for(LP lp :lps)
+                  {
+                      if(dayConverter(lp.getData()).equals(date))
+                      {
+                          sendLP.add(lp);
+                      }
+                  }
+                  intent.putExtra("TodayLP", (Serializable)sendLP);
+                  startActivity(intent);
+
+
+              }
+
+
+          }
+      });
+
+  }
+
+
+
+
+
+    }
+    CalendarDay dayConverter (String date)
+    { SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+        String[] convertedDate = new String[0];
+        try {
+            convertedDate = (sdf2.format(sdf.parse(date))).split("-");
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        CalendarDay newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]), Integer.valueOf(convertedDate[2]));
+        return newDate;
 
     }
 }

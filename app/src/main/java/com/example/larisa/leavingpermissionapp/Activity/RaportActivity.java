@@ -225,6 +225,8 @@ public class RaportActivity extends AppCompatActivity {
                         if(dataSnapshot.exists())
 
                         {
+
+                            String nume =dataSnapshot.child("fullName").getValue(String.class);
                             Log.d("data", "exists");
 
                             Float total ;
@@ -239,7 +241,7 @@ public class RaportActivity extends AppCompatActivity {
                             }
 
 
-                            LP lp = new LP(From.getSelectedItem().toString(),status ,To.getSelectedItem().toString(),total);
+                            LP lp = new LP(nume,From.getSelectedItem().toString() ,To.getSelectedItem().toString(),total,status);
                             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
 
                         }

@@ -27,8 +27,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +100,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
                 final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
-                final HashMap<String,LP> Userlp = new HashMap<>();
+                final List<LP> LPlist = new ArrayList<>();
 
                 DatabaseReference dbReference;
 
@@ -117,7 +120,12 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                                 // Log.d("Date is", String.valueOf(snapshot1.getKey()));
                                                 LP lp = snapshot2.getValue(LP.class);
                                                 //Log.d("user has been absent since", lp.getFrom());
-                                                Userlp.put(u.getFullName()+ " "+ snapshot1,lp);
+                                                String date = snapshot1.getKey();
+
+                                                lp.setData(date);
+                                                LPlist.add(lp);
+
+
 
 
 
@@ -136,8 +144,8 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                             }
                             //needs modifying
 
-                          Log.d("List has", String.valueOf(Userlp.size()));
-                            intent.putExtra("Lps",Userlp);
+
+                            intent.putExtra("Lps", (Serializable) LPlist);
                             startActivity(intent);
 
 

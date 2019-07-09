@@ -42,4 +42,9 @@
     <string name="hint_email_login">Email</string>
     <string name="confirm_button">Confirm</string>
     <string name="lista_angajati">Selectati angajatii pentru a putea vizualiza LP-urile.</string>
+    <string name="BACK">BACK</string>
+    <string name="sure_text">Are you sure?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="title_activity_lpcalendar_list">LPCalendarList</string>
 </resources>

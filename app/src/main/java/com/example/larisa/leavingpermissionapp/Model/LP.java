@@ -1,5 +1,7 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,18 +12,46 @@ public class LP implements Serializable {
     private String to;
     private Float total;
     private String status;
+    private String data;
+    private String nume;
+
+    public String getNume() {
+        return nume;
+    }
+
+    public void setNume(String nume) {
+        this.nume = nume;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
 
 
-    public LP( String from, String to, Float total, String status) {
+
+
+    public LP(String nume, String from, String to, Float total, String status) {
 
         this.from = from;
         this.to = to;
         this.total = total;
         this.status = status;
+        this.nume = nume;
     }
 
 
-
+    public LP(String from, String to, Float total, String status, String nume, String data) {
+        this.from = from;
+        this.to = to;
+        this.total = total;
+        this.status = status;
+        this.nume = nume;
+        this.data = data;
+    }
 
 
 
