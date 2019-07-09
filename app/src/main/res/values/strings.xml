@@ -46,4 +46,5 @@
     <string name="sure_text">Are You Sure?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="TotalRes">Total</string>
 </resources>

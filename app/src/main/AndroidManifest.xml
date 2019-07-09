@@ -18,7 +18,6 @@
         <activity android:name=".Activity.AddUser" />
         <activity android:name=".Activity.RaportActivity" />
         <activity android:name=".Activity.LeavingPermissionList" />
-        <activity android:name=".Activity.CamendarActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
