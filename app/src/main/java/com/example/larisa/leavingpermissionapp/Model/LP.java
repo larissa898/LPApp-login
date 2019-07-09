@@ -5,11 +5,11 @@ import java.util.Date;
 
 public class LP implements Serializable {
 
-
-    private String from;
-    private String to;
-    private Float total;
-    private String status;
+    public String name;
+    public String from;
+    public String to;
+    public Float total;
+    public String status;
 
 
     public LP( String from, String to, Float total, String status) {
@@ -21,6 +21,13 @@ public class LP implements Serializable {
     }
 
 
+    public LP(String name, String from, String to, Float total, String status) {
+        this.name = name;
+        this.from = from;
+        this.to = to;
+        this.total = total;
+        this.status = status;
+    }
 
 
 

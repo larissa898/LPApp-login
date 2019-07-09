@@ -29,6 +29,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,12 +100,15 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
                 final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
+                final ArrayList<LP> data = new ArrayList<>();
+                final ArrayList<String>ids = new ArrayList<>();
                 final HashMap<String,LP> Userlp = new HashMap<>();
 
                 DatabaseReference dbReference;
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
 
+                    final DateFormat dateFormat = new SimpleDateFormat("dd MMMM YYYY hh:mm:ss");
                     dbReference = FirebaseDatabase.getInstance().getReference("Users");
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -112,14 +118,21 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                                     if (snapshot.child("fullName").getValue().equals(u.getFullName())) {
-                                        for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
-                                            for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                                // Log.d("Date is", String.valueOf(snapshot1.getKey()));
-                                                LP lp = snapshot2.getValue(LP.class);
-                                                //Log.d("user has been absent since", lp.getFrom());
-                                                Userlp.put(u.getFullName()+ " "+ snapshot1,lp);
+                                        ids.add(snapshot.getKey());
 
-
+//                                        for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
+//                                            for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
+//                                                // Log.d("Date is", String.valueOf(snapshot1.getKey()));
+//                                                LP lp = snapshot2.getValue(LP.class);
+//                                                //Log.d("user has been absent since", lp.getFrom());
+//                                                lp.name = u.getFullName();
+//                                                try {
+//                                                    lp.date = dateFormat.parse(snapshot.getKey() + " " + snapshot2.getKey());
+//                                                } catch (ParseException e) {
+//                                                    Log.e(ViewTeam.class.getSimpleName(), "DATE parse exception: ", e);
+//                                                }
+//                                                data.add(lp);
+////                                                Userlp.put(u.getFullName()+ " "+ snapshot1.getKey() + " " + snapshot2.getKey() + " ",lp);
 
 
 
@@ -127,21 +140,28 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
                                         }
+
                                     }
 
+
+                            FinalCalendar.start(ViewTeam.this, ids);
                                 }
 
 
 
-                            }
+                               // Log.d("List has", String.valueOf(Userlp.size()));
+
+
+
                             //needs modifying
 
-                          Log.d("List has", String.valueOf(Userlp.size()));
-                            intent.putExtra("Lps",Userlp);
-                            startActivity(intent);
+//                            Log.d("List has", String.valueOf(Userlp.size()));
+//                            intent.putExtra("Lps",Userlp);
+//                            startActivity(intent);
 
 
-                        }
+
+
 
 
                         @Override
