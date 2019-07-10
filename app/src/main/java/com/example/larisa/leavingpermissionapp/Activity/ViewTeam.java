@@ -27,9 +27,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                usersList.clear();
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
@@ -97,71 +97,52 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
             public void onClick(View v) {
 
 
-
-
                 final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
-                final ArrayList<LP> data = new ArrayList<>();
-                final ArrayList<String>ids = new ArrayList<>();
-                final HashMap<String,LP> Userlp = new HashMap<>();
+                final List<LP> LPlist = new ArrayList<>();
 
                 DatabaseReference dbReference;
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
 
-                    final DateFormat dateFormat = new SimpleDateFormat("dd MMMM YYYY hh:mm:ss");
                     dbReference = FirebaseDatabase.getInstance().getReference("Users");
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                            LPlist.clear();
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                                     if (snapshot.child("fullName").getValue().equals(u.getFullName())) {
-                                        ids.add(snapshot.getKey());
+                                        for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
+                                            for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
+                                                // Log.d("Date is", String.valueOf(snapshot1.getKey()));
+                                                LP lp = snapshot2.getValue(LP.class);
+                                                //Log.d("user has been absent since", lp.getFrom());
+                                                String date = snapshot1.getKey();
 
-//                                        for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
-//                                            for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-//                                                // Log.d("Date is", String.valueOf(snapshot1.getKey()));
-//                                                LP lp = snapshot2.getValue(LP.class);
-//                                                //Log.d("user has been absent since", lp.getFrom());
-//                                                lp.name = u.getFullName();
-//                                                try {
-//                                                    lp.date = dateFormat.parse(snapshot.getKey() + " " + snapshot2.getKey());
-//                                                } catch (ParseException e) {
-//                                                    Log.e(ViewTeam.class.getSimpleName(), "DATE parse exception: ", e);
-//                                                }
-//                                                data.add(lp);
-////                                                Userlp.put(u.getFullName()+ " "+ snapshot1.getKey() + " " + snapshot2.getKey() + " ",lp);
+                                                lp.setData(date);
 
+                                                LPlist.add(lp);
 
 
                                             }
 
 
                                         }
-
                                     }
 
-
-                            FinalCalendar.start(ViewTeam.this, ids);
                                 }
 
 
-
-                               // Log.d("List has", String.valueOf(Userlp.size()));
-
-
-
+                            }
                             //needs modifying
 
-//                            Log.d("List has", String.valueOf(Userlp.size()));
-//                            intent.putExtra("Lps",Userlp);
-//                            startActivity(intent);
+
+                            intent.putExtra("Lps", (Serializable) LPlist);
+                            startActivity(intent);
 
 
-
-
+                        }
 
 
                         @Override
@@ -177,15 +158,10 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 }
 
 
-
-
-
             }
 
 
-
         });
-
 
 
     }
