@@ -7,8 +7,9 @@
     tools:context=".Activity.LPCalendarList">
 
     <android.support.v7.widget.RecyclerView
-        android:layout_width="386dp"
-        android:layout_height="708dp"
+        android:id="@+id/recycleViewLP"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"

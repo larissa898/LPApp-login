@@ -65,7 +65,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                usersList.clear();
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
@@ -97,8 +97,6 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
             public void onClick(View v) {
 
 
-
-
                 final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
                 final List<LP> LPlist = new ArrayList<>();
 
@@ -110,7 +108,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                            LPlist.clear();
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
@@ -123,12 +121,8 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                                 String date = snapshot1.getKey();
 
                                                 lp.setData(date);
+
                                                 LPlist.add(lp);
-
-
-
-
-
 
 
                                             }
@@ -138,7 +132,6 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     }
 
                                 }
-
 
 
                             }
@@ -165,15 +158,10 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 }
 
 
-
-
-
             }
 
 
-
         });
-
 
 
     }

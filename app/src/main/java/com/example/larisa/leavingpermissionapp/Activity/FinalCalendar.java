@@ -40,7 +40,8 @@ public class FinalCalendar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         final Intent intent = getIntent();
-       final List<LP> lps= (List<LP>) intent.getSerializableExtra("Lps"); setContentView(R.layout.activity_final_calendar);
+       final List<LP> lps= (List<LP>) intent.getSerializableExtra("Lps");
+       setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
         final List<CalendarDay> EventDays = new ArrayList<>();
 
@@ -48,36 +49,31 @@ public class FinalCalendar extends AppCompatActivity {
 
   for (final LP lp : lps)
   {
-      String dateFormat = lp.getData();
-      final CalendarDay newDate = dayConverter(dateFormat);
-//      SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
-//      SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-//      String[] convertedDate = new String[0];
-//      try {
-//          convertedDate = (sdf2.format(sdf.parse(dateFormat))).split("-");
-//
-//
-//      } catch (ParseException e) {
-//          e.printStackTrace();
-//      }
-//      final CalendarDay newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]), Integer.valueOf(convertedDate[2]));
 
-      calendarView.addDecorator(new DayViewDecorator() {
-          @Override
-          public boolean shouldDecorate(CalendarDay day) {
-              if(newDate.equals(day))
-              {
-                  EventDays.add(day);
+      if(lp.getStatus().equals("neconfirmat"))
+      {  String dateFormat = lp.getData();
+          final CalendarDay newDate = dayConverter(dateFormat);
+          calendarView.addDecorator(new DayViewDecorator() {
+              @Override
+              public boolean shouldDecorate(CalendarDay day) {
+                  if(newDate.equals(day))
+                  {
+                      EventDays.add(day);
+                  }
+                  return newDate.equals(day);
               }
-              return newDate.equals(day);
-          }
 
-          @Override
-          public void decorate(DayViewFacade view) {
-              view.addSpan(new DotSpan(Color.RED));
+              @Override
+              public void decorate(DayViewFacade view) {
+                  view.addSpan(new DotSpan(Color.RED));
 
-          }
-      });
+              }
+          });
+//
+      }
+
+
+
 
 
 
@@ -96,6 +92,8 @@ public class FinalCalendar extends AppCompatActivity {
                   }
                   intent.putExtra("TodayLP", (Serializable)sendLP);
                   startActivity(intent);
+                  sendLP.clear();
+
 
 
               }
@@ -105,6 +103,7 @@ public class FinalCalendar extends AppCompatActivity {
       });
 
   }
+
 
 
 
