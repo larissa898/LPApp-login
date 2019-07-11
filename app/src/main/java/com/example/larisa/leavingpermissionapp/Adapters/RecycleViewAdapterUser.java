@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,6 +75,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
         final LP mylist = lp.get(i);
         viewHolder.From.setText(mylist.getFrom());
         viewHolder.To.setText(mylist.getTo());
+        viewHolder.Status.setText(mylist.getStatus());
         viewHolder.Total.setText(String.valueOf(mylist.getTotal()));
     }
 
@@ -85,6 +87,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView From;
+        public TextView Status;
         public TextView To;
         public TextView Total;
         public Button editButton;
@@ -96,8 +99,10 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             From = v.findViewById(R.id.textViewFrom);
             To = v.findViewById(R.id.textViewTo);
             Total = v.findViewById(R.id.textViewTotal);
+            Status=  v.findViewById(R.id.textViewStatus);
             editButton =  v.findViewById(R.id.EditButton);
             deleteButton =  v.findViewById(R.id.deleteButton);
+
             editButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
 
@@ -108,6 +113,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
 
                 }
             });
+
         }
         public void onClick(View v) {
             switch (v.getId()){
@@ -119,12 +125,13 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     break;
                 case R.id.deleteButton:
                     position = getAdapterPosition();
-                    deleteLP(position);
+                    LP LivingPermission = lp.get(position);
+                    deleteLP(position,LivingPermission);
                     break;
             }
         }
 
-        public void deleteLP (final int id){
+        public void deleteLP (final int id, final LP lplp){
             alertDialogBuilder = new AlertDialog.Builder(context);
             inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.confirmation_dialog, null);
@@ -145,29 +152,45 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                 public void onClick(View v) {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
-                    Log.d("eeeeee", day+ " "+ strMonths[month ]+ " "+year);
+                   // Log.d("eeeeee", day+ " "+ strMonths[month ]+ " "+year);
                     dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
                             child(day+ " "+ strMonths[month] + " "+year);
-
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            lp.clear();
+//                            Log.d("@@@", String.valueOf(id));
+                            //String[] key = new String[6];
 
                             if(dataSnapshot.exists()){
+//                                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                                    key[j]=String.valueOf(snapshot.getKey());
+////                                    Log.d("!!!", String.valueOf(snapshot.getKey()));
+//                                    j++;
+//                                }
+
                                 int i=0;
+                                //int k=0;
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren())
                                {
-                                   if( i== id){
+                                   //String abc = snapshot.getKey();
+                                   if((i== id)  ){
                                        snapshot.getRef().removeValue();
-                                       dbReference.setValue(snapshot);
                                        dialog.dismiss();
-                                       synchronized (dialog) {
-                                       }
+                                      // lp.remove(id);
+
                                        return;
+
 
                                    }
                                    else{
-                                       i++; } } } }
+                                       i++;
+                                   }
+                               }
+
+                            }
+                            notifyDataSetChanged();
+                        }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -97,11 +97,7 @@ public class RaportActivity extends AppCompatActivity {
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total",0);
 
-
-
-
         date.setText(day + " "+ strMonths[month] + " " + year );
-
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -149,10 +145,10 @@ public class RaportActivity extends AppCompatActivity {
 
                 if(     ((FromHour ==  8 ) && (FromMinutes == 0)) || ((FromHour ==  9) &&  (FromMinutes == 0)) ||
                         ((FromHour ==  10) && (FromMinutes == 0)) || ((FromHour ==  11) && (FromMinutes == 0)) ||
-                        ((FromHour ==  12)&&  (FromMinutes == 0)) || ((FromHour ==  13) && (FromMinutes == 0)) ||
+                        ((FromHour ==  12) && (FromMinutes == 0)) || ((FromHour ==  13) && (FromMinutes == 0)) ||
                         ((FromHour ==  14) && (FromMinutes == 0)) || ((FromHour ==  15) && (FromMinutes == 0)) ||
                         ((FromHour ==  16) && (FromMinutes == 0)) || ((FromHour ==  17) && (FromMinutes == 0)) ||
-                        ((FromHour ==  18)&& (FromMinutes == 0))  || ((FromHour ==  19)&& (FromMinutes == 0))) {
+                        ((FromHour ==  18) && (FromMinutes == 0)) || ((FromHour ==  19) && (FromMinutes == 0))) {
 
                     for(int j=0; j<= 2*(20-FromHour); j=j+2)
                     {
@@ -192,13 +188,6 @@ public class RaportActivity extends AppCompatActivity {
                              minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
 
                         }
-//                         if(( hourResult +Integer.parseInt(hm[0]) <=3) ||( hourResult == 3 - Integer.parseInt(hm[0])  && minResult == (30)) || (first == "7" +
-//                                 ":30" && second ==
-//                                 "7:30") || (Integer.valueOf(hourMinFrom[0]) > Integer.valueOf(hourMinTo[0])
-//                                 || ((Integer.valueOf(hourMinFrom[0]) == Integer.valueOf(hourMinTo[0])) && (Integer.valueOf(hourMinFrom[1]) >= Integer.valueOf(hourMinTo[1]) ))))
-//                         {
-                       // String[] hm = total.toString().split(".");
-                       // Log.d("asd", hm[0]);
                         int plus =0;
                         int minfin=0;
                         if(total%10 ==3){

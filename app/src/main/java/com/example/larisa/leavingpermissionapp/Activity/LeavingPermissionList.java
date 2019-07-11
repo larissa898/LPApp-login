@@ -99,7 +99,6 @@ public class LeavingPermissionList extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if(dataSnapshot.exists())
-
                 {
                     float sum = 0;
                     for(DataSnapshot snapshot : dataSnapshot.getChildren())
@@ -109,29 +108,22 @@ public class LeavingPermissionList extends AppCompatActivity {
                             String h = snapshot.child("total").getValue().toString();
                             sum = sum + Float.parseFloat(h);
                             total=sum;
-
-
                     }
                     TotalOreZi.setText(String.valueOf(total));
-
-
+                    if(total==3.0 ){AddButton.setEnabled(false);}
                     Current = String.valueOf(CurrentDay);
                     recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList, day, month, year);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
-
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
-        });
 
+        });
         if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay) ){
             AddButton.setEnabled(false);
-
         }else{
             AddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -146,7 +138,6 @@ public class LeavingPermissionList extends AppCompatActivity {
                 }
             });
         }
-
         CancelList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +146,7 @@ public class LeavingPermissionList extends AppCompatActivity {
             }
         });
     }
+
 
 
 }
