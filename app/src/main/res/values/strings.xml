@@ -48,4 +48,6 @@
     <string name="yes">Yes</string>
     <string name="title_activity_lpcalendar_list">LPCalendarList</string>
     <string name="status">Status</string>
+    <string name="TotalRes">Total Ore:</string>
+    <string name="Status">Status:</string>
 </resources>
