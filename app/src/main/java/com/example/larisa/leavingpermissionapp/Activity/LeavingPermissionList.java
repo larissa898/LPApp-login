@@ -93,6 +93,32 @@ public class LeavingPermissionList extends AppCompatActivity {
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
                 child(day + " " + strMonths[month] + " " + year);
 
+        dbReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         dbReference.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -105,6 +131,7 @@ public class LeavingPermissionList extends AppCompatActivity {
                     {
                             final LP lp  = snapshot.getValue(LP.class);
                             LpList.add(lp);
+                            Log.i(LeavingPermissionList.class.getSimpleName(), "List Size: " + LpList.size());
                             String h = snapshot.child("total").getValue().toString();
                             sum = sum + Float.parseFloat(h);
                             total=sum;
@@ -112,6 +139,16 @@ public class LeavingPermissionList extends AppCompatActivity {
                     TotalOreZi.setText(String.valueOf(total));
                     if(total==3.0 ){AddButton.setEnabled(false);}
                     Current = String.valueOf(CurrentDay);
+                    /*Log.i(LeavingPermissionList.class.getSimpleName(), "List size: " + LpList.size());
+                    for (LP leavin : LpList) {
+                        Log.i(LeavingPermissionList.class.getSimpleName(), "Data: " + leavin.getData());
+                        Log.i(LeavingPermissionList.class.getSimpleName(), "Data: " + leavin.getFrom());
+
+                    }*/
+
+                   /* Log.i(LeavingPermissionList.class.getSimpleName(), "Day: " + day);
+                    Log.i(LeavingPermissionList.class.getSimpleName(), "Month: " + month);
+                    Log.i(LeavingPermissionList.class.getSimpleName(), "Year: " + year);*/
                     recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList, day, month, year);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();

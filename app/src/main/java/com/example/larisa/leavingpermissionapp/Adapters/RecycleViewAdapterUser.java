@@ -158,38 +158,45 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            lp.clear();
+//                            lp.clear();
 //                            Log.d("@@@", String.valueOf(id));
-                            //String[] key = new String[6];
+                            String[] key = new String[6];
+                            int j=0;
 
                             if(dataSnapshot.exists()){
-//                                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                                    key[j]=String.valueOf(snapshot.getKey());
-////                                    Log.d("!!!", String.valueOf(snapshot.getKey()));
-//                                    j++;
-//                                }
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    key[j]=String.valueOf(snapshot.getKey());
+//                                    Log.d("!!!", String.valueOf(snapshot.getKey()));
+                                    j++;
+                                }
 
                                 int i=0;
                                 //int k=0;
+
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren())
                                {
-                                   //String abc = snapshot.getKey();
-                                   if((i== id)  ){
+
+                                   if (snapshot.child("from").getValue().equals(lplp.getFrom()) && snapshot.child(
+                                           "to").getValue().equals(lplp.getTo())) {
+
+                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(),
+                                               "Value: " + snapshot.getValue());
+                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(), "Key: " + snapshot.getKey());
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
-                                      // lp.remove(id);
-
+                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(), "List Size1: " + lp.size());
+                                       lp.remove(id);
+                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(), "List Size2: " + lp.size());
                                        return;
 
 
                                    }
-                                   else{
-                                       i++;
-                                   }
-                               }
 
+
+                               }
+                                notifyDataSetChanged();
                             }
-                            notifyDataSetChanged();
+
                         }
 
                         @Override
