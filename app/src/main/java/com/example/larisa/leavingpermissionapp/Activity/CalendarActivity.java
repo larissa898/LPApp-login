@@ -6,13 +6,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -22,11 +20,9 @@ import android.widget.Toast;
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
 import com.example.larisa.leavingpermissionapp.Database.Database;
 import com.example.larisa.leavingpermissionapp.Model.LP;
-import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,6 +56,7 @@ public class CalendarActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<LP> LpList ;
     private Database db;
+    public String Current;
 
 
 
@@ -82,10 +79,7 @@ public class CalendarActivity extends AppCompatActivity {
                 "November",
                 "December"};
 
-
-
         Calendar cal = Calendar.getInstance();
-
 
         actualDay = cal.get(Calendar.DATE);
         actualMonth = cal.get(Calendar.MONTH);
@@ -93,6 +87,9 @@ public class CalendarActivity extends AppCompatActivity {
         CancelCalendar = findViewById(R.id.CancelButtonCalendar);
         calendarView = findViewById(R.id.calendarViewID);
         Angajat = findViewById(R.id.NumeAngajatCalendar);
+        recyclerView = findViewById(R.id.recyclerViewUser);
+        //recyclerView.setHasFixedSize(true);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -149,40 +146,10 @@ public class CalendarActivity extends AppCompatActivity {
                             intent.putExtra("actualDay", actualDay);
                             intent.putExtra("actualMonth", actualMonth);
                             intent.putExtra("actualYear", actualYear);
-
-                            DatabaseReference dbReference;
-                            dbReference =
-                                    FirebaseDatabase.getInstance().getReference("Users").child(userId).child("LP").child(dayOfMonth + " " + strMonths[month] + " " + year);
-                            dbReference.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                    if(!dataSnapshot.exists()) {
-                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                                            LP lp = snapshot.getValue(LP.class);
-                                            LpList.add(lp);
-                                        }
-
-                                        recyclerViewUser = new RecycleViewAdapterUser(CalendarActivity.this, LpList);
-                                        recyclerView.setHasFixedSize(true);
-                                        recyclerView.setAdapter(recyclerViewUser);
-                                        recyclerViewUser.notifyDataSetChanged();
-
-
-                                    }
-
-                                }
-
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                            Current = (actualDay + " " + actualMonth+ " "+actualYear);
                             startActivity(intent);
                             onRestart();
-                            finish();
+
                         }
                     }
                     else {     // If not double click....
@@ -199,8 +166,6 @@ public class CalendarActivity extends AppCompatActivity {
                         Message m = new Message();
                         myHandler.sendMessageDelayed(m,DOUBLE_PRESS_INTERVAL);
                     }
-
-
 
                 lastPressTime = pressTime;
             }

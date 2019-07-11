@@ -52,8 +52,10 @@ public class RaportActivity extends AppCompatActivity {
     private int month;
     private int year;
     private String status = "neconfirmat";
+    private Float total;
     String first="";
     String second="";
+    private int minn;
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -93,6 +95,7 @@ public class RaportActivity extends AppCompatActivity {
         day =  getIntent().getIntExtra("day",0);
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
+        total = getIntent().getFloatExtra("total",0);
 
         date.setText(day + " "+ strMonths[month] + " " + year );
 
@@ -135,16 +138,17 @@ public class RaportActivity extends AppCompatActivity {
                 
 
                 String[] hourMinFrom = first.split(":");
+
                 int FromMinutes  = Integer.valueOf(hourMinFrom[1]);
                 int FromHour = Integer.valueOf(hourMinFrom[0]);
                 List<String> ToList = new ArrayList<>();
 
                 if(     ((FromHour ==  8 ) && (FromMinutes == 0)) || ((FromHour ==  9) &&  (FromMinutes == 0)) ||
                         ((FromHour ==  10) && (FromMinutes == 0)) || ((FromHour ==  11) && (FromMinutes == 0)) ||
-                        ((FromHour ==  12)&&  (FromMinutes == 0)) || ((FromHour ==  13) && (FromMinutes == 0)) ||
+                        ((FromHour ==  12) && (FromMinutes == 0)) || ((FromHour ==  13) && (FromMinutes == 0)) ||
                         ((FromHour ==  14) && (FromMinutes == 0)) || ((FromHour ==  15) && (FromMinutes == 0)) ||
                         ((FromHour ==  16) && (FromMinutes == 0)) || ((FromHour ==  17) && (FromMinutes == 0)) ||
-                        ((FromHour ==  18)&& (FromMinutes == 0))  || ((FromHour ==  19)&& (FromMinutes == 0))) {
+                        ((FromHour ==  18) && (FromMinutes == 0)) || ((FromHour ==  19) && (FromMinutes == 0))) {
 
                     for(int j=0; j<= 2*(20-FromHour); j=j+2)
                     {
@@ -184,12 +188,28 @@ public class RaportActivity extends AppCompatActivity {
                              minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
 
                         }
-                         if( hourResult > 3 ||( hourResult == 3 && minResult == 30) || (first == "7:30" && second == "7:30") || (Integer.valueOf(hourMinFrom[0]) > Integer.valueOf(hourMinTo[0])
-                                 || ((Integer.valueOf(hourMinFrom[0]) == Integer.valueOf(hourMinTo[0])) && (Integer.valueOf(hourMinFrom[1]) >= Integer.valueOf(hourMinTo[1]) )))){
+                        int plus =0;
+                        int minfin=0;
+                        if(total%10 ==3){
+                            TotalOre.setText("No!");
+                        }
+                        if(minResult ==30 && (total-total%10)==0.5){
+                            plus =1;
+                            minfin=0;
 
+                        }else if((minResult==30 && (total-total%10)==0) ||(minResult==0 && (total-total%10)==0.5) )
+                        {
+                         minfin=30;
+                        }else if((minResult==0 && (total-total%10)==0)) {
+                            minfin=0;
+                        }
+
+                        if( (((hourResult + (total%10)) >3) ||((((hourResult + (total%10)+ plus) ==3) && (minfin!=0)))))
+                        {
                              TotalOre.setText("Select again!");
                              Confirm.setEnabled(false);
-                         } else {
+                         } else
+                             {
                             TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
                              Confirm.setEnabled(true);
                              //final int minutes = minResult;
@@ -197,6 +217,7 @@ public class RaportActivity extends AppCompatActivity {
                              ora = hourResult;
 
                          }
+
 
                     }
                     public void onNothingSelected(AdapterView<?> parent) {
@@ -264,6 +285,9 @@ public class RaportActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
+                intent.putExtra("day", day);
+                intent.putExtra("month", month);
+                intent.putExtra("year", year);
                 startActivity(intent);
             }
         });

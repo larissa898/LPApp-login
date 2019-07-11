@@ -35,6 +35,7 @@ public class LeavingPermissionList extends AppCompatActivity {
     private Button CancelList;
     private Button AddButton;
     private TextView CurrentDay;
+    public String Current;
     private int  day;
     private int month;
     private int year;
@@ -44,7 +45,8 @@ public class LeavingPermissionList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<LP> LpList;
     private int actualYear;
-    private String lpChild;
+    private Float total;
+    private TextView TotalOreZi;
 
 
 
@@ -75,6 +77,7 @@ public class LeavingPermissionList extends AppCompatActivity {
         CurrentDay = findViewById(R.id.textViewDayCurrent);
         AddButton = findViewById(R.id.buttonAddList);
         CancelList = findViewById(R.id.buttonCancelList);
+        TotalOreZi = findViewById(R.id.totalResult);
 
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
@@ -85,58 +88,49 @@ public class LeavingPermissionList extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         CurrentDay.setText(day + " "+ strMonths[month] + " " + year);
+
         DatabaseReference dbReference;
-        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").child(day + " " + strMonths[month] + " " + year);
+        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                child(day + " " + strMonths[month] + " " + year);
 
         dbReference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
                 if(dataSnapshot.exists())
-
                 {
-
+                    float sum = 0;
                     for(DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
-                        //for( DataSnapshot ceva : snapshot.getChildren() ) {
-
-//                            String pa2 = String.valueOf(ceva.getValue());
-//                            Log.d("pa2", pa2);
                             final LP lp  = snapshot.getValue(LP.class);
                             LpList.add(lp);
-
-                       // }
-
-
+                            String h = snapshot.child("total").getValue().toString();
+                            sum = sum + Float.parseFloat(h);
+                            total=sum;
                     }
-
-                    recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList );
+                    TotalOreZi.setText(String.valueOf(total));
+                    if(total==3.0 ){AddButton.setEnabled(false);}
+                    Current = String.valueOf(CurrentDay);
+                    recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList, day, month, year);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
-
                 }
-
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
+
         });
-
-
-        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay)){
+        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay) ){
             AddButton.setEnabled(false);
-
         }else{
             AddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(LeavingPermissionList.this, RaportActivity.class);
                     intent.putExtra("day", day);
+                    intent.putExtra("total", total);
                     intent.putExtra("month", month);
                     intent.putExtra("year", year);
                     Log.d("luna", String.valueOf(month));
@@ -144,8 +138,6 @@ public class LeavingPermissionList extends AppCompatActivity {
                 }
             });
         }
-
-
         CancelList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,6 +146,7 @@ public class LeavingPermissionList extends AppCompatActivity {
             }
         });
     }
+
 
 
 }
