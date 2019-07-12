@@ -5,21 +5,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterLP;
 import com.example.larisa.leavingpermissionapp.Model.LP;
-import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LPCalendarList extends AppCompatActivity {
+public class LPCalendarList extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView recyclerView;
     private RecycleViewAdapterLP recycleViewAdapterLP;
     private List<LP> lpList;
+    private Button backToCalendar;
+    private Button doneConfirming;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,5 +42,26 @@ public class LPCalendarList extends AppCompatActivity {
 
         recyclerView.setAdapter(recycleViewAdapterLP);
         recycleViewAdapterLP.notifyDataSetChanged();
+
+        backToCalendar = findViewById(R.id.backToCalendar);
+        doneConfirming =findViewById(R.id.finishedReviewing);
+
+        backToCalendar.setOnClickListener(this);
+        doneConfirming.setOnClickListener(this);
+
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.backToCalendar:
+                finish();
+                break;
+            case R.id.finishedReviewing:
+                finish();
+                break;
+
+
+        }
+}
 }

@@ -5,6 +5,7 @@ import android.hardware.usb.UsbRequest;
 import android.provider.ContactsContract;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.TestCalendar;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,8 +62,10 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
         usersList = new ArrayList<>();
 
+
         DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users");
+
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -72,9 +76,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                         usersList.add(user);
                     }
 
-
                     recycleViewAdapter = new RecycleViewAdapter(ViewTeam.this, usersList);
-
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
 
@@ -90,7 +92,9 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         });
 
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+
+
+ confirmButton.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
@@ -100,15 +104,15 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
                 final List<LP> LPlist = new ArrayList<>();
 
-                DatabaseReference dbReference;
+                DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
 
-                    dbReference = FirebaseDatabase.getInstance().getReference("Users");
+
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            LPlist.clear();
+
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
@@ -119,9 +123,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                                 LP lp = snapshot2.getValue(LP.class);
                                                 //Log.d("user has been absent since", lp.getFrom());
                                                 String date = snapshot1.getKey();
-
                                                 lp.setData(date);
-
                                                 LPlist.add(lp);
 
 
@@ -141,7 +143,6 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                             intent.putExtra("Lps", (Serializable) LPlist);
                             startActivity(intent);
 
-
                         }
 
 
@@ -155,7 +156,35 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                     });
 
 
+
                 }
+                dbReference.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                     LPlist.clear();
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
 
 
             }

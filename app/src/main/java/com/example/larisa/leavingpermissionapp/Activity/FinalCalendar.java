@@ -2,10 +2,14 @@ package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 
 import com.example.larisa.leavingpermissionapp.Model.LP;
@@ -31,6 +35,7 @@ import java.util.List;
 public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private List<LP> sendLP = new ArrayList<>();
+    private Button backToTeam;
 
 
 
@@ -44,6 +49,7 @@ public class FinalCalendar extends AppCompatActivity {
        setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
         final List<CalendarDay> EventDays = new ArrayList<>();
+        backToTeam=findViewById(R.id.backTeamButton);
 
 
 
@@ -65,12 +71,33 @@ public class FinalCalendar extends AppCompatActivity {
 
               @Override
               public void decorate(DayViewFacade view) {
+
                   view.addSpan(new DotSpan(Color.RED));
+
+
 
               }
           });
+
 //
       }
+  else {
+       String dateFormat = lp.getData();
+      final CalendarDay newDate = dayConverter(dateFormat);
+       calendarView.addDecorator(new DayViewDecorator() {
+           public boolean shouldDecorate(CalendarDay day) {
+               if(newDate.equals(day))
+                {
+                    EventDays.add(day);
+                }                return newDate.equals(day);
+             }
+
+             public void decorate(DayViewFacade view) {
+                 view.setBackgroundDrawable(getResources().getDrawable(R.drawable.greencircle2));
+
+            }
+         });
+    }
 
 
 
@@ -104,9 +131,12 @@ public class FinalCalendar extends AppCompatActivity {
 
   }
 
-
-
-
+backToTeam.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        finish();
+    }
+});
 
 
     }
@@ -125,4 +155,5 @@ public class FinalCalendar extends AppCompatActivity {
         return newDate;
 
     }
+
 }

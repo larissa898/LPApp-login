@@ -116,8 +116,9 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
 
         public void acceptLP(final LP LivingPerm, final int position) {
             DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
+
             Log.d("Must do something", LivingPerm.getFrom());
-            dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            dbReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -127,9 +128,11 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                                 for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
                                     int i = 0;
                                     for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                        if (i == position) {
+
+                                        if (i == position && snapshot1.getKey().equals(LivingPerm.getData())) {
                                             snapshot2.child("status").getRef().setValue("Confirmat");
-                                            return;
+                                            break;
+
                                         }
                                         else
                                         {
@@ -137,6 +140,7 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                                         }
 
                                     }
+
                                 }
 
                             }
@@ -172,10 +176,16 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                                 for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
                                     int i = 0;
                                     for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                        if (i == position) {
+                                        Log.d("Query returns", snapshot2.getKey());
+                                        if (i == position && snapshot1.getKey().equals(LivingPerm.getData())) {
                                             snapshot2.child("status").getRef().setValue("Refuzat");
+                                            return;
                                         }
-                                        i++;
+                                        else
+                                        {
+                                            i++;
+                                        }
+
                                     }
                                 }
 
