@@ -79,7 +79,7 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
             fromTimeLabel = v.findViewById(R.id.fromLP);
             toTimeLabel = v.findViewById(R.id.toLP);
             totalHoursLabel = v.findViewById(R.id.totalOre);
-            numeAngajat = v.findViewById(R.id.textViewNume);
+            numeAngajat = v.findViewById(R.id.textViewNumeEdit);
             fromTime = v.findViewById(R.id.textViewFromLP);
             toTime = v.findViewById(R.id.textViewToLP);
             totalHours = v.findViewById(R.id.textViewTotal);

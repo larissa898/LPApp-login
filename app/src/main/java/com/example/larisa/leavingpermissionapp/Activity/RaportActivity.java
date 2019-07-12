@@ -1,15 +1,12 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +14,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,10 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -51,27 +49,28 @@ public class RaportActivity extends AppCompatActivity {
     private int  day;
     private int month;
     private int year;
-    private String from;
-    private String to;
+    private String from1;
+    private String to1;
     private String status = "neconfirmat";
     private Float total;
     String first="";
     String second="";
     private int minn;
-
+    private  String[] listFinal;
+    private boolean[] takenIntervals;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
+        listFinal =  new String[24];
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raport);
-
         final String[] items = new String[]{"7:30", "8:00", "8:30", "9:00", "9:30",
                 "10:00", "10:30", "11:00", "11:30","12:00", "12:30", "13:00" ,"13:30",
                 "14:00", "14:30","15:00", "15:30", "16:00", "16:30","17:00", "17:30",
                 "18:00", "18:30", "19:00"};
+        takenIntervals = new boolean[items.length];
+        Arrays.fill(takenIntervals,false);
 
         final String[] strMonths = {"January",
                 "February",
@@ -86,7 +85,6 @@ public class RaportActivity extends AppCompatActivity {
                 "November",
                 "December"};
 
-
         Confirm = findViewById(R.id.ConfirmButtonRaport);
         From = findViewById(R.id.spinnerFrom);
         To = findViewById(R.id.spinnerTo);
@@ -98,8 +96,8 @@ public class RaportActivity extends AppCompatActivity {
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total",0);
-        from = getIntent().getStringExtra("from");
-        to = getIntent().getStringExtra("to");
+        from1= getIntent().getStringExtra("from");
+        to1 = getIntent().getStringExtra("to");
 
         date.setText(day + " "+ strMonths[month] + " " + year );
 
@@ -108,6 +106,67 @@ public class RaportActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
 
+        final DatabaseReference dbReference;
+        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                child(day + " " + strMonths[month] + " " + year);
+        final List<String> listFrom = new ArrayList<>();
+        final List<String> listTo = new ArrayList<>();
+        dbReference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listFrom.clear();
+                listTo.clear();
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        listFrom.add(String.valueOf(snapshot.child("from").getValue()));
+                        listTo.add(String.valueOf(snapshot.child("to").getValue()));
+                    }
+                }
+
+                if(listFrom.size()!=0){
+                    boolean foundFirstEntry = false;
+                    for (int j = 0; j < listFrom.size(); j++) {
+                        for (int i = 0; i < items.length; i++) {
+                            if (items[i].equals(listFrom.get(j))) {
+                                foundFirstEntry = true;
+                                takenIntervals[i] = true;
+                            } else if (foundFirstEntry) {
+                                if (items[i].equals(listTo.get(j))) {
+                                    foundFirstEntry = false;
+                                    takenIntervals[i] = true;
+                                } else {
+                                    takenIntervals[i] = true;
+                                }
+                            }
+                        }
+                    }
+                    int i=0;
+                    for (int j = 0; j < takenIntervals.length; j++) {
+                        if(takenIntervals[j]==false){
+
+                            listFinal[i]= items[j];
+                            Log.d("^",listFinal[i]);
+                            i++;
+                        }
+
+                    }
+                    ArrayAdapter<String> adapter;
+                    if(listFrom.size()==0){
+                        adapter = new ArrayAdapter<>(RaportActivity.this,
+                                android.R.layout.simple_spinner_dropdown_item, items);
+                    }else{
+                        adapter = new ArrayAdapter<>(RaportActivity.this,
+                                android.R.layout.simple_spinner_dropdown_item, listFinal);
+                    }
+                    From.setAdapter(adapter);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+
+        });
         final Query query =  functionRef.child(userId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -129,9 +188,8 @@ public class RaportActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);//set the spinners adapter to the previously created one.
 
-        From.setAdapter(adapter);
+
 
         Confirm.setEnabled(false);
 

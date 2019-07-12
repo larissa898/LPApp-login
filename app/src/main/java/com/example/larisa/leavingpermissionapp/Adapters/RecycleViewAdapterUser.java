@@ -4,20 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
-import com.example.larisa.leavingpermissionapp.Activity.FinalCalendar;
-import com.example.larisa.leavingpermissionapp.Activity.LeavingPermissionList;
-import com.example.larisa.leavingpermissionapp.Activity.RaportActivity;
-import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
+import com.example.larisa.leavingpermissionapp.Activity.EditActivity;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAdapterUser.ViewHolder> {
 
@@ -193,7 +186,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
 
 
             Context context = v.getContext();
-            Intent intent = new Intent(context, RaportActivity.class);
+            Intent intent = new Intent(context, EditActivity.class);
             intent.putExtra("from", lp.getFrom());
             intent.putExtra("to", lp.getTo());
             intent.putExtra("day", day);

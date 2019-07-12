@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.larisa.leavingpermissionapp">
+<manifest package="com.example.larisa.leavingpermissionapp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.LPCalendarList"></activity>
+        <activity android:name=".Activity.EditActivity"></activity>
+        <activity android:name=".Activity.LPCalendarList" />
         <activity android:name=".TestCalendar" />
         <activity android:name=".Activity.FinalCalendar" />
         <activity android:name=".Activity.RegisterActivity" />
@@ -19,7 +20,6 @@
         <activity android:name=".Activity.AddUser" />
         <activity android:name=".Activity.RaportActivity" />
         <activity android:name=".Activity.LeavingPermissionList" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

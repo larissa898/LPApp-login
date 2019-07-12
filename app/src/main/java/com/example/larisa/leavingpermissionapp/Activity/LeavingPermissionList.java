@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class LeavingPermissionList extends AppCompatActivity {
@@ -96,19 +97,20 @@ public class LeavingPermissionList extends AppCompatActivity {
         dbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                LpList.clear();
+               LpList.clear();
 
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                LpList.clear();
 
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 LpList.clear();
-                Log.d("!!!", String.valueOf(dataSnapshot.getValue()));
+
             }
 
             @Override
