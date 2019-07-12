@@ -77,6 +77,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
         viewHolder.To.setText(mylist.getTo());
         viewHolder.Status.setText(mylist.getStatus());
         viewHolder.Total.setText(String.valueOf(mylist.getTotal()));
+
     }
 
     @Override
@@ -113,14 +114,13 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
 
                 }
             });
-
         }
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.EditButton:
                     int position = getAdapterPosition();
                     LP LivingPerm = lp.get(position);
-                    editLp(LivingPerm);
+                    editLp(LivingPerm, v);
 
                     break;
                 case R.id.deleteButton:
@@ -152,26 +152,19 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                 public void onClick(View v) {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
-                   // Log.d("eeeeee", day+ " "+ strMonths[month ]+ " "+year);
                     dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
                             child(day+ " "+ strMonths[month] + " "+year);
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            lp.clear();
-//                            Log.d("@@@", String.valueOf(id));
                             String[] key = new String[6];
                             int j=0;
 
                             if(dataSnapshot.exists()){
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                                     key[j]=String.valueOf(snapshot.getKey());
-//                                    Log.d("!!!", String.valueOf(snapshot.getKey()));
                                     j++;
                                 }
-
-                                int i=0;
-                                //int k=0;
 
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren())
                                {
@@ -179,38 +172,35 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                                    if (snapshot.child("from").getValue().equals(lplp.getFrom()) && snapshot.child(
                                            "to").getValue().equals(lplp.getTo())) {
 
-                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(),
-                                               "Value: " + snapshot.getValue());
-                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(), "Key: " + snapshot.getKey());
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
-                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(), "List Size1: " + lp.size());
-                                       lp.remove(id);
-                                       Log.i(RecycleViewAdapterUser.class.getSimpleName(), "List Size2: " + lp.size());
                                        return;
-
-
                                    }
-
-
                                }
                                 notifyDataSetChanged();
                             }
-
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
 
                     });
-
                 }
             });
-
         }
 
-        public void editLp(final LP lp){
+        public void editLp(final LP lp, View v){
+
+
+            Context context = v.getContext();
+            Intent intent = new Intent(context, RaportActivity.class);
+            intent.putExtra("from", lp.getFrom());
+            intent.putExtra("to", lp.getTo());
+            intent.putExtra("day", day);
+            intent.putExtra("month", month);
+            intent.putExtra("year", year);
+            context.startActivity(intent);
+
 
         }
     }

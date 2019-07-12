@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class LeavingPermissionList extends AppCompatActivity {
 
     private Button CancelList;
     private Button AddButton;
+    public Button editButton;
     private TextView CurrentDay;
     public String Current;
     private int  day;
@@ -47,8 +49,6 @@ public class LeavingPermissionList extends AppCompatActivity {
     private int actualYear;
     private Float total;
     private TextView TotalOreZi;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,6 @@ public class LeavingPermissionList extends AppCompatActivity {
                 "November",
                 "December"};
 
-
-
         recyclerView = findViewById(R.id.recyclerViewUser);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -78,6 +76,7 @@ public class LeavingPermissionList extends AppCompatActivity {
         AddButton = findViewById(R.id.buttonAddList);
         CancelList = findViewById(R.id.buttonCancelList);
         TotalOreZi = findViewById(R.id.totalResult);
+        editButton =  findViewById(R.id.EditButton);
 
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
@@ -89,13 +88,15 @@ public class LeavingPermissionList extends AppCompatActivity {
 
         CurrentDay.setText(day + " "+ strMonths[month] + " " + year);
 
-        DatabaseReference dbReference;
+        final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
                 child(day + " " + strMonths[month] + " " + year);
+        LpList.clear();
 
         dbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                LpList.clear();
 
             }
 
@@ -106,7 +107,8 @@ public class LeavingPermissionList extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                LpList.clear();
+                Log.d("!!!", String.valueOf(dataSnapshot.getValue()));
             }
 
             @Override
@@ -139,16 +141,6 @@ public class LeavingPermissionList extends AppCompatActivity {
                     TotalOreZi.setText(String.valueOf(total));
                     if(total==3.0 ){AddButton.setEnabled(false);}
                     Current = String.valueOf(CurrentDay);
-                    /*Log.i(LeavingPermissionList.class.getSimpleName(), "List size: " + LpList.size());
-                    for (LP leavin : LpList) {
-                        Log.i(LeavingPermissionList.class.getSimpleName(), "Data: " + leavin.getData());
-                        Log.i(LeavingPermissionList.class.getSimpleName(), "Data: " + leavin.getFrom());
-
-                    }*/
-
-                   /* Log.i(LeavingPermissionList.class.getSimpleName(), "Day: " + day);
-                    Log.i(LeavingPermissionList.class.getSimpleName(), "Month: " + month);
-                    Log.i(LeavingPermissionList.class.getSimpleName(), "Year: " + year);*/
                     recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList, day, month, year);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
@@ -175,6 +167,7 @@ public class LeavingPermissionList extends AppCompatActivity {
                 }
             });
         }
+
         CancelList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

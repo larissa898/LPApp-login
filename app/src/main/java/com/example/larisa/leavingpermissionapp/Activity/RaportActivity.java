@@ -51,6 +51,8 @@ public class RaportActivity extends AppCompatActivity {
     private int  day;
     private int month;
     private int year;
+    private String from;
+    private String to;
     private String status = "neconfirmat";
     private Float total;
     String first="";
@@ -96,6 +98,8 @@ public class RaportActivity extends AppCompatActivity {
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total",0);
+        from = getIntent().getStringExtra("from");
+        to = getIntent().getStringExtra("to");
 
         date.setText(day + " "+ strMonths[month] + " " + year );
 
