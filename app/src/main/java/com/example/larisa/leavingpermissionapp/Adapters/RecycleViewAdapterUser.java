@@ -94,10 +94,10 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             To = v.findViewById(R.id.textViewTo);
             Total = v.findViewById(R.id.textViewTotal);
             Status=  v.findViewById(R.id.textViewStatus);
-            editButton =  v.findViewById(R.id.EditButton);
+            //editButton =  v.findViewById(R.id.EditButton);
             deleteButton =  v.findViewById(R.id.deleteButton);
 
-            editButton.setOnClickListener(this);
+           // editButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
 
             v.setOnClickListener(new View.OnClickListener() {
@@ -110,14 +110,14 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
         }
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.EditButton:
-                    int position = getAdapterPosition();
-                    LP LivingPerm = lp.get(position);
-                    editLp(LivingPerm, v);
-
-                    break;
+//                case R.id.EditButton:
+//                    int position = getAdapterPosition();
+//                    LP LivingPerm = lp.get(position);
+//                    editLp(LivingPerm, v);
+//
+//                    break;
                 case R.id.deleteButton:
-                    position = getAdapterPosition();
+                    int position = getAdapterPosition();
                     LP LivingPermission = lp.get(position);
                     deleteLP(position,LivingPermission);
                     break;
@@ -165,6 +165,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                                    if (snapshot.child("from").getValue().equals(lplp.getFrom()) && snapshot.child(
                                            "to").getValue().equals(lplp.getTo())) {
 
+
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
                                        return;
@@ -182,19 +183,19 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             });
         }
 
-        public void editLp(final LP lp, View v){
-
-
-            Context context = v.getContext();
-            Intent intent = new Intent(context, EditActivity.class);
-            intent.putExtra("from", lp.getFrom());
-            intent.putExtra("to", lp.getTo());
-            intent.putExtra("day", day);
-            intent.putExtra("month", month);
-            intent.putExtra("year", year);
-            context.startActivity(intent);
-
-
-        }
+//        public void editLp(final LP lp, View v){
+//
+//
+//            Context context = v.getContext();
+//            Intent intent = new Intent(context, EditActivity.class);
+//            intent.putExtra("from", lp.getFrom());
+//            intent.putExtra("to", lp.getTo());
+//            intent.putExtra("day", day);
+//            intent.putExtra("month", month);
+//            intent.putExtra("year", year);
+//            context.startActivity(intent);
+//
+//
+//        }
     }
 }

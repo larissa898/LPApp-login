@@ -77,7 +77,7 @@ public class LeavingPermissionList extends AppCompatActivity {
         AddButton = findViewById(R.id.buttonAddList);
         CancelList = findViewById(R.id.buttonCancelList);
         TotalOreZi = findViewById(R.id.totalResult);
-        editButton =  findViewById(R.id.EditButton);
+        //editButton =  findViewById(R.id.EditButton);
 
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
@@ -104,6 +104,7 @@ public class LeavingPermissionList extends AppCompatActivity {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 LpList.clear();
+
 
             }
 
@@ -153,7 +154,7 @@ public class LeavingPermissionList extends AppCompatActivity {
             }
 
         });
-        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay) ){
+        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay && month==actualMonth) ){
             AddButton.setEnabled(false);
         }else{
             AddButton.setOnClickListener(new View.OnClickListener() {
