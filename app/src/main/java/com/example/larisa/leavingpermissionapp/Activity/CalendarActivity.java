@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
-import com.example.larisa.leavingpermissionapp.Database.Database;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,7 +53,6 @@ public class CalendarActivity extends AppCompatActivity {
     private RecycleViewAdapterUser recyclerViewUser;
     private RecyclerView recyclerView;
     private List<LP> LpList ;
-    private Database db;
     public String Current;
 
 
@@ -88,8 +85,7 @@ public class CalendarActivity extends AppCompatActivity {
         calendarView = findViewById(R.id.calendarViewID);
         Angajat = findViewById(R.id.NumeAngajatCalendar);
         recyclerView = findViewById(R.id.recyclerViewUser);
-        //recyclerView.setHasFixedSize(true);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();

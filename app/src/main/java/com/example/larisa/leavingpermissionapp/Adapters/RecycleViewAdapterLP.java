@@ -1,6 +1,7 @@
 package com.example.larisa.leavingpermissionapp.Adapters;
 
 import android.content.Context;
+import android.os.HardwarePropertiesManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.larisa.leavingpermissionapp.Activity.ItemClickListener;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -17,13 +20,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapterLP.ViewHolder> {
 
     private Context context;
     private List<LP> lps = new ArrayList<>();
+    public HashMap<Integer,LP> modifiedLP = new HashMap<>();
+
+
 
     public RecycleViewAdapterLP(Context context, List<LP> lps) {
         this.context = context;
@@ -40,12 +48,21 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
     @Override
     public void onBindViewHolder(RecycleViewAdapterLP.ViewHolder holder, final int position) {
 
-        final LP lp = lps.get(position);
+        LP lp = lps.get(position);
         holder.numeAngajat.setText(lp.getNume());
         holder.fromTime.setText(lp.getFrom());
         holder.toTime.setText(lp.getTo());
         holder.totalHours.setText(lp.getTotal().toString());
         holder.status.setText(lp.getStatus());
+        holder.setItemClickListener((new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int pos) {
+
+
+                modifiedLP.put(position,lps.get(position));
+            }
+        }));
+
 
 
     }
@@ -71,6 +88,9 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
         public TextView statusLabel;
         public TextView status;
 
+        ItemClickListener itemClickListener;
+
+
 
         public ViewHolder(View v, final Context ctx) {
             super(v);
@@ -93,6 +113,14 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
             refuseButton.setOnClickListener(this);
 
 
+
+
+        }
+
+
+        public  void setItemClickListener(ItemClickListener ic)
+        {
+            this.itemClickListener  = ic;
         }
 
         public void onClick(View v) {
@@ -100,12 +128,14 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                 case R.id.acceptButton:
                     int position = getAdapterPosition();
                     LP LivingPerm = lps.get(position);
-                    acceptLP(LivingPerm, position);
+                    acceptLP(LivingPerm);
+                    this.itemClickListener.onItemClick(v, getLayoutPosition());
                     break;
                 case R.id.refuseButton:
                     position = getAdapterPosition();
                     LivingPerm = lps.get(position);
-                    refuseLP(LivingPerm, position);
+                    refuseLP(LivingPerm);
+                    this.itemClickListener.onItemClick(v, getLayoutPosition());
                     break;
 
 
@@ -114,97 +144,18 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
 
         }
 
-        public void acceptLP(final LP LivingPerm, final int position) {
-            DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
-
-            Log.d("Must do something", LivingPerm.getFrom());
-            dbReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.child("fullName").getValue(String.class).equals(LivingPerm.getNume())) {
-                                for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
-                                    int i = 0;
-                                    for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-
-                                        if (i == position && snapshot1.getKey().equals(LivingPerm.getData())) {
-                                            snapshot2.child("status").getRef().setValue("Confirmat");
-                                            break;
-
-                                        }
-                                        else
-                                        {
-                                            i++;
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-
-                }
-
-                @Override
-
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-
-                }
-            });
-
+        public void acceptLP(final LP LivingPerm) {
+            LivingPerm.setStatus("confirmat");
+            notifyDataSetChanged();
 
         }
 
-        public void refuseLP(final LP LivingPerm, final int position) {
-            DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
-            Log.d("Must do something", LivingPerm.getFrom());
-            dbReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        public void refuseLP(final LP LivingPerm) {
+            LivingPerm.setStatus("refuzat");
+            notifyDataSetChanged();
 
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.child("fullName").getValue(String.class).equals(LivingPerm.getNume())) {
-                                for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
-                                    int i = 0;
-                                    for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                        Log.d("Query returns", snapshot2.getKey());
-                                        if (i == position && snapshot1.getKey().equals(LivingPerm.getData())) {
-                                            snapshot2.child("status").getRef().setValue("Refuzat");
-                                            return;
-                                        }
-                                        else
-                                        {
-                                            i++;
-                                        }
-
-                                    }
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-
-                }
-
-                @Override
-
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-
-                }
-            });
         }
+
+
     }
 }
