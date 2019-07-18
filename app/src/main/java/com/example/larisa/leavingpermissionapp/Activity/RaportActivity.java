@@ -429,7 +429,7 @@ public class RaportActivity extends AppCompatActivity {
                     }
                 }
                 if( FromHour >= Integer.valueOf(hm1[0])){
-                    while (FromHour<= Integer.valueOf(mh2[0])){t
+                    while (FromHour<= Integer.valueOf(mh2[0])){
                         if(((FromMinutes==Integer.valueOf(30)))){
                             ToList.add(FromHour + 1 + ":" + "00");
                             ToList.add(FromHour + ":" + 30);
