@@ -15,7 +15,7 @@
     <string name="Parola_Angajat">Parola</string>
     <string name="save_angajat">Save</string>
     <string name="cancel_angajat">Cancel</string>
-    <string name="nume">Nume Angajat</string>
+    <string name="nume">Nume Angajat:</string>
     <string name="ok_button">OK</string>
     <string name="add_employee">Add new employee</string>
     <string name="Total">Total ore</string>
@@ -47,9 +47,11 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="title_activity_lpcalendar_list">LPCalendarList</string>
-    <string name="status">Status</string>
+    <string name="status">Status:</string>
     <string name="TotalRes">Total Ore:</string>
     <string name="Status">Status:</string>
+    <string name="back_to_team">Back</string>
+    <string name="back_to_calendar">Back</string>
+    <string name="done_confirming">Done</string>
     <string name="Add">Add</string>
-    <string name="Edit">Edit</string>
 </resources>

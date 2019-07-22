@@ -48,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mStateListener;
 
     @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -92,6 +97,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = userNM.getText().toString();
                 String pwd = password.getText().toString();
+                if(email.equals("") || pwd.equals(""))
+                {
+                    Toast.makeText(MainActivity.this, "Please enter your credentials", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
 
 //Authenticate with fire base
                 firebaseAuth.signInWithEmailAndPassword(email, pwd)
@@ -118,11 +130,18 @@ public class MainActivity extends AppCompatActivity {
                                                     Log.d("Query", "This is a team leader");
                                                     Intent intent = new Intent(MainActivity.this, ViewTeam.class);
                                                     startActivity(intent);
+                                                    finish();
+                                                    userNM.setText("");
+                                                    password.setText("");
                                                 }
                                                 else
                                                 {
+
                                                     Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
                                                     startActivity(intent);
+                                                    finish();
+                                                    userNM.setText("");
+                                                    password.setText("");
 
                                                 }
                                             }
@@ -153,21 +172,25 @@ public class MainActivity extends AppCompatActivity {
 
 
             });
+                }
         }});
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
                  startActivity(intent);
+                 finish();
             }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                finishAffinity();
             }
         });
+
 
     }
 }

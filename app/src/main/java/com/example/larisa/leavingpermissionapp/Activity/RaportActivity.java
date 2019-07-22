@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,6 +58,7 @@ public class RaportActivity extends AppCompatActivity {
     private int minn;
     private String[] listFinal;
     private boolean[] takenIntervals;
+    private String monthActual;
     String[] toListFirebase = new String[]{};
     String[] fromListFirebase = new String[]{};
 
@@ -72,21 +72,9 @@ public class RaportActivity extends AppCompatActivity {
                 "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
                 "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
                 "18:00", "18:30", "19:00"};
+
         takenIntervals = new boolean[items.length];
         Arrays.fill(takenIntervals, false);
-        final String[] strMonths = {"January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"};
-
         Confirm = findViewById(R.id.ConfirmButtonRaport);
         From = findViewById(R.id.spinnerFrom);
         To = findViewById(R.id.spinnerTo);
@@ -100,14 +88,15 @@ public class RaportActivity extends AppCompatActivity {
         total = getIntent().getFloatExtra("total", 0);
         from1 = getIntent().getStringExtra("from");
         to1 = getIntent().getStringExtra("to");
-        date.setText(day + " " + strMonths[month] + " " + year);
+        monthActual =  getIntent().getStringExtra("monthActual");
+        date.setText(day + " " + monthActual + " " + year);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
         final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
-                child(day + " " + strMonths[month] + " " + year);
+                child(day + " " + monthActual + " " + year);
         final List<String> listFrom = new ArrayList<>();
         final List<String> listTo = new ArrayList<>();
         dbReference.addValueEventListener(new ValueEventListener() {
@@ -122,36 +111,19 @@ public class RaportActivity extends AppCompatActivity {
                         listTo.add(valueOf(snapshot.child("to").getValue()));
                     }
                 }
-                int j;
+
                 toListFirebase = new String[listFrom.size() + 1];
                 fromListFirebase = new String[listFrom.size() + 1];
-                if (listFrom.size() != 0) {
-                    boolean foundFirstEntry = false;
-                    for (j = 0; j < listFrom.size(); j++) {
-                        for (int i = 0; i < items.length; i++) {
-                            if (items[i].equals(listFrom.get(j))) {
-                                foundFirstEntry = true;
-                                takenIntervals[i] = true;
-                                fromListFirebase[j] = items[i];
-                            } else if (foundFirstEntry) {
-                                if (items[i].equals(listTo.get(j))) {
-                                    foundFirstEntry = false;
-                                    takenIntervals[i] = false;
-                                    toListFirebase[j] = items[i];
-                                } else {
-                                    takenIntervals[i] = true;
-                                }
-                            }
-                        }
-                    }
+                takenIntervals = GetTakenInterval( listFrom,    listTo,  items );
+
                     int i = 0;
-                    for (j = 0; j < takenIntervals.length; j++) {
+                    for (int j = 0; j < takenIntervals.length; j++) {
                         if (takenIntervals[j] == false) {
                             listFinal[i] = items[j];
                             i++;
                         }
                     }
-                }
+
                 toListFirebase[listFrom.size()] = "20:00";
                 fromListFirebase[listFrom.size()] = "20:00";
                 ArrayAdapter<String> adapter;
@@ -280,22 +252,45 @@ public class RaportActivity extends AppCompatActivity {
                 intent.putExtra("day", day);
                 intent.putExtra("month", month);
                 intent.putExtra("year", year);
+                intent.putExtra("monthActual", monthActual);
                 startActivity(intent);
+
             }
         });
         Beckraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
-                intent.putExtra("day", day);
-                intent.putExtra("month", month);
-                intent.putExtra("year", year);
-                startActivity(intent);
+                finish();
             }
         });
 
     }
 
+
+    boolean[] GetTakenInterval(List listFrom, List listTo , String[] items){
+
+        if (listFrom.size() != 0) {
+            boolean foundFirstEntry = false;
+            for (int j = 0; j < listFrom.size(); j++) {
+                for (int i = 0; i < items.length; i++) {
+                    if (items[i].equals(listFrom.get(j))) {
+                        foundFirstEntry = true;
+                        takenIntervals[i] = true;
+                        fromListFirebase[j] = items[i];
+                    } else if (foundFirstEntry) {
+                        if (items[i].equals(listTo.get(j))) {
+                            foundFirstEntry = false;
+                            takenIntervals[i] = false;
+                            toListFirebase[j] = items[i];
+                        } else {
+                            takenIntervals[i] = true;
+                        }
+                    }
+                }
+            }
+        }
+        return takenIntervals;
+    }
 
     List<String> GenerateList(List<String> listFrom, int FromHour, int FromMinutes) {
         Boolean ok = false;
@@ -350,6 +345,10 @@ public class RaportActivity extends AppCompatActivity {
                                 ToList.add(FromHour + ":" + 30);
                                 ToList.add(FromHour + 1 + ":" + "00");
                                 FromHour++;
+                            }
+                            if(FromMinutes != Integer.valueOf(30) &&
+                                    Integer.valueOf(FromListM[index]) == 30){
+                                ToList.add(FromHour + ":" + 30);
                             }
                         }
                    }

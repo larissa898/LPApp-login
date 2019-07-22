@@ -28,28 +28,17 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     private Context context;
     private List<LP> lp = new ArrayList<>();
     private LayoutInflater inflater;
+    String monthActual;
     private int day;
     private int month;
     private int year;
-    String[] strMonths = {"January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"};
-
-    public RecycleViewAdapterUser(Context context, List<LP> lp, int day, int month, int year) {
+    public RecycleViewAdapterUser(Context context, List<LP> lp, int day, int month, int year, String monthActual) {
         this.context = context;
         this.lp = lp;
         this.day = day;
         this.month = month;
         this.year = year;
+        this.monthActual = monthActual;
     }
 
     @NonNull
@@ -130,7 +119,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
                     dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
-                            child(day+ " "+ strMonths[month] + " "+year);
+                            child(day+ " "+  monthActual+ " "+year);
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -148,6 +137,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                                            "to").getValue().equals(lplp.getTo())) {
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
+                                       lp.clear();
                                        return;
                                    }
                                }

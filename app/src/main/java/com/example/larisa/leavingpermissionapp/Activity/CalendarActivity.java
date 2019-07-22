@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -17,9 +16,7 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
-import com.example.larisa.leavingpermissionapp.Database.Database;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,13 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -52,6 +46,7 @@ public class CalendarActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
     public String Current;
+    private String actualM;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -138,10 +133,10 @@ public class CalendarActivity extends AppCompatActivity {
                             intent.putExtra("actualDay", actualDay);
                             intent.putExtra("actualMonth", actualMonth);
                             intent.putExtra("actualYear", actualYear);
+                            actualM=strMonths[month];
+                            intent.putExtra("monthActual", actualM);
                             Current = (actualDay + " " + actualMonth+ " "+actualYear);
                             startActivity(intent);
-                            onRestart();
-
                         }
                     }
                     else {     // If not double click....
@@ -170,6 +165,9 @@ public class CalendarActivity extends AppCompatActivity {
         CancelCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(CalendarActivity.this
+                        , MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });

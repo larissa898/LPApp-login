@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+  -->
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.LPCalendarList">
+
+<android.support.v7.widget.RecyclerView android:id="@+id/recycleViewLP"
+    android:layout_width="374dp"
+    android:layout_height="589dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.38"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.269"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    <Button
+    android:id="@+id/backToCalendar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:text="@string/back_to_calendar"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.055"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/recycleViewLP"
+    app:layout_constraintVertical_bias="0.227" />
+
+    <Button
+    android:id="@+id/finishedReviewing"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="28dp"
+    android:layout_marginStart="8dp"
+    android:text="@string/done_confirming"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.954"
+    app:layout_constraintStart_toStartOf="@+id/backToCalendar"
+    app:layout_constraintTop_toBottomOf="@+id/recycleViewLP"
+    app:layout_constraintVertical_bias="0.227" />
+    </android.support.constraint.ConstraintLayout>

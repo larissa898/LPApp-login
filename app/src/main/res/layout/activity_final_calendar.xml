@@ -21,4 +21,35 @@
         app:mcv_selectionColor="#00F"
         app:mcv_showOtherDates="all" />
 
+    <Button
+        android:id="@+id/backTeamButton"
+        android:layout_width="98dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/back_to_team"
+        android:textColor="@color/textColor"
+        android:background="@color/buttonColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.872" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="256dp"
+        android:layout_height="94dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/expleologo" />
+
 </android.support.constraint.ConstraintLayout>
