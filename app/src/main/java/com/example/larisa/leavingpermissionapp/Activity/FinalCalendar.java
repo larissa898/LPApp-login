@@ -15,25 +15,16 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
-import com.prolificinteractive.materialcalendarview.format.DayFormatter;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
-
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.HashMap;
 import java.util.List;
 
 public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private List<LP> sendLP = new ArrayList<>();
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +40,6 @@ public class FinalCalendar extends AppCompatActivity {
 
   for (final LP lp : lps)
   {
-
       if(lp.getStatus().equals("neconfirmat"))
       {  String dateFormat = lp.getData();
           final CalendarDay newDate = dayConverter(dateFormat);
@@ -66,17 +56,9 @@ public class FinalCalendar extends AppCompatActivity {
               @Override
               public void decorate(DayViewFacade view) {
                   view.addSpan(new DotSpan(Color.RED));
-
               }
           });
-//
       }
-
-
-
-
-
-
       calendarView.setOnDateLongClickListener(new OnDateLongClickListener() {
           @Override
           public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
@@ -93,22 +75,11 @@ public class FinalCalendar extends AppCompatActivity {
                   intent.putExtra("TodayLP", (Serializable)sendLP);
                   startActivity(intent);
                   sendLP.clear();
-
-
-
               }
-
-
           }
       });
 
   }
-
-
-
-
-
-
     }
     CalendarDay dayConverter (String date)
     { SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
@@ -116,8 +87,6 @@ public class FinalCalendar extends AppCompatActivity {
         String[] convertedDate = new String[0];
         try {
             convertedDate = (sdf2.format(sdf.parse(date))).split("-");
-
-
         } catch (ParseException e) {
             e.printStackTrace();
         }

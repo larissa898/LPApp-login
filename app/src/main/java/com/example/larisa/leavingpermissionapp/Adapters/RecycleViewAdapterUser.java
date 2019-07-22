@@ -2,7 +2,6 @@ package com.example.larisa.leavingpermissionapp.Adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.larisa.leavingpermissionapp.Activity.EditActivity;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,7 +18,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +73,6 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     public int getItemCount() {
         return lp.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView From;
@@ -86,7 +81,6 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
         public TextView Total;
         public Button editButton;
         public Button deleteButton;
-
         public ViewHolder(View v, final Context ctx) {
             super(v);
             context = ctx;
@@ -94,10 +88,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             To = v.findViewById(R.id.textViewTo);
             Total = v.findViewById(R.id.textViewTotal);
             Status=  v.findViewById(R.id.textViewStatus);
-            //editButton =  v.findViewById(R.id.EditButton);
             deleteButton =  v.findViewById(R.id.deleteButton);
-
-           // editButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
 
             v.setOnClickListener(new View.OnClickListener() {
@@ -110,12 +101,6 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
         }
         public void onClick(View v) {
             switch (v.getId()){
-//                case R.id.EditButton:
-//                    int position = getAdapterPosition();
-//                    LP LivingPerm = lp.get(position);
-//                    editLp(LivingPerm, v);
-//
-//                    break;
                 case R.id.deleteButton:
                     int position = getAdapterPosition();
                     LP LivingPermission = lp.get(position);
@@ -123,7 +108,6 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     break;
             }
         }
-
         public void deleteLP (final int id, final LP lplp){
             alertDialogBuilder = new AlertDialog.Builder(context);
             inflater = LayoutInflater.from(context);
@@ -158,14 +142,10 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                                     key[j]=String.valueOf(snapshot.getKey());
                                     j++;
                                 }
-
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren())
                                {
-
                                    if (snapshot.child("from").getValue().equals(lplp.getFrom()) && snapshot.child(
                                            "to").getValue().equals(lplp.getTo())) {
-
-
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
                                        return;
@@ -182,20 +162,5 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                 }
             });
         }
-
-//        public void editLp(final LP lp, View v){
-//
-//
-//            Context context = v.getContext();
-//            Intent intent = new Intent(context, EditActivity.class);
-//            intent.putExtra("from", lp.getFrom());
-//            intent.putExtra("to", lp.getTo());
-//            intent.putExtra("day", day);
-//            intent.putExtra("month", month);
-//            intent.putExtra("year", year);
-//            context.startActivity(intent);
-//
-//
-//        }
     }
 }

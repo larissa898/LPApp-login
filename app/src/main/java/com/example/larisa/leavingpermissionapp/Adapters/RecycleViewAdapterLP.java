@@ -24,7 +24,6 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
 
     private Context context;
     private List<LP> lps = new ArrayList<>();
-
     public RecycleViewAdapterLP(Context context, List<LP> lps) {
         this.context = context;
         this.lps = lps;
@@ -39,25 +38,19 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
 
     @Override
     public void onBindViewHolder(RecycleViewAdapterLP.ViewHolder holder, final int position) {
-
         final LP lp = lps.get(position);
         holder.numeAngajat.setText(lp.getNume());
         holder.fromTime.setText(lp.getFrom());
         holder.toTime.setText(lp.getTo());
         holder.totalHours.setText(lp.getTotal().toString());
         holder.status.setText(lp.getStatus());
-
-
     }
-
 
     @Override
     public int getItemCount() {
         return lps.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         public TextView numeAngajatLabel;
         public TextView fromTimeLabel;
         public TextView toTimeLabel;
@@ -70,7 +63,6 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
         public Button refuseButton;
         public TextView statusLabel;
         public TextView status;
-
 
         public ViewHolder(View v, final Context ctx) {
             super(v);
@@ -87,12 +79,8 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
             refuseButton = v.findViewById(R.id.refuseButton);
             statusLabel = v.findViewById(R.id.statusLP);
             status = v.findViewById(R.id.textViewStatus);
-
-
             acceptButton.setOnClickListener(this);
             refuseButton.setOnClickListener(this);
-
-
         }
 
         public void onClick(View v) {
@@ -107,8 +95,6 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                     LivingPerm = lps.get(position);
                     refuseLP(LivingPerm, position);
                     break;
-
-
             }
 
 
@@ -120,7 +106,6 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
             dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.child("fullName").getValue(String.class).equals(LivingPerm.getNume())) {
@@ -135,37 +120,26 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                                         {
                                             i++;
                                         }
-
                                     }
                                 }
-
                             }
-
                         }
-
                     }
-
 
                 }
 
                 @Override
-
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
 
                 }
             });
-
-
         }
-
         public void refuseLP(final LP LivingPerm, final int position) {
             DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
             Log.d("Must do something", LivingPerm.getFrom());
             dbReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.child("fullName").getValue(String.class).equals(LivingPerm.getNume())) {
@@ -178,20 +152,13 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                                         i++;
                                     }
                                 }
-
                             }
-
                         }
-
                     }
-
-
                 }
 
                 @Override
-
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
 
                 }
             });

@@ -47,34 +47,33 @@ public class RaportActivity extends AppCompatActivity {
     public int minnn;
     public int ora;
     private TextView TotalOre;
-    private int  day;
+    private int day;
     private int month;
     private int year;
     private String from1;
     private String to1;
     private String status = "neconfirmat";
     private Float total;
-    String first="";
-    String second="";
+    String first = "";
+    String second = "";
     private int minn;
-    private  String[] listFinal;
+    private String[] listFinal;
     private boolean[] takenIntervals;
-    String[] da = new String[]{};
-    String[] nu = new String[]{};
+    String[] toListFirebase = new String[]{};
+    String[] fromListFirebase = new String[]{};
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        listFinal =  new String[24];
+        listFinal = new String[24];
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raport);
         final String[] items = new String[]{"7:30", "8:00", "8:30", "9:00", "9:30",
-                "10:00", "10:30", "11:00", "11:30","12:00", "12:30", "13:00" ,"13:30",
-                "14:00", "14:30","15:00", "15:30", "16:00", "16:30","17:00", "17:30",
+                "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+                "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
                 "18:00", "18:30", "19:00"};
         takenIntervals = new boolean[items.length];
-        Arrays.fill(takenIntervals,false);
-
+        Arrays.fill(takenIntervals, false);
         final String[] strMonths = {"January",
                 "February",
                 "March",
@@ -95,19 +94,17 @@ public class RaportActivity extends AppCompatActivity {
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
         Beckraport = findViewById(R.id.buttonBackRaport);
-        day =  getIntent().getIntExtra("day",0);
-        month = getIntent().getIntExtra("month",0);
+        day = getIntent().getIntExtra("day", 0);
+        month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
-        total = getIntent().getFloatExtra("total",0);
-        from1= getIntent().getStringExtra("from");
+        total = getIntent().getFloatExtra("total", 0);
+        from1 = getIntent().getStringExtra("from");
         to1 = getIntent().getStringExtra("to");
-
-        date.setText(day + " "+ strMonths[month] + " " + year );
-
+        date.setText(day + " " + strMonths[month] + " " + year);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
+        final DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
         final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
                 child(day + " " + strMonths[month] + " " + year);
@@ -126,62 +123,62 @@ public class RaportActivity extends AppCompatActivity {
                     }
                 }
                 int j;
-                 da = new String[listFrom.size()+1];
-                 nu = new String[listFrom.size()];
-                if(listFrom.size()!=0){
+                toListFirebase = new String[listFrom.size() + 1];
+                fromListFirebase = new String[listFrom.size() + 1];
+                if (listFrom.size() != 0) {
                     boolean foundFirstEntry = false;
-                    for ( j = 0; j < listFrom.size(); j++) {
+                    for (j = 0; j < listFrom.size(); j++) {
                         for (int i = 0; i < items.length; i++) {
                             if (items[i].equals(listFrom.get(j))) {
                                 foundFirstEntry = true;
                                 takenIntervals[i] = true;
-                                nu[j]=items[i];
+                                fromListFirebase[j] = items[i];
                             } else if (foundFirstEntry) {
                                 if (items[i].equals(listTo.get(j))) {
                                     foundFirstEntry = false;
                                     takenIntervals[i] = false;
-
-                                    da[j]=items[i];
-
+                                    toListFirebase[j] = items[i];
                                 } else {
                                     takenIntervals[i] = true;
                                 }
                             }
                         }
                     }
-                    int i=0;
+                    int i = 0;
                     for (j = 0; j < takenIntervals.length; j++) {
-                        if(takenIntervals[j]==false){
-                            listFinal[i]= items[j];
-                            Log.d("^",listFinal[i]);
+                        if (takenIntervals[j] == false) {
+                            listFinal[i] = items[j];
                             i++;
                         }
                     }
                 }
+                toListFirebase[listFrom.size()] = "20:00";
+                fromListFirebase[listFrom.size()] = "20:00";
                 ArrayAdapter<String> adapter;
-                if(listFrom.size()==0){
+                if (listFrom.size() == 0) {
                     adapter = new ArrayAdapter<>(RaportActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, items);
-                }else{
+                } else {
                     adapter = new ArrayAdapter<>(RaportActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, listFinal);
                 }
                 From.setAdapter(adapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-        final Query query =  functionRef.child(userId);
+        final Query query = functionRef.child(userId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                {
+                if (dataSnapshot.exists()) {
                     String nume = dataSnapshot.child("fullName").getValue(String.class);
                     Nume.setText(nume);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -193,59 +190,61 @@ public class RaportActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 first = From.getSelectedItem().toString();
                 String[] hourMinFrom = first.split(":");
-                int FromMinutes  = Integer.valueOf(hourMinFrom[1]);
+                int FromMinutes = Integer.valueOf(hourMinFrom[1]);
                 int FromHour = Integer.valueOf(hourMinFrom[0]);
                 List<String> ToList = new ArrayList<>();
+                Log.d("*****" , String.valueOf(FromHour));
 
                 ToList = GenerateList(listFrom, FromHour, FromMinutes);
+
                 ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
                 To.setAdapter(adapterTo);
-                To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+                To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String[] hourMinFrom = first.split(":");
                         second = To.getSelectedItem().toString();
                         String[] hourMinTo = second.split(":");
-                        int hourResult=0;
-                        int  minResult=0;
-                        if( Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])){
-                             hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
-                             minResult = 30;
+                        int hourResult = 0;
+                        int minResult = 0;
+                        if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
+                            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
+                            minResult = 30;
                         } else {
-                             hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
-                             minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
+                            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
+                            minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
                         }
-                        int plus =0;
-                        int minfin=0;
-                        if(total%10 ==3){
+                        int plus = 0;
+                        int minfin = 0;
+                        if (total % 10 == 3) {
                             TotalOre.setText("No!");
                         }
-                        if(minResult ==30 && (total-total%10)==0.5){
-                            plus =1;
-                            minfin=0;
+                        if (minResult == 30 && (total - total % 10) == 0.5) {
+                            plus = 1;
+                            minfin = 0;
 
-                        }else if((minResult==30 && (total-total%10)==0) ||(minResult==0 && (total-total%10)==0.5) )
-                        {
-                         minfin=30;
-                        }else if((minResult==0 && (total-total%10)==0)) {
-                            minfin=0;
+                        } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
+                            minfin = 30;
+                        } else if ((minResult == 0 && (total - total % 10) == 0)) {
+                            minfin = 0;
                         }
 
-                        if( (((hourResult + (total%10)) >3) ||((((hourResult + (total%10)+ plus) ==3) && (minfin!=0)))))
-                        {
-                             TotalOre.setText("Select again!");
-                             Confirm.setEnabled(false);
-                         } else {
+                        if ((((hourResult + (total % 10)) > 3) || ((((hourResult + (total % 10) + plus) == 3) && (minfin != 0))))) {
+                            TotalOre.setText("Select again!");
+                            Confirm.setEnabled(false);
+                        } else {
                             TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
                             Confirm.setEnabled(true);
                             minnn = minResult;
                             ora = hourResult;
                         }
                     }
+
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
 
                 });
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -253,27 +252,26 @@ public class RaportActivity extends AppCompatActivity {
         Confirm.setOnClickListener(new View.OnClickListener() {
             DateFormat df = new SimpleDateFormat("HH:mm:ss");
             String time = df.format(Calendar.getInstance().getTime());
+
             @Override
             public void onClick(View v) {
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists())
-                        {
-                            String nume =dataSnapshot.child("fullName").getValue(String.class);
+                        if (dataSnapshot.exists()) {
+                            String nume = dataSnapshot.child("fullName").getValue(String.class);
                             Log.d("data", "exists");
-                            Float total ;
-                            if(minnn == 30){
-                                total = Float.valueOf(valueOf(ora+ ".5") );
+                            Float total;
+                            if (minnn == 30) {
+                                total = Float.valueOf(valueOf(ora + ".5"));
+                            } else {
+                                total = Float.valueOf(valueOf(ora));
                             }
-                            else
-                            {
-                                total = Float.valueOf(valueOf(ora) );
-                            }
-                            LP lp = new LP(nume,From.getSelectedItem().toString() ,To.getSelectedItem().toString(),total,status);
+                            LP lp = new LP(nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
                             FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
@@ -298,164 +296,65 @@ public class RaportActivity extends AppCompatActivity {
 
     }
 
-    List<String> GenerateList (List<String> listFrom, int FromHour, int FromMinutes){
+
+    List<String> GenerateList(List<String> listFrom, int FromHour, int FromMinutes) {
+        Boolean ok = false;
         List<String> ToList = new ArrayList<>();
-        switch (listFrom.size()){
-            case 0: if(     ((FromHour ==  8 ) && (FromMinutes == 0)) || ((FromHour ==  9) &&  (FromMinutes == 0)) ||
-                    ((FromHour ==  10) && (FromMinutes == 0)) || ((FromHour ==  11) && (FromMinutes == 0)) ||
-                    ((FromHour ==  12) && (FromMinutes == 0)) || ((FromHour ==  13) && (FromMinutes == 0)) ||
-                    ((FromHour ==  14) && (FromMinutes == 0)) || ((FromHour ==  15) && (FromMinutes == 0)) ||
-                    ((FromHour ==  16) && (FromMinutes == 0)) || ((FromHour ==  17) && (FromMinutes == 0)) ||
-                    ((FromHour ==  18) && (FromMinutes == 0)) || ((FromHour ==  19) && (FromMinutes == 0))) {
-                for(int j=0; j<= 2*(20-FromHour); j=j+2)
-                {
-                    ToList.add(FromHour   +":"+ 30 );
-                    ToList.add(FromHour +1 + ":" + "00");
+        String[] FromListH = new String[listFrom.size()+1];
+        String[] FromListM = new String[listFrom.size()+1];
+        String[] ToListH = new String[listFrom.size()+1];
+        String[] ToListM = new String[listFrom.size()+1];
+        int iterator;
+        int index;
+        for (index = 0; index < listFrom.size()  +1 ; index++) {
+            String[] hourMinToListFirs = toListFirebase[index].split(":");
+            String[] hourMinFromListFirst = fromListFirebase[index].split(":");
+            FromListH[index] = hourMinFromListFirst[0];
+            Log.d("***", FromListH[index]);
+            FromListM[index] = hourMinFromListFirst[1];
+            ToListH[index] = hourMinToListFirs[0];
+            ToListM[index] = hourMinToListFirs[1];
+        }
+        if (listFrom.size() == 0) {
+            if (((FromHour == 8) && (FromMinutes == 0)) || ((FromHour == 9) && (FromMinutes == 0)) ||
+                    ((FromHour == 10) && (FromMinutes == 0)) || ((FromHour == 11) && (FromMinutes == 0)) ||
+                    ((FromHour == 12) && (FromMinutes == 0)) || ((FromHour == 13) && (FromMinutes == 0)) ||
+                    ((FromHour == 14) && (FromMinutes == 0)) || ((FromHour == 15) && (FromMinutes == 0)) ||
+                    ((FromHour == 16) && (FromMinutes == 0)) || ((FromHour == 17) && (FromMinutes == 0)) ||
+                    ((FromHour == 18) && (FromMinutes == 0)) || ((FromHour == 19) && (FromMinutes == 0))) {
+                for (int j = 0; j <= 2 * (20 - FromHour); j = j + 2) {
+                    ToList.add(FromHour + ":" + 30);
+                    ToList.add(FromHour + 1 + ":" + "00");
                     FromHour++;
                 }
-            }else{
-                for(int j=0; j<= 2*(18-FromHour); j=j+2)
-                {
+            } else {
+                for (int j = 0; j <= 2 * (18 - FromHour); j = j + 2) {
                     ToList.add(FromHour + 1 + ":" + "00");
                     ToList.add(FromHour + ":" + 30);
                     FromHour++;
                 }
             }
-                break;
-            case 1:
-                String[] hm = da[0].split(":");
-                String[] mh = nu[0].split(":");
-                if(FromHour >= Integer.valueOf(hm[0]) && (FromMinutes >= Integer.valueOf(hm[1]))){
-                    while (FromHour<= 19){
-                        if(((FromMinutes==Integer.valueOf(30)))){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
+        }else if (listFrom.size() > 0){
+            for (iterator = 0; iterator < listFrom.size()+1; iterator++) {
+                for (index = 0; index < listFrom.size()+1 ; index++) {
+                    if ((FromHour < Integer.valueOf(FromListH[index]) && ok==false) ||
+                            (FromHour == Integer.valueOf(FromListH[index]) &&
+                                    FromMinutes < Integer.valueOf(FromListM[index]) && ok==false) ) {
+                        ok=true;
+                        while (FromHour < Integer.valueOf(FromListH[index])) {
+                            if (((FromMinutes == Integer.valueOf(30)))) {
+                                ToList.add(FromHour + 1 + ":" + "00");
+                                ToList.add(FromHour + 1 + ":" + 30);
+                                FromHour++;
+                            } else {
+                                ToList.add(FromHour + ":" + 30);
+                                ToList.add(FromHour + 1 + ":" + "00");
+                                FromHour++;
+                            }
                         }
-                    }
+                   }
                 }
-                if (FromHour < Integer.valueOf(mh[0]) + Integer.valueOf(mh[1])){
-                    while (FromHour<( Integer.valueOf(mh[0]) )){
-                        if(((FromMinutes==Integer.valueOf(30)))){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }
-                }
-                break;
-            case 2:
-                hm = da[0].split(":");
-                mh = nu[0].split(":");
-                String[] hm1 = da[1].split(":");
-                String[] mh1 = nu[1].split(":");
-                if(FromHour < Integer.valueOf(mh[0]) ){
-                    while (FromHour<=(Integer.valueOf(mh[0]))){
-                        if(FromMinutes==30){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }}
-                if(FromHour >= ( Integer.valueOf(hm[0]))){
-                    while (FromHour <= Integer.valueOf(mh1[0])){
-                        if(FromMinutes==30){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }
-                }
-                if( FromHour > Integer.valueOf(hm1[0])){
-                    while (FromHour<= 19){
-                        if(((FromMinutes==Integer.valueOf(30)))){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }
-                }
-                break;
-            case 3:
-                hm = da[0].split(":");
-                mh = nu[0].split(":");
-                hm1 = da[1].split(":");
-                mh1 = nu[1].split(":");
-                String[] hm2 = da[2].split(":");
-                String[] mh2 = nu[2].split(":");
-                if(FromHour < Integer.valueOf(mh[0]) ){
-                    while (FromHour<( Integer.valueOf(mh[0]))){
-                        if(FromMinutes==Integer.valueOf(30)){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }}
-                if(FromHour >= ( Integer.valueOf(hm[0]))){
-                    while (FromHour <= Integer.valueOf(mh1[0])){
-                        if(FromMinutes==Integer.valueOf(30)){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }
-                }
-                if( FromHour >= Integer.valueOf(hm1[0])){
-                    while (FromHour<= Integer.valueOf(mh2[0])){
-                        if(((FromMinutes==Integer.valueOf(30)))){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }
-                }
-                if( FromHour >= Integer.valueOf(hm2[0])){
-                    while (FromHour<=Integer.valueOf(19)){
-                        if(((FromMinutes==Integer.valueOf(30)))){
-                            ToList.add(FromHour + 1 + ":" + "00");
-                            ToList.add(FromHour + ":" + 30);
-                            FromHour++;
-                        }else{
-                            ToList.add(FromHour   +":"+ 30 );
-                            ToList.add(FromHour +1 + ":" + "00");
-                            FromHour++;
-                        }
-                    }
-                }
-
-                break;
+            }
         }
         return ToList;
     }

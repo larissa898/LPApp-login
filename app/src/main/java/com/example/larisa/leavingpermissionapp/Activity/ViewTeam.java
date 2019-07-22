@@ -41,25 +41,18 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
     private RecyclerView recyclerView;
     private RecycleViewAdapter recycleViewAdapter;
     private List<User> usersList;
-
     private Button confirmButton;
     private TextView welcomText;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_team);
-
-
         recyclerView = findViewById(R.id.recycleViewActivity);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         confirmButton = findViewById(R.id.confirmButton);
         welcomText = findViewById(R.id.welcomeText);
-
         usersList = new ArrayList<>();
-
         DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users");
         dbReference.addValueEventListener(new ValueEventListener() {
@@ -71,21 +64,14 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                         User user = snapshot.getValue(User.class);
                         usersList.add(user);
                     }
-
-
                     recycleViewAdapter = new RecycleViewAdapter(ViewTeam.this, usersList);
-
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
-
                 }
 
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -95,15 +81,10 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
             @Override
             public void onClick(View v) {
-
-
                 final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
                 final List<LP> LPlist = new ArrayList<>();
-
                 DatabaseReference dbReference;
-
                 for (final User u : recycleViewAdapter.checkedUsers) {
-
                     dbReference = FirebaseDatabase.getInstance().getReference("Users");
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -115,54 +96,29 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     if (snapshot.child("fullName").getValue().equals(u.getFullName())) {
                                         for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
                                             for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                                // Log.d("Date is", String.valueOf(snapshot1.getKey()));
                                                 LP lp = snapshot2.getValue(LP.class);
-                                                //Log.d("user has been absent since", lp.getFrom());
                                                 String date = snapshot1.getKey();
-
                                                 lp.setData(date);
-
                                                 LPlist.add(lp);
-
-
                                             }
-
-
                                         }
                                     }
 
                                 }
-
-
                             }
                             //needs modifying
-
-
                             intent.putExtra("Lps", (Serializable) LPlist);
                             startActivity(intent);
-
-
                         }
-
 
                         @Override
-
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
-
                         }
-
                     });
-
-
                 }
-
-
             }
 
 
         });
-
-
     }
 }

@@ -23,14 +23,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     private Context context;
     private List<User> users = new ArrayList<>();
     public List<User> checkedUsers = new ArrayList<>();
-
     public RecycleViewAdapter(Context context, List<User> users)
     {
         this.context = context;
         this.users = users;
     }
-
-
 
     @Override
     public RecycleViewAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
@@ -40,7 +37,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
 
     @Override
     public void onBindViewHolder(RecycleViewAdapter.ViewHolder holder, final int position) {
-
         final User user = users.get(position);
         holder.numeAngajat.setText(user.getFullName());
         holder.setItemClickListener(new ItemClickListener() {
@@ -48,7 +44,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
             public void onItemClick(View v, int pos) {
                 CheckBox ck = (CheckBox) v;
                 if(ck.isChecked())
-
                 {
                   checkedUsers.add(users.get(position));
                 }
@@ -58,8 +53,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
                 }
             }
         });
-
-
     }
 
     @Override
@@ -68,12 +61,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
     }
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-
         public TextView numeAngajat;
         public CheckBox checkBox;
         ItemClickListener itemClickListener;
-
-
         public ViewHolder(View v, final Context ctx)
         {
             super(v);
@@ -81,12 +71,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
             numeAngajat = v.findViewById(R.id.numeAngajat);
             checkBox = v.findViewById(R.id.checkAngajat);
             checkBox.setOnClickListener(this);
-//
-
-
-
-
-
 
         }
         public  void setItemClickListener(ItemClickListener ic)

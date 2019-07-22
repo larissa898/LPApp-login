@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText userNM;
     private EditText password;
     private Button register;
-
-
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
@@ -54,29 +52,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
-        //db.insertDB(user);
-
-
         login = findViewById(R.id.button);
         cancel =  findViewById(R.id.button2);
         userNM =  findViewById(R.id.editTextNM);
         password=  findViewById(R.id.editText);
         register = findViewById(R.id.registerButton);
-
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("message");
         databaseReference.setValue("Hello there");
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
                 Log.d("Message", "Reading from the database" + value);
-
-
             }
 
             @Override
@@ -93,15 +81,11 @@ public class MainActivity extends AppCompatActivity {
                 if(user != null)
                 {
                     Log.d("User" , "is signed in");
-
                 }
                 else
                     Log.d("User" , "is signed out");
-
-
             }
         };
-
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 String pwd = password.getText().toString();
 
 //Authenticate with fire base
-
                 firebaseAuth.signInWithEmailAndPassword(email, pwd)
                         .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -118,15 +101,11 @@ public class MainActivity extends AppCompatActivity {
                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-
                                 //check that the user has validated the email
                                 if(task.isSuccessful() && user.isEmailVerified())
 
-
                                 {
                                     //check if the user is a team leader or not
-
-
                                     DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
                                     Query query =  functionRef.child(userId);
                                     query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -134,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             if(dataSnapshot.exists())
                                             {   String functie = dataSnapshot.child("functie").getValue(String.class);
-
                                                 if(functie.equals("Team Leader"))
                                                 {
                                                     Log.d("Query", "This is a team leader");
@@ -142,14 +120,12 @@ public class MainActivity extends AppCompatActivity {
                                                     startActivity(intent);
                                                 }
                                                 else
-
                                                 {
                                                     Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
                                                     startActivity(intent);
 
                                                 }
                                             }
-
                                         }
 
                                         @Override
@@ -158,9 +134,6 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     });
                                     Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
-
-
-
 
                                 }
                                 else
@@ -175,9 +148,7 @@ public class MainActivity extends AppCompatActivity {
                                             userNM.setText("");
                                             password.setText("");
                                         }
-
                                 }
-
                 }
 
 
@@ -197,8 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
 
     }
 }

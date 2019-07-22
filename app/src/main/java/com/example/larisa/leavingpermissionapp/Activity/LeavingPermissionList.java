@@ -72,13 +72,11 @@ public class LeavingPermissionList extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         LpList = new ArrayList<>();
-
         CurrentDay = findViewById(R.id.textViewDayCurrent);
         AddButton = findViewById(R.id.buttonAddList);
         CancelList = findViewById(R.id.buttonCancelList);
         TotalOreZi = findViewById(R.id.totalResult);
         //editButton =  findViewById(R.id.EditButton);
-
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
         actualMonth =  getIntent().getIntExtra("actualMonth",0);
@@ -86,49 +84,34 @@ public class LeavingPermissionList extends AppCompatActivity {
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         CurrentDay.setText(day + " "+ strMonths[month] + " " + year);
-
         final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
                 child(day + " " + strMonths[month] + " " + year);
         LpList.clear();
-
         dbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                LpList.clear();
-
             }
-
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 LpList.clear();
-
-
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 LpList.clear();
-
             }
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
         dbReference.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 if(dataSnapshot.exists())
                 {
                     float sum = 0;

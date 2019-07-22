@@ -37,10 +37,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private  Button  confirmButton;
     private Button cancelRegistration;
     private List <LP> LPs;
-
     private FirebaseAuth mAuth;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,14 +51,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         function = findViewById(R.id.registerFunction);
         confirmButton = findViewById(R.id.confirmRegister);
         cancelRegistration = findViewById(R.id.registerCancel);
-
         mAuth = FirebaseAuth.getInstance();
-
         confirmButton.setOnClickListener(this);
         cancelRegistration.setOnClickListener(this);
-
-
-
     }
     public void registerUser()
     {
@@ -72,8 +64,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         final String registerFirstName = firstName.getText().toString().trim();
         final String registerFunction = function.getText().toString().trim();
         final String registerFullName = registerFirstName + " " + registerLastName;
-
-
         // validate Email field
         if(registerEmail.isEmpty())
         {
@@ -92,13 +82,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         }
         //validate password field
-
         if(registerPassword.isEmpty())
         {
             password.setError("The password field cannot be empty !");
             password.requestFocus();
             return;
-
         }
         else
         {
@@ -114,14 +102,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 return;
             }
         }
-
         //validate password confirmation
         if(registerConfirmPassword.isEmpty())
         {
             confirmPassword.setError("This field cannot be empty");
             confirmPassword.requestFocus();
             return;
-
         }
         else
         {
@@ -130,7 +116,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 confirmPassword.setError("The passwords do not match!Please try again");
                 confirmPassword.requestFocus();
                 return;
-
             }
         }
 
@@ -140,7 +125,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             lastName.setError("This field cannot be empty!");
             lastName.requestFocus();
             return;
-
         }
        //validate first name
         if(registerFirstName.isEmpty())
@@ -183,18 +167,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                          //   .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").setValue("no LPs");
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
-
                 }
                 else
                 {
                     Toast.makeText(RegisterActivity.this, "User has not been created", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
     }
-
     @Override
     public void onClick(View v) {
         switch(v.getId())
@@ -205,8 +186,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.registerCancel:
                 finish();
                 break;
-
-
         }
 
     }
