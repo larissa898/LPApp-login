@@ -11,9 +11,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.LPCalendarList"></activity>
         <activity android:name=".Activity.FinalCalendar" />
-        <activity android:name=".Activity.RegisterActivity" />
+        <activity android:name=".Activity.RegisterActivity"   />
         <activity android:name=".Activity.CalendarActivity" />
-        <activity android:name=".Activity.ViewTeam" />
+        <activity android:name=".Activity.ViewTeam"  android:alwaysRetainTaskState="true" android:launchMode="singleTask"
+            />
         <activity android:name=".Activity.AddUser" />
         <activity android:name=".Activity.RaportActivity" />
         <activity android:name=".Activity.LeavingPermissionList" />

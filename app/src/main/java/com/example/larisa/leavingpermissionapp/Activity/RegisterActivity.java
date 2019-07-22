@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.MainActivity;
@@ -33,10 +35,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText confirmPassword;
     private EditText lastName;
     private EditText firstName;
-    private EditText function;
+    private Spinner function;
     private  Button  confirmButton;
     private Button cancelRegistration;
     private List <LP> LPs;
+    private String [] availableFunctions;
 
     private FirebaseAuth mAuth;
 
@@ -54,9 +57,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         function = findViewById(R.id.registerFunction);
         confirmButton = findViewById(R.id.confirmRegister);
         cancelRegistration = findViewById(R.id.registerCancel);
-
+        availableFunctions = new String[]{"Analist", "Analist Ajutor","Inginer de Sistem","Team Leader",
+                "Tehnician",
+                "Tehnician ajutor"};
         mAuth = FirebaseAuth.getInstance();
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                availableFunctions);
+        function.setAdapter(adapter);
         confirmButton.setOnClickListener(this);
         cancelRegistration.setOnClickListener(this);
 
@@ -70,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         final String registerConfirmPassword = confirmPassword.getText().toString().trim();
         final String registerLastName = lastName.getText().toString().trim();
         final String registerFirstName = firstName.getText().toString().trim();
-        final String registerFunction = function.getText().toString().trim();
+        final String registerFunction = function.getSelectedItem().toString().trim();
         final String registerFullName = registerFirstName + " " + registerLastName;
 
 
@@ -85,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         {
             if( !Patterns.EMAIL_ADDRESS.matcher(registerEmail).matches())
             {
-                email.setError("Please choose a valid email");
+                email.setError("Please enter a valid email");
                 email.requestFocus();
                 return;
             }
@@ -109,7 +117,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             matcher = pattern.matcher(registerPassword);
             if(!matcher.matches())
             {
-                password.setError("You must choose a valid password!");
+                password.setError("You must choose a password that contains at least one number, one uppercase and " +
+                        "one special character");
                 password.requestFocus();
                 return;
             }
@@ -150,12 +159,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
         //validate function
-        if(registerFunction.isEmpty())
-        {
-            function.setError("This field cannot be empty!");
-            function.requestFocus();
-            return;
-        }
+
 
         mAuth.createUserWithEmailAndPassword(registerEmail, registerPassword).
                 addOnCompleteListener(new OnCompleteListener<AuthResult>() {

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterLP;
 import com.example.larisa.leavingpermissionapp.Model.LP;
@@ -18,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +34,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
     private List<LP> lpList;
     private Button backToCalendar;
     private Button doneConfirming;
-
+    private TextView listDate;
 
 
     @Override
@@ -39,7 +42,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lpcalendar_list);
 
-
+        listDate = findViewById(R.id.lpListDate);
         recyclerView = findViewById(R.id.recycleViewLP);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -48,6 +51,10 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
         Intent intent = getIntent();
         List<LP> lpList= (List<LP>) intent.getSerializableExtra("TodayLP");
 
+        if(lpList != null)
+        {
+            listDate.setText(lpList.get(0).getData());
+        }
 
         recycleViewAdapterLP = new RecycleViewAdapterLP(LPCalendarList.this, lpList);
 
@@ -68,7 +75,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.finishedReviewing:
-//                Log.d("Manageable", String.valueOf(recycleViewAdapterLP.modifiedLP.size()));
+//
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
                 for ( final Integer key : recycleViewAdapterLP.modifiedLP.keySet()) {
 
@@ -118,9 +125,12 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                     });
                 }
 
+
                 finish();
                 break;
-            case R.id.backToCalendar:
+               case R.id.backToCalendar:
+
+
                 finish();
                 break;
 

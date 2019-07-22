@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -93,6 +94,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 final List<LP> LPlist = new ArrayList<>();
 
                 DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
+                final int[] i = {0};
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
 
@@ -127,9 +129,13 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                             }
                             //needs modifying
 
+                            i[0]++;
+                            if(i[0] == recycleViewAdapter.checkedUsers.size())
+                            {
+                                intent.putExtra("Lps", (Serializable) LPlist);
+                                startActivity(intent);
+                            }
 
-                            intent.putExtra("Lps", (Serializable) LPlist);
-                            startActivity(intent);
 
                         }
 
@@ -146,6 +152,10 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
                 }
+
+
+
+                Log.d("AAbCDS", String.valueOf(LPlist.size()));
                 dbReference.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -182,4 +192,5 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
     }
+
 }

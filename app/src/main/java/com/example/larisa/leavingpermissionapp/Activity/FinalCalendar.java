@@ -118,6 +118,7 @@ public class FinalCalendar extends AppCompatActivity {
                       }
                   }
                   intent.putExtra("TodayLP", (Serializable)sendLP);
+                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                   startActivity(intent);
                   sendLP.clear();
 
@@ -131,15 +132,25 @@ public class FinalCalendar extends AppCompatActivity {
 
   }
 
+
 backToTeam.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
         finish();
+//       Intent intent = new Intent(FinalCalendar.this,ViewTeam.class);
+//       startActivity(intent);
+
+
+
     }
 });
 
 
+
+
+
     }
+
     CalendarDay dayConverter (String date)
     { SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -155,5 +166,12 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
         return newDate;
 
     }
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        Intent intent = new Intent(this,ViewTeam.class);
+        startActivity(intent);
 
+    }
 }

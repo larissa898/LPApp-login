@@ -108,6 +108,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = userNM.getText().toString();
                 String pwd = password.getText().toString();
+                if(email.equals("") || pwd.equals(""))
+                {
+                    Toast.makeText(MainActivity.this, "Please enter your credentials", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
 
 //Authenticate with fire base
 
@@ -140,12 +147,16 @@ public class MainActivity extends AppCompatActivity {
                                                     Log.d("Query", "This is a team leader");
                                                     Intent intent = new Intent(MainActivity.this, ViewTeam.class);
                                                     startActivity(intent);
+                                                    userNM.setText("");
+                                                    password.setText("");
                                                 }
                                                 else
 
                                                 {
                                                     Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
                                                     startActivity(intent);
+                                                    userNM.setText("");
+                                                    password.setText("");
 
                                                 }
                                             }
@@ -182,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             });
+                }
         }});
         register.setOnClickListener(new View.OnClickListener() {
             @Override
