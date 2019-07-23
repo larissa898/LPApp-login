@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,6 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
     private RecyclerView recyclerView;
     private RecycleViewAdapter recycleViewAdapter;
     private List<User> usersList;
-
     private Button confirmButton;
     private TextView welcomText;
 
@@ -50,6 +51,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         welcomText = findViewById(R.id.welcomeText);
 
         usersList = new ArrayList<>();
+
 
 
         DatabaseReference dbReference;

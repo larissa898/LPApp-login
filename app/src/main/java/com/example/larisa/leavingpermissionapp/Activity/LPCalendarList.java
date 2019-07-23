@@ -129,8 +129,6 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                 finish();
                 break;
                case R.id.backToCalendar:
-
-
                 finish();
                 break;
 

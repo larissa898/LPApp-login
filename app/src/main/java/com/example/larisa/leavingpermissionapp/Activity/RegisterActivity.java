@@ -167,31 +167,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    User user = new User(registerFullName,registerFunction);
-                    FirebaseDatabase.getInstance().getReference("Users")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).
-                            addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful())
-
-                                    {
-                                        FirebaseUser user =  mAuth.getCurrentUser();
-                                        user.sendEmailVerification();
-
-                                        Toast.makeText(RegisterActivity.this, "User has been successfully created, please verify your email adress", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                    //FirebaseDatabase.getInstance().getReference("Users")
-                         //   .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").setValue("no LPs");
+                    FirebaseUser user =  mAuth.getCurrentUser();
+                    user.sendEmailVerification();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    intent.putExtra("registerFullName", registerFullName);
+                    intent.putExtra("registerFunction", registerFunction);
+                    intent.putExtra("message","Success");
                     startActivity(intent);
-
                 }
                 else
+
                 {
-                    Toast.makeText(RegisterActivity.this, "User has not been created", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    intent.putExtra("message","Failed");
+                    startActivity(intent);
+
                 }
 
             }

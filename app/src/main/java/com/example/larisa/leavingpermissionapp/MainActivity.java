@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
@@ -26,6 +27,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private Button cancel;
     private EditText userNM;
     private EditText password;
-    private Button register;
+    private TextView register;
 
 
     private FirebaseDatabase database;
@@ -61,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         login = findViewById(R.id.button);
-        cancel =  findViewById(R.id.button2);
-        userNM =  findViewById(R.id.editTextNM);
-        password=  findViewById(R.id.editText);
+        cancel = findViewById(R.id.button2);
+        userNM = findViewById(R.id.editTextNM);
+        password = findViewById(R.id.editText);
         register = findViewById(R.id.registerButton);
 
         database = FirebaseDatabase.getInstance();
@@ -81,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("Message", "Failed to read from the database" );
+                Log.d("Message", "Failed to read from the database");
             }
         });
 
@@ -90,13 +100,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null)
-                {
-                    Log.d("User" , "is signed in");
+                if (user != null) {
+                    Log.d("User", "is signed in");
 
-                }
-                else
-                    Log.d("User" , "is signed out");
+                } else
+                    Log.d("User", "is signed out");
 
 
             }
@@ -108,98 +116,101 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = userNM.getText().toString();
                 String pwd = password.getText().toString();
-                if(email.equals("") || pwd.equals(""))
-                {
+                if (email.equals("") || pwd.equals("")) {
                     Toast.makeText(MainActivity.this, "Please enter your credentials", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
+
+//
+//
 
 
-//Authenticate with fire base
+//Authenticate with fire basepa
 
-                firebaseAuth.signInWithEmailAndPassword(email, pwd)
-                        .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                               String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                               FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
-                                //check that the user has validated the email
-                                if(task.isSuccessful() && user.isEmailVerified())
+                    firebaseAuth.signInWithEmailAndPassword(email, pwd)
+                            .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-                                {
-                                    //check if the user is a team leader or not
+                                    //check that the user has validated the email
+                                    if (task.isSuccessful() && user.isEmailVerified()) {
+                                        //check if the user is a team leader or not
 
 
-                                    DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
-                                    Query query =  functionRef.child(userId);
-                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot.exists())
-                                            {   String functie = dataSnapshot.child("functie").getValue(String.class);
+                                        Intent intent = getIntent();
+                                        if(intent.getExtras() != null)
+                                        {
+                                        if(intent.getExtras().containsKey("message")) {
+                                            if (intent.getExtras().get("message").equals(
+                                                    "Success")) {
+                                                String registerFullName = intent.getExtras().getString("registerFullName");
+                                                String registerFunction = intent.getExtras().getString("registerFunction");
 
-                                                if(functie.equals("Team Leader"))
-                                                {
-                                                    Log.d("Query", "This is a team leader");
-                                                    Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                                                    startActivity(intent);
-                                                    userNM.setText("");
-                                                    password.setText("");
-                                                }
-                                                else
+                                                User registerUser = new User(registerFullName, registerFunction);
+                                                FirebaseDatabase.getInstance().getReference("Users")
+                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
+                                                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
 
-                                                {
-                                                    Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                                                    startActivity(intent);
-                                                    userNM.setText("");
-                                                    password.setText("");
+                                                                    Toast.makeText(MainActivity.this, "User has been successfully created, please " +
+                                                                            "verify your email adress", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        });
+                                                redirectUser(userId);
+                                            }
+                                        }
 
+                                        } else {
+                                            if(intent.getExtras() != null) {
+                                                if (intent.getExtras().containsKey("message")) {
+
+                                                    if (intent.getExtras().get("message").equals("Failed")) {
+                                                        Toast.makeText(MainActivity.this, "User has not been created " +
+                                                                "please try again", Toast.LENGTH_SHORT).show();
+
+                                                    }
                                                 }
                                             }
+                                            if (intent.getExtras() == null)
+                                            {
+                                                redirectUser(userId);
 
+                                            }
                                         }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                        }
-                                    });
-                                    Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
-
-
-
-
-                                }
-                                else
-                                    {
-                                        if(!user.isEmailVerified())
-                                        {
-                                            Toast.makeText(MainActivity.this,"Please verify your email address",Toast.LENGTH_LONG).show();
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(MainActivity.this,"Wrong Credentials",Toast.LENGTH_LONG).show();
+                                    } else {
+                                        if (!user.isEmailVerified()) {
+                                            Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Wrong Credentials", Toast.LENGTH_LONG).show();
                                             userNM.setText("");
                                             password.setText("");
                                         }
+                                    }
 
                                 }
 
+
+                            });
                 }
 
 
-            });
-                }
-        }});
+
+
+
+            }
+        });
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-                 startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -209,8 +220,48 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
     }
-}
+
+
+
+            public void redirectUser(String userId) {
+
+                DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
+                Query query = functionRef.child(userId);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            String functie = dataSnapshot.child("functie").getValue(String.class);
+
+                            if (functie.equals("Team Leader")) {
+                                Log.d("Query", "This is a team leader");
+                                Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                                startActivity(intent);
+                                userNM.setText("");
+                                password.setText("");
+                            } else {
+                                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                                startActivity(intent);
+                                userNM.setText("");
+                                password.setText("");
+
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
+
+
+            }
+
+        }
+
+
+
