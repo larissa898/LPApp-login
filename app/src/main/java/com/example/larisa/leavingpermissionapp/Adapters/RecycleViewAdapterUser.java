@@ -2,13 +2,21 @@ package com.example.larisa.leavingpermissionapp.Adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
+import com.example.larisa.leavingpermissionapp.Activity.LeavingPermissionList;
+import com.example.larisa.leavingpermissionapp.Activity.RaportActivity;
+import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,7 +85,9 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             To = v.findViewById(R.id.textViewTo);
             Total = v.findViewById(R.id.textViewTotal);
             Status=  v.findViewById(R.id.textViewStatus);
+            editButton = v.findViewById(R.id.editButton);
             deleteButton =  v.findViewById(R.id.deleteButton);
+            editButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
 
             v.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +105,13 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     LP LivingPermission = lp.get(position);
                     deleteLP(position,LivingPermission);
                     break;
+                case R.id.editButton:
+                    position = getAdapterPosition();
+                    LivingPermission = lp.get(position);
+
+                    editLp(position,LivingPermission,v);
+                    break;
+
             }
         }
         public void deleteLP (final int id, final LP lplp){
@@ -151,6 +168,28 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     });
                 }
             });
+        }
+        public void editLp(final int id, final LP lp, View v){
+
+//            alertDialogBuilder = new AlertDialog.Builder(context);
+//            inflater = LayoutInflater.from(context);
+//            final View view = inflater.inflate(R.layout.activity_raport, null);
+//
+            String Flag = "edit";
+            String LpTotal = String.valueOf(lp.getTotal());
+            Context context = v.getContext();
+            Intent intent = new Intent(context, RaportActivity.class);
+            intent.putExtra("Flag", Flag);
+            intent.putExtra("from", lp.getFrom());
+            intent.putExtra("to", lp.getTo());
+            intent.putExtra("LpTotal", LpTotal);
+            intent.putExtra("day", day);
+            intent.putExtra("month", month);
+            intent.putExtra("year", year);
+            intent.putExtra("monthActual", monthActual);
+            context.startActivity(intent);
+
+
         }
     }
 }

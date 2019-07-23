@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,6 +63,12 @@ public class RaportActivity extends AppCompatActivity {
     private String monthActual;
     String[] toListFirebase = new String[]{};
     String[] fromListFirebase = new String[]{};
+    private String Flag;
+    private int FromMinutes;
+    private int FromHour;
+    private String[] hourMinTo;
+    ArrayAdapter<String> adapter;
+    String LpTotal;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -82,15 +90,18 @@ public class RaportActivity extends AppCompatActivity {
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
         Beckraport = findViewById(R.id.buttonBackRaport);
+        LpTotal = getIntent().getStringExtra("LpTotal");
+        Flag = getIntent().getStringExtra("Flag");
+        from1 = getIntent().getStringExtra("from");
+        to1 = getIntent().getStringExtra("to");
         day = getIntent().getIntExtra("day", 0);
         month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total", 0);
-        from1 = getIntent().getStringExtra("from");
-        to1 = getIntent().getStringExtra("to");
         monthActual =  getIntent().getStringExtra("monthActual");
         date.setText(day + " " + monthActual + " " + year);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -111,7 +122,6 @@ public class RaportActivity extends AppCompatActivity {
                         listTo.add(valueOf(snapshot.child("to").getValue()));
                     }
                 }
-
                 toListFirebase = new String[listFrom.size() + 1];
                 fromListFirebase = new String[listFrom.size() + 1];
                 takenIntervals = GetTakenInterval( listFrom,    listTo,  items );
@@ -126,16 +136,8 @@ public class RaportActivity extends AppCompatActivity {
 
                 toListFirebase[listFrom.size()] = "20:00";
                 fromListFirebase[listFrom.size()] = "20:00";
-                ArrayAdapter<String> adapter;
-                if (listFrom.size() == 0) {
-                    adapter = new ArrayAdapter<>(RaportActivity.this,
-                            android.R.layout.simple_spinner_dropdown_item, items);
-                } else {
-                    adapter = new ArrayAdapter<>(RaportActivity.this,
-                            android.R.layout.simple_spinner_dropdown_item, listFinal);
-                }
-                From.setAdapter(adapter);
-            }
+
+                           }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -157,70 +159,98 @@ public class RaportActivity extends AppCompatActivity {
             }
         });
         Confirm.setEnabled(false);
-        From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                first = From.getSelectedItem().toString();
-                String[] hourMinFrom = first.split(":");
-                int FromMinutes = Integer.valueOf(hourMinFrom[1]);
-                int FromHour = Integer.valueOf(hourMinFrom[0]);
-                List<String> ToList = new ArrayList<>();
-                Log.d("*****" , String.valueOf(FromHour));
+        if (listFrom.size() == 0) {
+            adapter = new ArrayAdapter<>(RaportActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, items);
+        } else {
+            adapter = new ArrayAdapter<>(RaportActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, listFinal);
+        }
+        From.setAdapter(adapter);
 
-                ToList = GenerateList(listFrom, FromHour, FromMinutes);
+        if(Flag.equals("edit")){
+            int positionFrom = indexOf(adapter, from1);
+            int positionTo = indexOf(adapter, to1);
+            From.setSelection(positionFrom);
+            To.setSelection(positionTo);
+            String[] hLp = LpTotal.split(".");
+            //TotalOre.setText(Integer.valueOf(hLp[0])  + " hours and " + " minutes");
+//            first = from1;
+//            second = to1;
+//            String[] hourMinFrom = first.split(":");
+//            FromMinutes = Integer.valueOf(hourMinFrom[1]);
+//            FromHour = Integer.valueOf(hourMinFrom[0]);
 
-                ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
-                To.setAdapter(adapterTo);
-                To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String[] hourMinFrom = first.split(":");
-                        second = To.getSelectedItem().toString();
-                        String[] hourMinTo = second.split(":");
-                        int hourResult = 0;
-                        int minResult = 0;
-                        if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
-                            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
-                            minResult = 30;
-                        } else {
-                            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
-                            minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
+        }else if (Flag.equals("add")){
+            From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    first = From.getSelectedItem().toString();
+                    String[] hourMinFrom = first.split(":");
+                    FromMinutes = Integer.valueOf(hourMinFrom[1]);
+                    FromHour = Integer.valueOf(hourMinFrom[0]);
+
+                    List<String> ToList = new ArrayList<>();
+                    Log.d("*****" , String.valueOf(FromHour));
+
+                    ToList = GenerateList(listFrom, FromHour, FromMinutes);
+
+                    ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
+                    To.setAdapter(adapterTo);
+                    To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String[] hourMinFrom = first.split(":");
+
+                            second = To.getSelectedItem().toString();
+                            hourMinTo = second.split(":");
+
+                            int hourResult = 0;
+                            int minResult = 0;
+                            if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
+                                hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
+                                minResult = 30;
+                            } else {
+                                hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
+                                minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
+                            }
+                            int plus = 0;
+                            int minfin = 0;
+                            if (total % 10 == 3) {
+                                TotalOre.setText("No!");
+                            }
+                            if (minResult == 30 && (total - total % 10) == 0.5) {
+                                plus = 1;
+                                minfin = 0;
+
+                            } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
+                                minfin = 30;
+                            } else if ((minResult == 0 && (total - total % 10) == 0)) {
+                                minfin = 0;
+                            }
+
+                            if ((((hourResult + (total % 10)) > 3) || ((((hourResult + (total % 10) + plus) == 3) && (minfin != 0))))) {
+                                TotalOre.setText("Select again!");
+                                Confirm.setEnabled(false);
+                            } else {
+                                TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
+                                Confirm.setEnabled(true);
+                                minnn = minResult;
+                                ora = hourResult;
+                            }
                         }
-                        int plus = 0;
-                        int minfin = 0;
-                        if (total % 10 == 3) {
-                            TotalOre.setText("No!");
-                        }
-                        if (minResult == 30 && (total - total % 10) == 0.5) {
-                            plus = 1;
-                            minfin = 0;
 
-                        } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
-                            minfin = 30;
-                        } else if ((minResult == 0 && (total - total % 10) == 0)) {
-                            minfin = 0;
+                        public void onNothingSelected(AdapterView<?> parent) {
                         }
 
-                        if ((((hourResult + (total % 10)) > 3) || ((((hourResult + (total % 10) + plus) == 3) && (minfin != 0))))) {
-                            TotalOre.setText("Select again!");
-                            Confirm.setEnabled(false);
-                        } else {
-                            TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
-                            Confirm.setEnabled(true);
-                            minnn = minResult;
-                            ora = hourResult;
-                        }
-                    }
+                    });
+                }
 
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
 
-                });
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
         Confirm.setOnClickListener(new View.OnClickListener() {
             DateFormat df = new SimpleDateFormat("HH:mm:ss");
             String time = df.format(Calendar.getInstance().getTime());
@@ -356,5 +386,16 @@ public class RaportActivity extends AppCompatActivity {
             }
         }
         return ToList;
+    }
+    private int indexOf(final Adapter adapter, Object value)
+    {
+        for (int index = 0, count = adapter.getCount(); index < count; ++index)
+        {
+            if (adapter.getItem(index).equals(value))
+            {
+                return index;
+            }
+        }
+        return -1;
     }
 }
