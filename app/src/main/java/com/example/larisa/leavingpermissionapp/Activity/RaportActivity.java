@@ -69,9 +69,13 @@ public class RaportActivity extends AppCompatActivity {
     private int FromHour;
     private String[] hourMinTo;
     ArrayAdapter<String> adapter;
+    ArrayAdapter<String> adapteredit;
     String LpTotal;
     String key ;
     LP LpList;
+    Float TotalLpActual;
+    public int abc;
+    private String[] hourMinFrom;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -102,6 +106,7 @@ public class RaportActivity extends AppCompatActivity {
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total", 0);
         key = getIntent().getStringExtra("keyy");
+        TotalLpActual = getIntent().getFloatExtra("TotalLpActual",0);
         monthActual =  getIntent().getStringExtra("monthActual");
         date.setText(day + " " + monthActual + " " + year);
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -143,6 +148,55 @@ public class RaportActivity extends AppCompatActivity {
                 toListFirebase[listFrom.size()] = "20:00";
                 fromListFirebase[listFrom.size()] = "20:00";
 
+                // create adapter
+                if (listFrom.size() == 0) {
+                    adapter = new ArrayAdapter<>(RaportActivity.this,
+                            android.R.layout.simple_spinner_dropdown_item, items);
+                }
+                else {
+                    adapter = new ArrayAdapter<>(RaportActivity.this,
+                            android.R.layout.simple_spinner_dropdown_item, listFinal);
+                }
+
+                if(Flag.equals("edit")){
+                    adapteredit = new ArrayAdapter<>(RaportActivity.this,
+                            android.R.layout.simple_spinner_dropdown_item, items);
+                    From.setAdapter(adapteredit);
+                    To.setAdapter(adapteredit);
+                    int positionFrom = indexOf(adapteredit, fromEdit);
+                    int positionTo = indexOf(adapteredit, toEdit);
+                    From.setSelection(positionFrom);
+                    To.setSelection(positionTo);
+                    first=fromEdit;
+                    second=toEdit;
+                    Confirm.setText("EDIT");
+
+                }
+                else if (Flag.equals("add")){
+                    From.setAdapter(adapter);
+                    From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            first = From.getSelectedItem().toString();
+                            String[] hourMinFrom = first.split(":");
+                            FromMinutes = Integer.valueOf(hourMinFrom[1]);
+                            FromHour = Integer.valueOf(hourMinFrom[0]);
+
+                            List<String> ToList = new ArrayList<>();
+                            Log.d("*****" , String.valueOf(FromHour));
+
+                            ToList = GenerateList(listFrom, FromHour, FromMinutes);
+
+                            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
+                            To.setAdapter(adapterTo);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+                    Confirm.setText("ADD");
+                }
                            }
 
             @Override
@@ -166,59 +220,6 @@ public class RaportActivity extends AppCompatActivity {
         });
 
         Confirm.setEnabled(false);
-
-        // create adapter
-        if (listFrom.size() == 0) {
-            adapter = new ArrayAdapter<>(RaportActivity.this,
-                    android.R.layout.simple_spinner_dropdown_item, items);
-        }
-        else {
-            adapter = new ArrayAdapter<>(RaportActivity.this,
-                    android.R.layout.simple_spinner_dropdown_item, listFinal);
-        }
-        for (int j = 0; j < takenIntervals.length; j++)
-           {
-               String e =(listFinal[j]);
-               Log.e("##", e);
-
-           }
-
-        From.setAdapter(adapter);
-
-        if(Flag.equals("edit")){
-            To.setAdapter(adapter);
-            int positionFrom = indexOf(adapter, fromEdit);
-            int positionTo = indexOf(adapter, toEdit);
-            From.setSelection(positionFrom);
-            To.setSelection(positionTo);
-            first=fromEdit;
-            second=toEdit;
-            Confirm.setText("EDIT");
-
-        }else if (Flag.equals("add")){
-            From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    first = From.getSelectedItem().toString();
-                    String[] hourMinFrom = first.split(":");
-                    FromMinutes = Integer.valueOf(hourMinFrom[1]);
-                    FromHour = Integer.valueOf(hourMinFrom[0]);
-
-                    List<String> ToList = new ArrayList<>();
-                    Log.d("*****" , String.valueOf(FromHour));
-
-                    ToList = GenerateList(listFrom, FromHour, FromMinutes);
-
-                    ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
-                    To.setAdapter(adapterTo);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-            Confirm.setText("ADD");
-        }
 
         Confirm.setOnClickListener(new View.OnClickListener() {
             DateFormat df = new SimpleDateFormat("HH:mm:ss");
@@ -247,8 +248,13 @@ public class RaportActivity extends AppCompatActivity {
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
                                 }
-                                LP lp = new LP(nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
-                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
+                                LP lp = new LP(nume, From.getSelectedItem().toString()
+                                        , To.getSelectedItem().toString(), total, status);
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance()
+                                                .getCurrentUser().getUid())
+                                        .child("LP").child(date.getText()
+                                        .toString()).child(time).setValue(lp);
                             }
                             if(dataSnapshot.exists()){
 
@@ -307,56 +313,27 @@ public class RaportActivity extends AppCompatActivity {
 
         To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String[] hourMinFrom = first.split(":");
-
-                second = To.getSelectedItem().toString();
+                hourMinFrom = first.split(":");
+                               second = To.getSelectedItem().toString();
                 hourMinTo = second.split(":");
-
-                int hourResult = 0;
-                int minResult = 0;
-                if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
-                    hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
-                    minResult = 30;
-                } else {
-                    hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
-                    minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
-                }
-                int plus = 0;
-                int minfin = 0;
-                if (total % 10 == 3) {
-                    TotalOre.setText("No!");
-                }
-                if (minResult == 30 && (total - total % 10) == 0.5) {
-                    plus = 1;
-                    minfin = 0;
-
-                } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
-                    minfin = 30;
-                } else if ((minResult == 0 && (total - total % 10) == 0)) {
-                    minfin = 0;
-                }
-
-                if ((((hourResult + (total % 10)) > 3) || ((((hourResult + (total % 10) + plus) == 3) && (minfin != 0))))) {
-                    TotalOre.setText("Select again!");
-                    Confirm.setEnabled(false);
-                } else {
-                    TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
-                    Confirm.setEnabled(true);
-                    minnn = minResult;
-                    ora = hourResult;
-                }
+                SetTotal(hourMinFrom);
             }
-
             public void onNothingSelected(AdapterView<?> parent) {
             }
 
         });
 
 
+
         Beckraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
+                intent.putExtra("day", day);
+                intent.putExtra("month", month);
+                intent.putExtra("year", year);
+                intent.putExtra("monthActual", monthActual);
+                startActivity(intent);
             }
         });
 
@@ -463,5 +440,49 @@ public class RaportActivity extends AppCompatActivity {
             }
         }
         return -1;
+    }
+    void SetTotal (String[] hourMinFrom){
+        int hourResult = 0;
+        int minResult = 0;
+        if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
+            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
+            minResult = 30;
+        } else {
+            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
+            minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
+        }
+        int plus = 0;
+        int minfin = 0;
+        if (total % 10 == 3) {
+            TotalOre.setText("No!");
+        }
+        if (minResult == 30 && (total - total % 10) == 0.5) {
+            plus = 1;
+            minfin = 0;
+
+        } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
+            minfin = 30;
+        } else if ((minResult == 0 && (total - total % 10) == 0)) {
+            minfin = 0;
+        }
+        Float result = null;
+        if(minResult==30){
+            result = Float.valueOf(hourResult + ".5");
+        }else
+        {
+            result = Float.valueOf(hourResult);
+        }
+        if ((((result + (total % 10) - TotalLpActual) > 3)||
+                ((((hourResult + (total % 10) + plus - TotalLpActual)) == 3)
+                        && (minfin != 0)))) {
+            TotalOre.setText("Select again!");
+            Confirm.setEnabled(false);
+        } else {
+            TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
+            Confirm.setEnabled(true);
+            minnn = minResult;
+            ora = hourResult;
+        }
+
     }
 }

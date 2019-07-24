@@ -37,6 +37,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     private int day;
     private int month;
     private int year;
+    private Float total;
     public RecycleViewAdapterUser(Context context, List<LP> lp, int day, int month, int year, String monthActual) {
         this.context = context;
         this.lp = lp;
@@ -183,11 +184,15 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     int j=0;
+                    float sum = 0;
 
                     if(dataSnapshot.exists()){
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                             key[j]=String.valueOf(snapshot.getKey());
                             j++;
+                            String h = snapshot.child("total").getValue().toString();
+                            sum = sum + Float.parseFloat(h);
+                            total=sum;
                         }
                     }
                     String keyLP = key[id];
@@ -201,6 +206,8 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     intent.putExtra("toEdit", lp.getTo());
                     intent.putExtra("LpTotal", LpTotal);
                     intent.putExtra("keyy", keyLP);
+                    intent.putExtra("total", total);
+                    intent.putExtra("TotalLpActual", lp.getTotal());
                     intent.putExtra("day", day);
                     intent.putExtra("month", month);
                     intent.putExtra("year", year);
