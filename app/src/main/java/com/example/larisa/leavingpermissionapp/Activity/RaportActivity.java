@@ -1,5 +1,6 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -51,8 +52,8 @@ public class RaportActivity extends AppCompatActivity {
     private int day;
     private int month;
     private int year;
-    private String from1;
-    private String to1;
+    private String fromEdit;
+    private String toEdit;
     private String status = "neconfirmat";
     private Float total;
     String first = "";
@@ -69,6 +70,8 @@ public class RaportActivity extends AppCompatActivity {
     private String[] hourMinTo;
     ArrayAdapter<String> adapter;
     String LpTotal;
+    String key ;
+    LP LpList;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -92,12 +95,13 @@ public class RaportActivity extends AppCompatActivity {
         Beckraport = findViewById(R.id.buttonBackRaport);
         LpTotal = getIntent().getStringExtra("LpTotal");
         Flag = getIntent().getStringExtra("Flag");
-        from1 = getIntent().getStringExtra("from");
-        to1 = getIntent().getStringExtra("to");
+        fromEdit = getIntent().getStringExtra("fromEdit");
+        toEdit = getIntent().getStringExtra("toEdit");
         day = getIntent().getIntExtra("day", 0);
         month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total", 0);
+        key = getIntent().getStringExtra("keyy");
         monthActual =  getIntent().getStringExtra("monthActual");
         date.setText(day + " " + monthActual + " " + year);
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -110,6 +114,8 @@ public class RaportActivity extends AppCompatActivity {
                 child(day + " " + monthActual + " " + year);
         final List<String> listFrom = new ArrayList<>();
         final List<String> listTo = new ArrayList<>();
+
+        //create listFrom and listTo from Firebase and generate listFinal
         dbReference.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -158,28 +164,36 @@ public class RaportActivity extends AppCompatActivity {
 
             }
         });
+
         Confirm.setEnabled(false);
+
+        // create adapter
         if (listFrom.size() == 0) {
             adapter = new ArrayAdapter<>(RaportActivity.this,
                     android.R.layout.simple_spinner_dropdown_item, items);
-        } else {
+        }
+        else {
             adapter = new ArrayAdapter<>(RaportActivity.this,
                     android.R.layout.simple_spinner_dropdown_item, listFinal);
         }
+        for (int j = 0; j < takenIntervals.length; j++)
+           {
+               String e =(listFinal[j]);
+               Log.e("##", e);
+
+           }
+
         From.setAdapter(adapter);
 
         if(Flag.equals("edit")){
-            int positionFrom = indexOf(adapter, from1);
-            int positionTo = indexOf(adapter, to1);
+            To.setAdapter(adapter);
+            int positionFrom = indexOf(adapter, fromEdit);
+            int positionTo = indexOf(adapter, toEdit);
             From.setSelection(positionFrom);
             To.setSelection(positionTo);
-            String[] hLp = LpTotal.split(".");
-            //TotalOre.setText(Integer.valueOf(hLp[0])  + " hours and " + " minutes");
-//            first = from1;
-//            second = to1;
-//            String[] hourMinFrom = first.split(":");
-//            FromMinutes = Integer.valueOf(hourMinFrom[1]);
-//            FromHour = Integer.valueOf(hourMinFrom[0]);
+            first=fromEdit;
+            second=toEdit;
+            Confirm.setText("EDIT");
 
         }else if (Flag.equals("add")){
             From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -197,58 +211,13 @@ public class RaportActivity extends AppCompatActivity {
 
                     ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
                     To.setAdapter(adapterTo);
-                    To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String[] hourMinFrom = first.split(":");
-
-                            second = To.getSelectedItem().toString();
-                            hourMinTo = second.split(":");
-
-                            int hourResult = 0;
-                            int minResult = 0;
-                            if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
-                                hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
-                                minResult = 30;
-                            } else {
-                                hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
-                                minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
-                            }
-                            int plus = 0;
-                            int minfin = 0;
-                            if (total % 10 == 3) {
-                                TotalOre.setText("No!");
-                            }
-                            if (minResult == 30 && (total - total % 10) == 0.5) {
-                                plus = 1;
-                                minfin = 0;
-
-                            } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
-                                minfin = 30;
-                            } else if ((minResult == 0 && (total - total % 10) == 0)) {
-                                minfin = 0;
-                            }
-
-                            if ((((hourResult + (total % 10)) > 3) || ((((hourResult + (total % 10) + plus) == 3) && (minfin != 0))))) {
-                                TotalOre.setText("Select again!");
-                                Confirm.setEnabled(false);
-                            } else {
-                                TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
-                                Confirm.setEnabled(true);
-                                minnn = minResult;
-                                ora = hourResult;
-                            }
-                        }
-
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-
-                    });
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
+            Confirm.setText("ADD");
         }
 
         Confirm.setOnClickListener(new View.OnClickListener() {
@@ -257,27 +226,74 @@ public class RaportActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            String nume = dataSnapshot.child("fullName").getValue(String.class);
-                            Log.d("data", "exists");
-                            Float total;
-                            if (minnn == 30) {
-                                total = Float.valueOf(valueOf(ora + ".5"));
-                            } else {
-                                total = Float.valueOf(valueOf(ora));
-                            }
-                            LP lp = new LP(nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
-                        }
-                    }
+                if(Flag.equals("edit")) {
+                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    final DatabaseReference dbReference;
+                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                            child(day+ " "+  monthActual+ " "+year);
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
+                    dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                            if (dataSnapshot.exists()) {
+                                String nume = dataSnapshot.child("fullName").getValue(String.class);
+                                Log.d("data", "exists");
+                                Float total;
+                                if (minnn == 30) {
+                                    total = Float.valueOf(valueOf(ora + ".5"));
+                                } else {
+                                    total = Float.valueOf(valueOf(ora));
+                                }
+                                LP lp = new LP(nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
+                            }
+                            if(dataSnapshot.exists()){
+
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                                {
+                                    if (snapshot.getKey().equals(key)){
+                                        snapshot.getRef().removeValue();
+                                        return;
+                                    }
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+                else if (Flag.equals("add")){
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                String nume = dataSnapshot.child("fullName").getValue(String.class);
+                                Log.d("data", "exists");
+                                Float total;
+                                if (minnn == 30) {
+                                    total = Float.valueOf(valueOf(ora + ".5"));
+                                } else {
+                                    total = Float.valueOf(valueOf(ora));
+                                }
+                                LP lp = new LP(nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                }
+
                 Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
                 intent.putExtra("day", day);
                 intent.putExtra("month", month);
@@ -286,7 +302,57 @@ public class RaportActivity extends AppCompatActivity {
                 startActivity(intent);
 
             }
+
         });
+
+        To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] hourMinFrom = first.split(":");
+
+                second = To.getSelectedItem().toString();
+                hourMinTo = second.split(":");
+
+                int hourResult = 0;
+                int minResult = 0;
+                if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
+                    hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
+                    minResult = 30;
+                } else {
+                    hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
+                    minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
+                }
+                int plus = 0;
+                int minfin = 0;
+                if (total % 10 == 3) {
+                    TotalOre.setText("No!");
+                }
+                if (minResult == 30 && (total - total % 10) == 0.5) {
+                    plus = 1;
+                    minfin = 0;
+
+                } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
+                    minfin = 30;
+                } else if ((minResult == 0 && (total - total % 10) == 0)) {
+                    minfin = 0;
+                }
+
+                if ((((hourResult + (total % 10)) > 3) || ((((hourResult + (total % 10) + plus) == 3) && (minfin != 0))))) {
+                    TotalOre.setText("Select again!");
+                    Confirm.setEnabled(false);
+                } else {
+                    TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
+                    Confirm.setEnabled(true);
+                    minnn = minResult;
+                    ora = hourResult;
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+
+        });
+
+
         Beckraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

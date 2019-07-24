@@ -75,9 +75,12 @@ public class LeavingPermissionList extends AppCompatActivity {
         monthActual =  getIntent().getStringExtra("monthActual");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         CurrentDay.setText(day + " "+ monthActual + " " + year);
+
         final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
                 child(day + " " + monthActual + " " + year);
+
+        //update with Firebase
         dbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -109,6 +112,8 @@ public class LeavingPermissionList extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
+        //total H+M and LPList for this day from Firebase
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -138,6 +143,8 @@ public class LeavingPermissionList extends AppCompatActivity {
             }
 
         });
+
+        //AddButton
         if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay && month==actualMonth) ){
             AddButton.setEnabled(false);
         }else{
@@ -154,6 +161,7 @@ public class LeavingPermissionList extends AppCompatActivity {
                     intent.putExtra("monthActual", monthActual);
                     Log.d("luna", String.valueOf(month));
                     startActivity(intent);
+                    finish();
 
                 }
             });
