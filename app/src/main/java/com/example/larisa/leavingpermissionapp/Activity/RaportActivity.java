@@ -170,6 +170,21 @@ public class RaportActivity extends AppCompatActivity {
                     first=fromEdit;
                     second=toEdit;
                     Confirm.setText("EDIT");
+                    From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            first = From.getSelectedItem().toString();
+                            String[] hourMinFrom = first.split(":");
+                            FromMinutes = Integer.valueOf(hourMinFrom[1]);
+                            FromHour = Integer.valueOf(hourMinFrom[0]);
+                            hourMinTo = toEdit.split(":");
+                            SetTotal(hourMinFrom, hourMinTo);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
 
                 }
                 else if (Flag.equals("add")){
@@ -237,7 +252,6 @@ public class RaportActivity extends AppCompatActivity {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
 
                             if (dataSnapshot.exists()) {
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
@@ -316,7 +330,7 @@ public class RaportActivity extends AppCompatActivity {
                 hourMinFrom = first.split(":");
                                second = To.getSelectedItem().toString();
                 hourMinTo = second.split(":");
-                SetTotal(hourMinFrom);
+                SetTotal(hourMinFrom, hourMinTo);
             }
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -441,7 +455,7 @@ public class RaportActivity extends AppCompatActivity {
         }
         return -1;
     }
-    void SetTotal (String[] hourMinFrom){
+    void SetTotal (String[] hourMinFrom, String[] hourMinTo){
         int hourResult = 0;
         int minResult = 0;
         if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
