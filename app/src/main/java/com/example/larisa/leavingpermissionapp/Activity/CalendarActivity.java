@@ -53,6 +53,8 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+
+        //months of the year
         final String[] strMonths = {"January",
                 "February",
                 "March",
@@ -66,11 +68,11 @@ public class CalendarActivity extends AppCompatActivity {
                 "November",
                 "December"};
 
-        Calendar cal = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
-        actualDay = cal.get(Calendar.DATE);
-        actualMonth = cal.get(Calendar.MONTH);
-        actualYear = cal.get(Calendar.YEAR);
+        actualDay = calendar.get(Calendar.DATE);
+        actualMonth = calendar.get(Calendar.MONTH);
+        actualYear = calendar.get(Calendar.YEAR);
         CancelCalendar = findViewById(R.id.CancelButtonCalendar);
         calendarView = findViewById(R.id.calendarViewID);
         Angajat = findViewById(R.id.NumeAngajatCalendar);
@@ -78,9 +80,9 @@ public class CalendarActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
 
+        //Set the welcome message with the user name
         Query query =  functionRef.child(userId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -90,17 +92,15 @@ public class CalendarActivity extends AppCompatActivity {
                 {
                     String nume = dataSnapshot.child("fullName").getValue(String.class);
                     Angajat.setText("Buna " +  nume + "!" );
-
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
-
+        //
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -118,22 +118,27 @@ public class CalendarActivity extends AppCompatActivity {
 
                     // If double click...
                     if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                        //If it is weekend you can not add LPs
+                        //Otherwise double click will send you the next activity <<Leaving Permission List>>
                         if ( dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday"))){
                             Toast.makeText(getApplicationContext(), "It's weekend, choose a working day"
                                     , Toast.LENGTH_SHORT).show();
 
-                        }else{
+                        }
+                        else{
 
                             mHasDoubleClicked = true;
                             Intent intent = new Intent(CalendarActivity.this
                                     , LeavingPermissionList.class);
+
+                            //Calculates the month according to the month number
+                            actualM=strMonths[month];
                             intent.putExtra("day", dayOfMonth);
                             intent.putExtra("month", month);
                             intent.putExtra("year", year);
                             intent.putExtra("actualDay", actualDay);
                             intent.putExtra("actualMonth", actualMonth);
                             intent.putExtra("actualYear", actualYear);
-                            actualM=strMonths[month];
                             intent.putExtra("monthActual", actualM);
                             Current = (actualDay + " " + actualMonth+ " "+actualYear);
                             startActivity(intent);

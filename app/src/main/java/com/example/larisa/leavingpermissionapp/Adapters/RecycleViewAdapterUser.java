@@ -33,11 +33,13 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     private Context context;
     private List<LP> lp = new ArrayList<>();
     private LayoutInflater inflater;
-    String monthActual;
+    private String monthActual;
+    private Float total;
     private int day;
     private int month;
     private int year;
-    private Float total;
+
+
     public RecycleViewAdapterUser(Context context, List<LP> lp, int day, int month, int year, String monthActual) {
         this.context = context;
         this.lp = lp;
@@ -64,10 +66,12 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
 
     }
 
+    //Get list size
     @Override
     public int getItemCount() {
         return lp.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView From;
@@ -76,6 +80,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
         public TextView Total;
         public Button editButton;
         public Button deleteButton;
+
         public ViewHolder(View v, final Context ctx) {
             super(v);
             context = ctx;
@@ -97,7 +102,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             });
         }
 
-
+        //When you click edit or delete
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.deleteButton:
@@ -117,21 +122,27 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
 
         //delete LP
         public void deleteLP (final int id, final LP lplp){
+
+            //create alert dialog
             alertDialogBuilder = new AlertDialog.Builder(context);
             inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.confirmation_dialog, null);
-            Button noButton =  view.findViewById(R.id.noButton);
-            Button yesButton =  view.findViewById(R.id.yesButton);
             alertDialogBuilder.setView(view);
             dialog = alertDialogBuilder.create();
             dialog.show();
 
+            Button noButton =  view.findViewById(R.id.noButton);
+            Button yesButton =  view.findViewById(R.id.yesButton);
+
+            //When you select No, nothing happens, the dialog closes
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
                 }
             });
+
+            //When press Yes,delete that LP from Firebase
             yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -172,7 +183,9 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             });
         }
 
-        //edit Lp
+        //Edit Lp
+        //When editing an item you are redirected to report activity
+        //Submit a Flag= "edit" that says you are editing and sending the necessary data from this activity
         public void editLp(final int id, final LP lp, final View v){
 
             final String[] key = new String[6];
@@ -205,7 +218,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     intent.putExtra("fromEdit", lp.getFrom());
                     intent.putExtra("toEdit", lp.getTo());
                     intent.putExtra("LpTotal", LpTotal);
-                    intent.putExtra("keyy", keyLP);
+                    intent.putExtra("key", keyLP);
                     intent.putExtra("total", total);
                     intent.putExtra("TotalLpActual", lp.getTotal());
                     intent.putExtra("day", day);
