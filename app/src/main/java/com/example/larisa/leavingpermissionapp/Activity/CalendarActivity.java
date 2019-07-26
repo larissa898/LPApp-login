@@ -16,8 +16,7 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,13 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -48,21 +44,17 @@ public class CalendarActivity extends AppCompatActivity {
     int actualMonth;
     int actualYear;
     private DatabaseReference mDatabase;
-    private List<String > lpChildren = new ArrayList();
-    private String lpChild;
-    private RecycleViewAdapterUser recyclerViewUser;
     private RecyclerView recyclerView;
-    private List<LP> LpList ;
     public String Current;
-
-
-
+    private String actualM;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+
+        //months of the year
         final String[] strMonths = {"January",
                 "February",
                 "March",
@@ -76,22 +68,21 @@ public class CalendarActivity extends AppCompatActivity {
                 "November",
                 "December"};
 
-        Calendar cal = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
-        actualDay = cal.get(Calendar.DATE);
-        actualMonth = cal.get(Calendar.MONTH);
-        actualYear = cal.get(Calendar.YEAR);
+        actualDay = calendar.get(Calendar.DATE);
+        actualMonth = calendar.get(Calendar.MONTH);
+        actualYear = calendar.get(Calendar.YEAR);
         CancelCalendar = findViewById(R.id.CancelButtonCalendar);
         calendarView = findViewById(R.id.calendarViewID);
         Angajat = findViewById(R.id.NumeAngajatCalendar);
         recyclerView = findViewById(R.id.recyclerViewUser);
 
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
 
+        //Set the welcome message with the user name
         Query query =  functionRef.child(userId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -101,17 +92,15 @@ public class CalendarActivity extends AppCompatActivity {
                 {
                     String nume = dataSnapshot.child("fullName").getValue(String.class);
                     Angajat.setText("Buna " +  nume + "!" );
-
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
-
+        //
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -129,33 +118,43 @@ public class CalendarActivity extends AppCompatActivity {
 
                     // If double click...
                     if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                        //If it is weekend you can not add LPs
+                        //Otherwise double click will send you the next activity <<Leaving Permission List>>
                         if ( dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday"))){
-                            Toast.makeText(getApplicationContext(), "It's weekend, choose a working day" , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "It's weekend, choose a working day"
+                                    , Toast.LENGTH_SHORT).show();
 
-                        }else{
+                        }
+                        else{
 
                             mHasDoubleClicked = true;
-                            Intent intent = new Intent(CalendarActivity.this, LeavingPermissionList.class);
+                            Intent intent = new Intent(CalendarActivity.this
+                                    , LeavingPermissionList.class);
+
+                            //Calculates the month according to the month number
+                            actualM=strMonths[month];
                             intent.putExtra("day", dayOfMonth);
                             intent.putExtra("month", month);
                             intent.putExtra("year", year);
                             intent.putExtra("actualDay", actualDay);
                             intent.putExtra("actualMonth", actualMonth);
                             intent.putExtra("actualYear", actualYear);
+                            intent.putExtra("monthActual", actualM);
                             Current = (actualDay + " " + actualMonth+ " "+actualYear);
                             startActivity(intent);
-                            onRestart();
-
                         }
                     }
                     else {     // If not double click....
                         mHasDoubleClicked = false;
                         @SuppressLint("HandlerLeak") final Handler myHandler = new Handler() {
                             public void handleMessage(Message m) {
-                                if (!mHasDoubleClicked && (dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday")))) {
-                                    Toast.makeText(getApplicationContext(), "It's weekend, choose a working day" , Toast.LENGTH_SHORT).show();
+                                if (!mHasDoubleClicked && (dayOfWeek.equals("Sunday")
+                                        || (dayOfWeek.equals("Saturday")))) {
+                                    Toast.makeText(getApplicationContext()
+                                            , "It's weekend, choose a working day" , Toast.LENGTH_SHORT).show();
                                 }else{
-                                    Toast.makeText(getApplicationContext(), "Press Double-Click to make a request", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext()
+                                            , "Press Double-Click to make a request", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         };
@@ -171,6 +170,9 @@ public class CalendarActivity extends AppCompatActivity {
         CancelCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(CalendarActivity.this
+                        , MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });

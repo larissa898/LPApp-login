@@ -55,4 +55,5 @@
     <string name="done_confirming">Done</string>
     <string name="hint_phone">Enter your mobile phone</string>
     <string name="register_number">Enter your register number</string>
+    <string name="Add">Add</string>
 </resources>

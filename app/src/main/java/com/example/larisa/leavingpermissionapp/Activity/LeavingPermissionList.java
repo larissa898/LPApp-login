@@ -27,13 +27,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class LeavingPermissionList extends AppCompatActivity {
 
     private Button CancelList;
     private Button AddButton;
+    public Button editButton;
     private TextView CurrentDay;
     public String Current;
     private int  day;
@@ -47,64 +50,81 @@ public class LeavingPermissionList extends AppCompatActivity {
     private int actualYear;
     private Float total;
     private TextView TotalOreZi;
-
-
+    private String monthActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_leaving_permission_list);
-         String[] strMonths = {"January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"};
-
-
-
         recyclerView = findViewById(R.id.recyclerViewUser);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         LpList = new ArrayList<>();
-
         CurrentDay = findViewById(R.id.textViewDayCurrent);
         AddButton = findViewById(R.id.buttonAddList);
         CancelList = findViewById(R.id.buttonCancelList);
         TotalOreZi = findViewById(R.id.totalResult);
-
+        editButton =  findViewById(R.id.editButton);
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
         actualMonth =  getIntent().getIntExtra("actualMonth",0);
         actualYear =  getIntent().getIntExtra("actualYear",0);
         month = getIntent().getIntExtra("month",0);
         year = getIntent().getIntExtra("year", 0);
+        monthActual =  getIntent().getStringExtra("monthActual");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        CurrentDay.setText(day + " "+ monthActual + " " + year);
 
-        CurrentDay.setText(day + " "+ strMonths[month] + " " + year);
-
-        DatabaseReference dbReference;
+        final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
-                child(day + " " + strMonths[month] + " " + year);
+                child(day + " " + monthActual + " " + year);
 
+        //update with Firebase
+        dbReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+               LpList.clear();
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                LpList.clear();
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                LpList.clear();
+                if(LpList.size() == 0){
+                    Intent intent = new Intent(LeavingPermissionList.this, LeavingPermissionList.class);
+                    intent.putExtra("day", day);
+                    intent.putExtra("total", total);
+                    intent.putExtra("month", month);
+                    intent.putExtra("year", year);
+                    intent.putExtra("monthActual", monthActual);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        //total H+M and LPList for this day from Firebase
         dbReference.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 if(dataSnapshot.exists())
                 {
                     float sum = 0;
                     for(DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
-                            final LP lp  = snapshot.getValue(LP.class);
+                             LP lp  = snapshot.getValue(LP.class);
                             LpList.add(lp);
+                            Log.i(LeavingPermissionList.class.getSimpleName(), "List Size: " + LpList.size());
                             String h = snapshot.child("total").getValue().toString();
                             sum = sum + Float.parseFloat(h);
                             total=sum;
@@ -112,7 +132,8 @@ public class LeavingPermissionList extends AppCompatActivity {
                     TotalOreZi.setText(String.valueOf(total));
                     if(total==3.0 ){AddButton.setEnabled(false);}
                     Current = String.valueOf(CurrentDay);
-                    recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList, day, month, year);
+                    recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList, day, month,
+                            year, monthActual);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
                 }
@@ -122,27 +143,36 @@ public class LeavingPermissionList extends AppCompatActivity {
             }
 
         });
-        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay) ){
+
+        //AddButton
+        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay && month==actualMonth) ){
             AddButton.setEnabled(false);
         }else{
             AddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String Flag = "add";
                     Intent intent = new Intent(LeavingPermissionList.this, RaportActivity.class);
+                    intent.putExtra("Flag", Flag);
                     intent.putExtra("day", day);
                     intent.putExtra("total", total);
                     intent.putExtra("month", month);
                     intent.putExtra("year", year);
+                    intent.putExtra("monthActual", monthActual);
                     Log.d("luna", String.valueOf(month));
                     startActivity(intent);
+                    finish();
+
                 }
             });
         }
+
         CancelList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LeavingPermissionList.this, CalendarActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

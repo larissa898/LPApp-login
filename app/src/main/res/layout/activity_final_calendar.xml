@@ -33,6 +33,8 @@
         android:textColor="@color/textColor"
         android:background="@color/buttonColor"
         android:text="@string/back_to_team"
+        android:textColor="@color/textColor"
+        android:background="@color/buttonColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

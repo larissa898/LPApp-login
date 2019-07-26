@@ -7,16 +7,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,13 +28,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.lang.String.valueOf;
 
 public class RaportActivity extends AppCompatActivity {
 
@@ -44,253 +45,472 @@ public class RaportActivity extends AppCompatActivity {
     private Spinner To;
     private TextView date;
     private TextView Nume;
-    private Button Beckraport;
+    private Button Backraport;
     public int minnn;
     public int ora;
     private TextView TotalOre;
-    private int  day;
+    private int day;
     private int month;
     private int year;
+    private String fromEdit;
+    private String toEdit;
     private String status = "neconfirmat";
     private Float total;
-    String first="";
-    String second="";
+    private String first = "";
+    private String second = "";
     private int minn;
-
+    private String[] listFinal;
+    private boolean[] takenIntervals;
+    private String monthActual;
+    private String[] toListFirebase = new String[]{};
+    private String[] fromListFirebase = new String[]{};
+    private String Flag;
+    private int FromMinutes;
+    private int FromHour;
+    private String[] hourMinTo;
+    private  ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapteredit;
+    private String LpTotal;
+    private String key ;
+    private LP LpList;
+    private Float TotalLpActual;
+    private String[] hourMinFrom;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
+        listFinal = new String[24];
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raport);
-
         final String[] items = new String[]{"7:30", "8:00", "8:30", "9:00", "9:30",
-                "10:00", "10:30", "11:00", "11:30","12:00", "12:30", "13:00" ,"13:30",
-                "14:00", "14:30","15:00", "15:30", "16:00", "16:30","17:00", "17:30",
+                "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+                "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
                 "18:00", "18:30", "19:00"};
 
-        final String[] strMonths = {"January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"};
-
-
+        takenIntervals = new boolean[items.length];
+        Arrays.fill(takenIntervals, false);
         Confirm = findViewById(R.id.ConfirmButtonRaport);
         From = findViewById(R.id.spinnerFrom);
         To = findViewById(R.id.spinnerTo);
         TotalOre = findViewById(R.id.TotalTextView);
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
-        Beckraport = findViewById(R.id.buttonBackRaport);
-        day =  getIntent().getIntExtra("day",0);
-        month = getIntent().getIntExtra("month",0);
+        Backraport = findViewById(R.id.buttonBackRaport);
+        LpTotal = getIntent().getStringExtra("LpTotal");
+        //If you get into this activity from editing you get "edit" in Flag
+        //If you get into this activity from add you get "add" in the Flag
+        Flag = getIntent().getStringExtra("Flag");
+        fromEdit = getIntent().getStringExtra("fromEdit");
+        toEdit = getIntent().getStringExtra("toEdit");
+        day = getIntent().getIntExtra("day", 0);
+        month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
-        total = getIntent().getFloatExtra("total",0);
-
-        date.setText(day + " "+ strMonths[month] + " " + year );
-
+        total = getIntent().getFloatExtra("total", 0);
+        key = getIntent().getStringExtra("key");
+        TotalLpActual = getIntent().getFloatExtra("TotalLpActual",0);
+        monthActual =  getIntent().getStringExtra("monthActual");
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        date.setText(day + " " + monthActual + " " + year);
+
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final DatabaseReference functionRef =  FirebaseDatabase.getInstance().getReference("Users");
+        final DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
+        final DatabaseReference dbReference;
+        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                child(day + " " + monthActual + " " + year);
+        final List<String> listFrom = new ArrayList<>();
+        final List<String> listTo = new ArrayList<>();
 
-        final Query query =  functionRef.child(userId);
-        query.addValueEventListener(new ValueEventListener() {
+        //create listFrom and listTo from Firebase and generate listFinal
+        dbReference.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listFrom.clear();
+                listTo.clear();
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        listFrom.add(valueOf(snapshot.child("from").getValue()));
+                        listTo.add(valueOf(snapshot.child("to").getValue()));
+                    }
+                }
+                toListFirebase = new String[listFrom.size() + 1];
+                fromListFirebase = new String[listFrom.size() + 1];
+                takenIntervals = GetTakenInterval( listFrom,    listTo,  items );
 
-                if (dataSnapshot.exists())
-                {
+                    int i = 0;
+                    for (int j = 0; j < takenIntervals.length; j++) {
+                        if (takenIntervals[j] == false) {
+                            listFinal[i] = items[j];
+                            i++;
+                        }
+                    }
+                toListFirebase[listFrom.size()] = "20:00";
+                fromListFirebase[listFrom.size()] = "20:00";
 
-                    String nume = dataSnapshot.child("fullName").getValue(String.class);
+                // create adapter
+                //If listFrom size = 0 then the adapter is made up of everything that contains items
+                //If listFrom size != 0 then the adapter is created by eliminating existing time intervals
+                if (listFrom.size() == 0) {
+                    adapter = new ArrayAdapter<>(RaportActivity.this,
+                            android.R.layout.simple_spinner_dropdown_item, items);
+                }
+                else {
+                    adapter = new ArrayAdapter<>(RaportActivity.this,
+                            android.R.layout.simple_spinner_dropdown_item, listFinal);
+                }
 
-                    Nume.setText(nume);
+                //Edit
+                if(Flag.equals("edit")){
+                    adapteredit = new ArrayAdapter<>(RaportActivity.this,
+                            android.R.layout.simple_spinner_dropdown_item, items);
+                    From.setAdapter(adapteredit);
+                    To.setAdapter(adapteredit);
+                    int positionFrom = indexOf(adapteredit, fromEdit);
+                    int positionTo = indexOf(adapteredit, toEdit);
+                    From.setSelection(positionFrom);
+                    To.setSelection(positionTo);
+                    first=fromEdit;
+                    second=toEdit;
+                    Confirm.setText("EDIT");
+                    //Select From Hour for LPEdit
+                    From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            first = From.getSelectedItem().toString();
+                            String[] hourMinFrom = first.split(":");
+                            FromMinutes = Integer.valueOf(hourMinFrom[1]);
+                            FromHour = Integer.valueOf(hourMinFrom[0]);
+                            hourMinTo = toEdit.split(":");
+                            SetTotal(hourMinFrom, hourMinTo);
+                        }
 
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+
+                }
+                //Add
+                else if (Flag.equals("add")){
+                    From.setAdapter(adapter);
+                    Confirm.setText("ADD");
+                    //Select From Hour from LPAdd
+                    From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            first = From.getSelectedItem().toString();
+                            String[] hourMinFrom = first.split(":");
+                            FromMinutes = Integer.valueOf(hourMinFrom[1]);
+                            FromHour = Integer.valueOf(hourMinFrom[0]);
+                            List<String> ToList = new ArrayList<>();
+                            //Generate ToList
+                            ToList = GenerateList(listFrom, FromHour, FromMinutes);
+                            //create adapterTo
+                            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
+                            To.setAdapter(adapterTo);
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
                 }
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        final Query query = functionRef.child(userId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String nume = dataSnapshot.child("fullName").getValue(String.class);
+                    Nume.setText(nume);
+                }
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);//set the spinners adapter to the previously created one.
-
-        From.setAdapter(adapter);
-
         Confirm.setEnabled(false);
 
-        From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                first = From.getSelectedItem().toString();
-                
-
-                String[] hourMinFrom = first.split(":");
-
-                int FromMinutes  = Integer.valueOf(hourMinFrom[1]);
-                int FromHour = Integer.valueOf(hourMinFrom[0]);
-                List<String> ToList = new ArrayList<>();
-
-                if(     ((FromHour ==  8 ) && (FromMinutes == 0)) || ((FromHour ==  9) &&  (FromMinutes == 0)) ||
-                        ((FromHour ==  10) && (FromMinutes == 0)) || ((FromHour ==  11) && (FromMinutes == 0)) ||
-                        ((FromHour ==  12) && (FromMinutes == 0)) || ((FromHour ==  13) && (FromMinutes == 0)) ||
-                        ((FromHour ==  14) && (FromMinutes == 0)) || ((FromHour ==  15) && (FromMinutes == 0)) ||
-                        ((FromHour ==  16) && (FromMinutes == 0)) || ((FromHour ==  17) && (FromMinutes == 0)) ||
-                        ((FromHour ==  18) && (FromMinutes == 0)) || ((FromHour ==  19) && (FromMinutes == 0))) {
-
-                    for(int j=0; j<= 2*(20-FromHour); j=j+2)
-                    {
-                        ToList.add(FromHour   +":"+ 30 );
-                        ToList.add(FromHour +1 + ":" + "00");
-                        FromHour++;
-                    }
-
-                }else{
-                    for(int j=0; j<= 2*(18-FromHour); j=j+2)
-                    {
-                        ToList.add(FromHour + 1 + ":" + "00");
-                        ToList.add(FromHour + ":" + 30);
-                        FromHour++;
-                    }
-                }
-
-                ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
-                To.setAdapter(adapterTo);
-                To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        String[] hourMinFrom = first.split(":");
-                        second = To.getSelectedItem().toString();
-
-                        String[] hourMinTo = second.split(":");
-                        int hourResult=0;
-                        int  minResult=0;
-
-
-                        if( Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])){
-                             hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
-                             minResult = 30;
-
-                        } else {
-                             hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
-                             minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
-
-                        }
-                        int plus =0;
-                        int minfin=0;
-                        if(total%10 ==3){
-                            TotalOre.setText("No!");
-                        }
-                        if(minResult ==30 && (total-total%10)==0.5){
-                            plus =1;
-                            minfin=0;
-
-                        }else if((minResult==30 && (total-total%10)==0) ||(minResult==0 && (total-total%10)==0.5) )
-                        {
-                         minfin=30;
-                        }else if((minResult==0 && (total-total%10)==0)) {
-                            minfin=0;
-                        }
-
-                        if( (((hourResult + (total%10)) >3) ||((((hourResult + (total%10)+ plus) ==3) && (minfin!=0)))))
-                        {
-                             TotalOre.setText("Select again!");
-                             Confirm.setEnabled(false);
-                         } else
-                             {
-                            TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
-                             Confirm.setEnabled(true);
-                             //final int minutes = minResult;
-                             minnn=minResult;
-                             ora = hourResult;
-
-                         }
-
-
-                    }
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-
-                });
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         Confirm.setOnClickListener(new View.OnClickListener() {
-
             DateFormat df = new SimpleDateFormat("HH:mm:ss");
             String time = df.format(Calendar.getInstance().getTime());
 
             @Override
             public void onClick(View v) {
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists())
+                //Edit LP
+                if(Flag.equals("edit")) {
+                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    final DatabaseReference dbReference;
+                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                            child(day+ " "+  monthActual+ " "+year);
+                    dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                        {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            String nume =dataSnapshot.child("fullName").getValue(String.class);
-                            Log.d("data", "exists");
-
-                            Float total ;
-                            if(minnn == 30){
-                                total = Float.valueOf(String.valueOf(ora+ ".5") );
-
-
+                            //Create new LP after edit origin LP in Firebase
+                            if (dataSnapshot.exists()) {
+                                String nume = dataSnapshot.child("fullName").getValue(String.class);
+                                Log.d("data", "exists");
+                                Float total;
+                                if (minnn == 30) {
+                                    total = Float.valueOf(ora + ".5");
+                                } else {
+                                    total = Float.valueOf(valueOf(ora));
+                                }
+                                LP lp = new LP(nume, From.getSelectedItem().toString()
+                                        , To.getSelectedItem().toString(), total, status);
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance()
+                                                .getCurrentUser().getUid())
+                                        .child("LP").child(date.getText()
+                                        .toString()).child(time).setValue(lp);
                             }
-                            else
-                            {
-                                total = Float.valueOf(String.valueOf(ora) );
+                            //Delete origin LP from Firebase
+                            if(dataSnapshot.exists()){
+
+                                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                                {
+                                    if (snapshot.getKey().equals(key)){
+                                        snapshot.getRef().removeValue();
+                                        return;
+                                    }
+                                }
+                                adapter.notifyDataSetChanged();
                             }
+                        }
 
-
-                            LP lp = new LP(nume,From.getSelectedItem().toString() ,To.getSelectedItem().toString(),total,status);
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
-                    }
+                    });
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+                //Add L
+                else if (Flag.equals("add")){
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            //Add LP in Firebase
+                            if (dataSnapshot.exists()) {
+                                String nume = dataSnapshot.child("fullName").getValue(String.class);
+                                Log.d("data", "exists");
+                                Float total;
+                                if (minnn == 30) {
+                                    total = Float.valueOf(valueOf(ora + ".5"));
+                                } else {
+                                    total = Float.valueOf(valueOf(ora));
+                                }
+                                LP lp = new LP(nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
+                            }
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                }
+                //Create new Intent
+                //When press Confirm Button redirection in Leaving Permission List
                 Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
                 intent.putExtra("day", day);
                 intent.putExtra("month", month);
                 intent.putExtra("year", year);
+                intent.putExtra("monthActual", monthActual);
                 startActivity(intent);
+
             }
+
+        });
+        //To Hour Select
+        To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                hourMinFrom = first.split(":");
+                               second = To.getSelectedItem().toString();
+                hourMinTo = second.split(":");
+                //Call Set Total to calculate the total hours on that LP
+                SetTotal(hourMinFrom, hourMinTo);
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+
         });
 
-        Beckraport.setOnClickListener(new View.OnClickListener() {
+        //When press Back button return to previous activity <<Leaving Permission List>> without changing
+        Backraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RaportActivity.this, LeavingPermissionList.class);
                 intent.putExtra("day", day);
                 intent.putExtra("month", month);
                 intent.putExtra("year", year);
+                intent.putExtra("monthActual", monthActual);
                 startActivity(intent);
             }
         });
+
+    }
+
+    //The function to create a boolean list of the hours used
+    //true-used
+    //false-unused
+    boolean[] GetTakenInterval(List listFrom, List listTo , String[] items){
+
+        if (listFrom.size() != 0) {
+            boolean foundFirstEntry = false;
+            for (int j = 0; j < listFrom.size(); j++) {
+                for (int i = 0; i < items.length; i++) {
+                    if (items[i].equals(listFrom.get(j))) {
+                        foundFirstEntry = true;
+                        takenIntervals[i] = true;
+                        fromListFirebase[j] = items[i];
+                    } else if (foundFirstEntry) {
+                        if (items[i].equals(listTo.get(j))) {
+                            foundFirstEntry = false;
+                            takenIntervals[i] = false;
+                            toListFirebase[j] = items[i];
+                        } else {
+                            takenIntervals[i] = true;
+                        }
+                    }
+                }
+            }
+        }
+        return takenIntervals;
+    }
+
+    //Generate the To list based on existing time intervals
+    //Removes existing time intervals in Firebase
+    List<String> GenerateList(List<String> listFrom, int FromHour, int FromMinutes) {
+        Boolean ok = false;
+        List<String> ToList = new ArrayList<>();
+        String[] FromListH = new String[listFrom.size()+1];
+        String[] FromListM = new String[listFrom.size()+1];
+        String[] ToListH = new String[listFrom.size()+1];
+        String[] ToListM = new String[listFrom.size()+1];
+        int iterator;
+        int index;
+        for (index = 0; index < listFrom.size()  +1 ; index++) {
+            String[] hourMinToListFirs = toListFirebase[index].split(":");
+            String[] hourMinFromListFirst = fromListFirebase[index].split(":");
+            FromListH[index] = hourMinFromListFirst[0];
+            FromListM[index] = hourMinFromListFirst[1];
+            ToListH[index] = hourMinToListFirs[0];
+            ToListM[index] = hourMinToListFirs[1];
+        }
+        //If listFrom.size == 0 generates the full range of hours
+        if (listFrom.size() == 0) {
+            if (((FromHour == 8) && (FromMinutes == 0)) || ((FromHour == 9) && (FromMinutes == 0)) ||
+                    ((FromHour == 10) && (FromMinutes == 0)) || ((FromHour == 11) && (FromMinutes == 0)) ||
+                    ((FromHour == 12) && (FromMinutes == 0)) || ((FromHour == 13) && (FromMinutes == 0)) ||
+                    ((FromHour == 14) && (FromMinutes == 0)) || ((FromHour == 15) && (FromMinutes == 0)) ||
+                    ((FromHour == 16) && (FromMinutes == 0)) || ((FromHour == 17) && (FromMinutes == 0)) ||
+                    ((FromHour == 18) && (FromMinutes == 0)) || ((FromHour == 19) && (FromMinutes == 0))) {
+                for (int j = 0; j <= 2 * (20 - FromHour); j = j + 2) {
+                    ToList.add(FromHour + ":" + 30);
+                    ToList.add(FromHour + 1 + ":" + "00");
+                    FromHour++;
+                }
+            } else {
+                for (int j = 0; j <= 2 * (18 - FromHour); j = j + 2) {
+                    ToList.add(FromHour + 1 + ":" + "00");
+                    ToList.add(FromHour + ":" + 30);
+                    FromHour++;
+                }
+            }
+        }else if (listFrom.size() > 0){
+            for (iterator = 0; iterator < listFrom.size()+1; iterator++) {
+                for (index = 0; index < listFrom.size()+1 ; index++) {
+                    if ((FromHour < Integer.valueOf(FromListH[index]) && ok==false) ||
+                            (FromHour == Integer.valueOf(FromListH[index]) &&
+                                    FromMinutes < Integer.valueOf(FromListM[index]) && ok==false) ) {
+                        ok=true;
+                        while (FromHour < Integer.valueOf(FromListH[index])) {
+                            if (((FromMinutes == Integer.valueOf(30)))) {
+                                ToList.add(FromHour + 1 + ":" + "00");
+                                ToList.add(FromHour + 1 + ":" + 30);
+                                FromHour++;
+                            } else {
+                                ToList.add(FromHour + ":" + 30);
+                                ToList.add(FromHour + 1 + ":" + "00");
+                                FromHour++;
+                            }
+                            if(FromMinutes != Integer.valueOf(30) &&
+                                    Integer.valueOf(FromListM[index]) == 30){
+                                ToList.add(FromHour + ":" + 30);
+                            }
+                        }
+                   }
+                }
+            }
+        }
+        return ToList;
+    }
+
+    //The function finds the index of the selected value
+    private int indexOf(final Adapter adapter, Object value)
+    {
+        for (int index = 0, count = adapter.getCount(); index < count; ++index)
+        {
+            if (adapter.getItem(index).equals(value))
+            {
+                return index;
+            }
+        }
+        return -1;
+    }
+    //Calculates the total hours on current Leaving Permission and does not allow to exceed 3 hours in total per day
+    void SetTotal (String[] hourMinFrom, String[] hourMinTo){
+        int hourResult = 0;
+        int minResult = 0;
+        if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
+            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]) - 1;
+            minResult = 30;
+        } else {
+            hourResult = Integer.valueOf(hourMinTo[0]) - Integer.valueOf(hourMinFrom[0]);
+            minResult = Integer.valueOf(hourMinTo[1]) - Integer.valueOf(hourMinFrom[1]);
+        }
+        int plus = 0;
+        int minfin = 0;
+        if (total % 10 == 3) {
+            TotalOre.setText("No!");
+        }
+        if (minResult == 30 && (total - total % 10) == 0.5) {
+            plus = 1;
+            minfin = 0;
+
+        } else if ((minResult == 30 && (total - total % 10) == 0) || (minResult == 0 && (total - total % 10) == 0.5)) {
+            minfin = 30;
+        } else if ((minResult == 0 && (total - total % 10) == 0)) {
+            minfin = 0;
+        }
+        Float result = null;
+        if(minResult==30){
+            result = Float.valueOf(hourResult + ".5");
+        }else
+        {
+            result = Float.valueOf(hourResult);
+        }
+        if ((((result + (total % 10) - TotalLpActual) > 3)||
+                ((((hourResult + (total % 10) + plus - TotalLpActual)) == 3)
+                        && (minfin != 0)))) {
+            TotalOre.setText("Select again!");
+            Confirm.setEnabled(false);
+        } else {
+            TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
+            Confirm.setEnabled(true);
+            minnn = minResult;
+            ora = hourResult;
+        }
 
     }
 }

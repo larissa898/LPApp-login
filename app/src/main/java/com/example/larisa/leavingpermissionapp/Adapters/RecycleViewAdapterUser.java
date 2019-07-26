@@ -4,20 +4,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
-import com.example.larisa.leavingpermissionapp.Activity.FinalCalendar;
 import com.example.larisa.leavingpermissionapp.Activity.LeavingPermissionList;
 import com.example.larisa.leavingpermissionapp.Activity.RaportActivity;
-import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,10 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAdapterUser.ViewHolder> {
 
@@ -39,28 +33,20 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     private Context context;
     private List<LP> lp = new ArrayList<>();
     private LayoutInflater inflater;
+    private String monthActual;
+    private Float total;
     private int day;
     private int month;
     private int year;
-    String[] strMonths = {"January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"};
 
-    public RecycleViewAdapterUser(Context context, List<LP> lp, int day, int month, int year) {
+
+    public RecycleViewAdapterUser(Context context, List<LP> lp, int day, int month, int year, String monthActual) {
         this.context = context;
         this.lp = lp;
         this.day = day;
         this.month = month;
         this.year = year;
+        this.monthActual = monthActual;
     }
 
     @NonNull
@@ -77,8 +63,10 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
         viewHolder.To.setText(mylist.getTo());
         viewHolder.Status.setText(mylist.getStatus());
         viewHolder.Total.setText(String.valueOf(mylist.getTotal()));
+
     }
 
+    //Get list size
     @Override
     public int getItemCount() {
         return lp.size();
@@ -100,9 +88,8 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
             To = v.findViewById(R.id.textViewTo);
             Total = v.findViewById(R.id.textViewTotal);
             Status=  v.findViewById(R.id.textViewStatus);
-            editButton =  v.findViewById(R.id.EditButton);
+            editButton = v.findViewById(R.id.editButton);
             deleteButton =  v.findViewById(R.id.deleteButton);
-
             editButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
 
@@ -113,97 +100,142 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
 
                 }
             });
-
         }
+
+        //When you click edit or delete
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.EditButton:
-                    int position = getAdapterPosition();
-                    LP LivingPerm = lp.get(position);
-                    editLp(LivingPerm);
-
-                    break;
                 case R.id.deleteButton:
-                    position = getAdapterPosition();
+                    int position = getAdapterPosition();
                     LP LivingPermission = lp.get(position);
                     deleteLP(position,LivingPermission);
                     break;
+                case R.id.editButton:
+                    position = getAdapterPosition();
+                    LivingPermission = lp.get(position);
+
+                    editLp(position,LivingPermission,v);
+                    break;
+
             }
         }
 
+        //delete LP
         public void deleteLP (final int id, final LP lplp){
+
+            //create alert dialog
             alertDialogBuilder = new AlertDialog.Builder(context);
             inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.confirmation_dialog, null);
-            Button noButton =  view.findViewById(R.id.noButton);
-            Button yesButton =  view.findViewById(R.id.yesButton);
             alertDialogBuilder.setView(view);
             dialog = alertDialogBuilder.create();
             dialog.show();
 
+            Button noButton =  view.findViewById(R.id.noButton);
+            Button yesButton =  view.findViewById(R.id.yesButton);
+
+            //When you select No, nothing happens, the dialog closes
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
                 }
             });
+
+            //When press Yes,delete that LP from Firebase
             yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
-                   // Log.d("eeeeee", day+ " "+ strMonths[month ]+ " "+year);
                     dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
-                            child(day+ " "+ strMonths[month] + " "+year);
+                            child(day+ " "+  monthActual+ " "+year);
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            lp.clear();
-//                            Log.d("@@@", String.valueOf(id));
-                            //String[] key = new String[6];
+                            String[] key = new String[6];
+                            int j=0;
 
                             if(dataSnapshot.exists()){
-//                                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                                    key[j]=String.valueOf(snapshot.getKey());
-////                                    Log.d("!!!", String.valueOf(snapshot.getKey()));
-//                                    j++;
-//                                }
-
-                                int i=0;
-                                //int k=0;
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    key[j]=String.valueOf(snapshot.getKey());
+                                    j++;
+                                }
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren())
                                {
-                                   //String abc = snapshot.getKey();
-                                   if((i== id)  ){
+                                   if (snapshot.child("from").getValue().equals(lplp.getFrom()) && snapshot.child(
+                                           "to").getValue().equals(lplp.getTo())) {
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
-                                      // lp.remove(id);
-
+                                       lp.clear();
                                        return;
-
-
-                                   }
-                                   else{
-                                       i++;
                                    }
                                }
-
+                                notifyDataSetChanged();
                             }
-                            notifyDataSetChanged();
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
 
                     });
-
                 }
             });
-
         }
 
-        public void editLp(final LP lp){
+        //Edit Lp
+        //When editing an item you are redirected to report activity
+        //Submit a Flag= "edit" that says you are editing and sending the necessary data from this activity
+        public void editLp(final int id, final LP lp, final View v){
+
+            final String[] key = new String[6];
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            final DatabaseReference dbReference;
+            dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                    child(day+ " "+  monthActual+ " "+year);
+            dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int j=0;
+                    float sum = 0;
+
+                    if(dataSnapshot.exists()){
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            key[j]=String.valueOf(snapshot.getKey());
+                            j++;
+                            String h = snapshot.child("total").getValue().toString();
+                            sum = sum + Float.parseFloat(h);
+                            total=sum;
+                        }
+                    }
+                    String keyLP = key[id];
+                    String Flag = "edit";
+                    String LpTotal = String.valueOf(lp.getTotal());
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, RaportActivity.class);
+                    intent.putExtra("Flag", Flag);
+                    intent.putExtra("LpList", lp);
+                    intent.putExtra("fromEdit", lp.getFrom());
+                    intent.putExtra("toEdit", lp.getTo());
+                    intent.putExtra("LpTotal", LpTotal);
+                    intent.putExtra("key", keyLP);
+                    intent.putExtra("total", total);
+                    intent.putExtra("TotalLpActual", lp.getTotal());
+                    intent.putExtra("day", day);
+                    intent.putExtra("month", month);
+                    intent.putExtra("year", year);
+                    intent.putExtra("monthActual", monthActual);
+                    v.getContext().startActivity(intent);
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+
+            });
+
 
         }
     }
