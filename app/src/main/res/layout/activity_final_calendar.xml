@@ -30,8 +30,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:textStyle="bold"
-        android:textColor="@color/textColor"
-        android:background="@color/buttonColor"
         android:text="@string/back_to_team"
         android:textColor="@color/textColor"
         android:background="@color/buttonColor"

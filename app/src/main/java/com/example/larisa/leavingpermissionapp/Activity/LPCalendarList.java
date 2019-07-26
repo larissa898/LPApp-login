@@ -112,7 +112,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                 if (i == key && snapshot1.getKey().equals(lp.getData())) {
                                                     if(lp.getStatus().equals("confirmat"))
                                                     {
-                                                        snapshot2.child("status").getRef().setValue("confirmat");
+
 
                                                         AssetManager assetManager = getAssets();
                                                         InputStream myInput;
@@ -202,14 +202,15 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                         }catch (IOException e) {
                                                             e.printStackTrace();
                                                         }
-                                                        return;
+                                                        snapshot2.child("status").getRef().setValue("confirmat");
+                                                        break;
 
 
                                                     }
                                                    else if(lp.getStatus()== ("refuzat"))
                                                     {
                                                         snapshot2.child("status").getRef().setValue("refuzat");
-                                                        return;
+                                                        break;
 
                                                     }
 
@@ -237,8 +238,6 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                        }
                     });
                 }
-
-
                 finish();
                 break;
                case R.id.backToCalendar:

@@ -144,7 +144,6 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 //                                        startActivity(intent);
 //                                    }
                                     intent.putExtra("Lps", (Serializable) LPlist);
-                                    intent.putExtra("users", (Serializable) recycleViewAdapter.checkedUsers);
                                     startActivity(intent);
 
                                 }
