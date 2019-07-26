@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterLP;
 import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -49,42 +51,42 @@ public class FinalCalendar extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+//       DatabaseReference dbReference;
+//        dbReference = FirebaseDatabase.getInstance().getReference("Users");
+//        dbReference.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                finish();
+//                Intent intent2 = new Intent(FinalCalendar.this, FinalCalendar.class);
+//                startActivity(intent2);
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
-       DatabaseReference dbReference;
-        dbReference = FirebaseDatabase.getInstance().getReference("Users");
-        dbReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                finish();
-                Intent intent2 = new Intent(FinalCalendar.this, FinalCalendar.class);
-                startActivity(intent2);
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 
 
-        final Intent intent = getIntent();
        final List<LP> lps= (List<LP>) intent.getSerializableExtra("Lps");
        setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
@@ -177,15 +179,16 @@ public class FinalCalendar extends AppCompatActivity {
 backToTeam.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
-        finish();
-//       Intent intent = new Intent(FinalCalendar.this,ViewTeam.class);
-//       startActivity(intent);
+
+       Intent intent = new Intent(FinalCalendar.this,ViewTeam.class);
+       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+       startActivity(intent);
 
 
 
     }
 });
-
 
 
 
@@ -212,6 +215,8 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     {
         finish();
         Intent intent = new Intent(this,ViewTeam.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
 
     }

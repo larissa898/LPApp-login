@@ -14,7 +14,6 @@ public class LP implements Serializable {
     private String status;
     private String data;
     private String nume;
-
     private User user;
 
     public String getNume() {

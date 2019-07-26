@@ -8,8 +8,6 @@ public class User implements Serializable {
     private String nume;
     private String prenume;
     private String functie;
-
-
     private String fullName;
     private String telefon;
     private String nrMatricol;

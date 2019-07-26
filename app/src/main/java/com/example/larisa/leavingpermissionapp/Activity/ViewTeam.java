@@ -84,8 +84,6 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         });
 
 
-
-
  confirmButton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -116,17 +114,17 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                                 LP lp = snapshot2.getValue(LP.class);
 
                                                 String date = snapshot1.getKey();
-//                                                String fullName  = snapshot.child("fullName").getValue(String.class);
-////
-//                                                String functie = snapshot.child("functie").getValue(String.class);
-//                                                String telefon = snapshot.child("telefon").getValue(String.class);
-//                                                String nrMatricol = snapshot.child("nrMatricol").getValue(String.class);
+                                                String fullName  = snapshot.child("fullName").getValue(String.class);
 //
-//                                                User user = new User(fullName,functie, telefon, nrMatricol);
-//
-//
-//
-//                                                lp.setUser(user);
+                                                String functie = snapshot.child("functie").getValue(String.class);
+                                                String telefon = snapshot.child("telefon").getValue(String.class);
+                                                String nrMatricol = snapshot.child("nrMatricol").getValue(String.class);
+
+                                                User user = new User(fullName,functie, telefon, nrMatricol);
+
+
+
+                                                lp.setUser(user);
 
                                                 lp.setData(date);
                                                 LPlist.add(lp);
@@ -140,13 +138,14 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     }
 
 
-                                    if(i[0] == recycleViewAdapter.checkedUsers.size())
-                                    {
-                                        intent.putExtra("Lps", (Serializable) LPlist);
-                                        startActivity(intent);
-                                    }
-//                                    intent.putExtra("Lps", (Serializable) LPlist);
-//                                    startActivity(intent);
+//                                    if(i[0] == recycleViewAdapter.checkedUsers.size())
+//                                    {
+//                                        intent.putExtra("Lps", (Serializable) LPlist);
+//                                        startActivity(intent);
+//                                    }
+                                    intent.putExtra("Lps", (Serializable) LPlist);
+                                    intent.putExtra("users", (Serializable) recycleViewAdapter.checkedUsers);
+                                    startActivity(intent);
 
                                 }
 
@@ -155,7 +154,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                             //needs modifying
 
 
-                            i[0] ++;
+//                            i[0] ++;
 
 
 
