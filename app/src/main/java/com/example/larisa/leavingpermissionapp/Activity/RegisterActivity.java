@@ -40,7 +40,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button cancelRegistration;
     private List <LP> LPs;
     private String [] availableFunctions;
-
+    private EditText registerNumber;
+    private EditText phoneNumber;
     private FirebaseAuth mAuth;
 
 
@@ -55,6 +56,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         lastName = findViewById(R.id.registerLastName);
         firstName = findViewById(R.id.registerFirstName);
         function = findViewById(R.id.registerFunction);
+        registerNumber = findViewById(R.id.registerNumber);
+        phoneNumber = findViewById(R.id.phoneNumber);
         confirmButton = findViewById(R.id.confirmRegister);
         cancelRegistration = findViewById(R.id.registerCancel);
         availableFunctions = new String[]{"Analist", "Analist Ajutor","Inginer de Sistem","Team Leader",
@@ -72,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
     public void registerUser()
-    {
+    {   final String number  = registerNumber.getText().toString().trim();
         final String registerEmail = email.getText().toString().trim();
         final String registerPassword = password.getText().toString().trim();
         final String registerConfirmPassword = confirmPassword.getText().toString().trim();
@@ -80,7 +83,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         final String registerFirstName = firstName.getText().toString().trim();
         final String registerFunction = function.getSelectedItem().toString().trim();
         final String registerFullName = registerFirstName + " " + registerLastName;
+        final String registerPhone  = phoneNumber.getText().toString().trim();
 
+
+         //validate register number
+        if(number.isEmpty())
+        {
+
+            registerNumber.setError("The register number field cannot be empty");
+            registerNumber.requestFocus();
+            return;
+        }
 
         // validate Email field
         if(registerEmail.isEmpty())
@@ -152,14 +165,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         }
        //validate first name
-        if(registerFirstName.isEmpty())
-        {
+        if(registerFirstName.isEmpty()) {
             firstName.setError("This field cannot be empty");
             firstName.requestFocus();
             return;
         }
         //validate function
+        if(registerPhone.isEmpty())
+        {   phoneNumber.setError("This field cannot be empty");
+            phoneNumber.requestFocus();
+            return;
 
+        }
+        else
+        {
+            if(registerPhone.length()<10)
+            {
+                phoneNumber.setError("The phone number must have at least 10 digits");
+                phoneNumber.requestFocus();
+                return;
+
+            }
+        }
 
         mAuth.createUserWithEmailAndPassword(registerEmail, registerPassword).
                 addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -172,6 +199,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     intent.putExtra("registerFullName", registerFullName);
                     intent.putExtra("registerFunction", registerFunction);
+                    intent.putExtra("registerNumber", number);
+                    intent.putExtra("registerPhone", registerPhone);
                     intent.putExtra("message","Success");
                     startActivity(intent);
                 }

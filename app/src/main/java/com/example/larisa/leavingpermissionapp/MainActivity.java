@@ -1,16 +1,20 @@
 package com.example.larisa.leavingpermissionapp;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
@@ -27,15 +31,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.poifs.macros.VBAMacroReader;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +62,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Button login;
@@ -58,16 +78,19 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mStateListener;
+   private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textView = findViewById(R.id.textView3);
 
 
 
 
-        //db.insertDB(user);
+
+
 
 
         login = findViewById(R.id.button);
@@ -147,8 +170,11 @@ public class MainActivity extends AppCompatActivity {
                                                     "Success")) {
                                                 String registerFullName = intent.getExtras().getString("registerFullName");
                                                 String registerFunction = intent.getExtras().getString("registerFunction");
+                                                String registerNumber =  intent.getExtras().getString("registerNumber");
+                                                String registerPhone =  intent.getExtras().getString("registerPhone");
 
-                                                User registerUser = new User(registerFullName, registerFunction);
+                                                User registerUser = new User(registerFullName, registerFunction,
+                                                        registerPhone, registerNumber);
                                                 FirebaseDatabase.getInstance().getReference("Users")
                                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
                                                         addOnCompleteListener(new OnCompleteListener<Void>() {

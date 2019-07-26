@@ -1,6 +1,7 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterLP;
+import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -20,8 +23,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -94,15 +111,109 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                     if(lp.getStatus().equals("confirmat"))
                                                     {
                                                         snapshot2.child("status").getRef().setValue("confirmat");
-                                                    }
-                                                    else
-                                                        snapshot2.child("status").getRef().setValue("refuzat");
+                                                        break;
+//                                                        AssetManager assetManager = getAssets();
+//                                                        InputStream myInput;
 
-                                                   break;
+//
+//                                                        try {
+//
+//                                                            myInput = assetManager.open("abc.xls");
+//                                                            POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+//
+//                                                            HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
+//
+//                                                            HSSFSheet mySheet = myWorkBook.getSheetAt(0);
+//
+//                                                             String fullNume [] = lp.getUser().getFullName().split(" ");
+//
+//                                                            HSSFCell cell;
+//                                                            //Nume
+//                                                            cell = mySheet.getRow(6).getCell(2);
+//                                                            cell.setCellValue(fullNume[1].toUpperCase());
+//                                                            //Prenume
+//                                                            cell = mySheet.getRow(6).getCell(6);
+//                                                            cell.setCellValue(fullNume[0]);
+//
+//
+//                                                            //Matricol
+//                                                            cell = mySheet.getRow(8).getCell(2);
+//                                                            cell.setCellValue(lp.getUser().getNrMatricol());
+//                                                            //Absent de la
+//                                                            cell = mySheet.getRow(8).getCell(5);
+//                                                            cell.setCellValue(lp.getData());
+//                                                            //Absent pana la
+//                                                            cell = mySheet.getRow(8).getCell(7);
+//                                                            cell.setCellValue(lp.getData());
+//                                                            //De la ora
+//                                                            cell = mySheet.getRow(12).getCell(5);
+//                                                            cell.setCellValue(lp.getFrom());
+//                                                            //Pana la ora
+//                                                            cell = mySheet.getRow(12).getCell(7);
+//                                                            cell.setCellValue(lp.getTo());
+//                                                            //Data depunere
+//                                                            cell = mySheet.getRow(18).getCell(3);
+//                                                            cell.setCellValue(lp.getData());
+//                                                            //Data confirmare
+//                                                            cell = mySheet.getRow(18).getCell(8);
+//                                                            cell.setCellValue(lp.getData());
+//                                                            //            //Adresa si numar de telefon
+//                                                            cell = mySheet.getRow(21).getCell(1);
+//                                                            cell.setCellValue(lp.getUser().getTelefon());
+//
+//
+//
+//
+//
+//                                                            final InputStream stream =
+//                                                                    LPCalendarList.this.getAssets().open(fullNume[0]+fullNume[1]+".png");
+//                                                            byte[] imageBytes = IOUtils.toByteArray(stream);
+//                                                            final int pictureIndex =
+//                                                                    myWorkBook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
+//                                                            stream.close();
+//                                                            final CreationHelper helper = myWorkBook.getCreationHelper();
+//                                                            final Drawing drawing = mySheet.createDrawingPatriarch();
+//
+//                                                            final ClientAnchor anchor = helper.createClientAnchor();
+//                                                            anchor.setAnchorType(ClientAnchor.AnchorType.MOVE_AND_RESIZE);
+//
+//
+//
+//                                                            anchor.setCol1( 3 );
+//                                                            anchor.setCol2( 5 );
+//                                                            anchor.setRow1( 15 ); // same row is okay
+//                                                            anchor.setRow2( 18 );
+//
+//                                                            final Picture pict = drawing.createPicture( anchor, pictureIndex );
+//
+//
+//                                                            File path = LPCalendarList.this.getFilesDir();
+//
+//                                                            FileOutputStream outFile =
+//                                                                    new FileOutputStream(new File(path,"/" +
+//                                                                            "Cerere_Absenta_" +fullNume[1].toUpperCase()+"_"+fullNume[0]+"_"
+//                                                                     + lp.getData()+"_"+lp.getFrom()+ "_991"+
+//                                                                    ".xls"));
+//                                                            myWorkBook.write(outFile);
+//                                                            outFile.close();
+//
+//                                                        }catch (IOException e) {
+//                                                            e.printStackTrace();
+//                                                        }
+
+
+                                                    }
+                                                   else if(lp.getStatus()== ("refuzat"))
+                                                    {
+                                                        snapshot2.child("status").getRef().setValue("refuzat");
+                                                        break;
+
+
+                                                    }
+
                                               }
                                                 else
                                                     {
-
                                                     i++;
                                                 }
 

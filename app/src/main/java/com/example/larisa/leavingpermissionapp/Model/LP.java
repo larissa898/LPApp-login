@@ -15,6 +15,8 @@ public class LP implements Serializable {
     private String data;
     private String nume;
 
+    private User user;
+
     public String getNume() {
         return nume;
     }
@@ -84,6 +86,13 @@ public class LP implements Serializable {
 
     public LP() {
     }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 
     public String getStatus() {
@@ -94,3 +103,4 @@ public class LP implements Serializable {
         this.status = status;
     }
 }
+

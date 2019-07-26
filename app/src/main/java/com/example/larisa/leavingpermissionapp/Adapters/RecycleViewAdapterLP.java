@@ -128,14 +128,25 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                 case R.id.acceptButton:
                     int position = getAdapterPosition();
                     LP LivingPerm = lps.get(position);
-                    acceptLP(LivingPerm);
-                    this.itemClickListener.onItemClick(v, getLayoutPosition());
+                    if(LivingPerm.getStatus().equals("neconfirmat")){
+                        acceptLP(LivingPerm);
+                        this.itemClickListener.onItemClick(v, getLayoutPosition());
+                    }else{
+                        acceptButton.setEnabled(false);
+                        refuseButton.setEnabled(false);
+                    }
+
                     break;
                 case R.id.refuseButton:
                     position = getAdapterPosition();
                     LivingPerm = lps.get(position);
+                    if(LivingPerm.getStatus().equals("neconfirmat")){
                     refuseLP(LivingPerm);
                     this.itemClickListener.onItemClick(v, getLayoutPosition());
+                    }else{
+                        acceptButton.setEnabled(false);
+                        refuseButton.setEnabled(false);
+                    }
                     break;
 
 

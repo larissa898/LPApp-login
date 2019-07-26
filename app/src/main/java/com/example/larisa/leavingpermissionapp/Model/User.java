@@ -1,14 +1,18 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
     private String nume;
     private String prenume;
     private String functie;
-    private String fullName;
 
+
+    private String fullName;
+    private String telefon;
+    private String nrMatricol;
 
     private List<LP> lps;
 
@@ -28,6 +32,13 @@ public class User {
         this.prenume = prenume;
         this.lps = lps;
     }
+    public User(String fullName,String functie, String telefon, String nrMatricol) {
+        this.fullName = fullName;
+        this.functie = functie;
+        this.telefon = telefon;
+        this.nrMatricol = nrMatricol;
+    }
+
 
 
 
@@ -71,6 +82,21 @@ public class User {
 
     public void setLps(List<LP> lps) {
         this.lps = lps;
+    }
+    public String getTelefon() {
+        return telefon;
+    }
+
+    public void setTelefon(String telefon) {
+        this.telefon = telefon;
+    }
+
+    public String getNrMatricol() {
+        return nrMatricol;
+    }
+
+    public void setNrMatricol(String nrMatricol) {
+        this.nrMatricol = nrMatricol;
     }
 
     public String getFullName() {

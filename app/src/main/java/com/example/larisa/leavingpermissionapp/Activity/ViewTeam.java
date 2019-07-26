@@ -1,6 +1,7 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.content.Intent;
+import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -95,10 +96,11 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
                 final List<LP> LPlist = new ArrayList<>();
 
-                DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
-                final int[] i = {0};
+                final DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
+                final int[] i = {1};
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
+
 
 
                     dbReference.addValueEventListener(new ValueEventListener() {
@@ -111,12 +113,24 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     if (snapshot.child("fullName").getValue().equals(u.getFullName())) {
                                         for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
                                             for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                                // Log.d("Date is", String.valueOf(snapshot1.getKey()));
                                                 LP lp = snapshot2.getValue(LP.class);
-                                                //Log.d("user has been absent since", lp.getFrom());
+
                                                 String date = snapshot1.getKey();
+//                                                String fullName  = snapshot.child("fullName").getValue(String.class);
+////
+//                                                String functie = snapshot.child("functie").getValue(String.class);
+//                                                String telefon = snapshot.child("telefon").getValue(String.class);
+//                                                String nrMatricol = snapshot.child("nrMatricol").getValue(String.class);
+//
+//                                                User user = new User(fullName,functie, telefon, nrMatricol);
+//
+//
+//
+//                                                lp.setUser(user);
+
                                                 lp.setData(date);
                                                 LPlist.add(lp);
+
 
 
                                             }
@@ -125,18 +139,24 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                         }
                                     }
 
+
+                                    if(i[0] == recycleViewAdapter.checkedUsers.size())
+                                    {
+                                        intent.putExtra("Lps", (Serializable) LPlist);
+                                        startActivity(intent);
+                                    }
+//                                    intent.putExtra("Lps", (Serializable) LPlist);
+//                                    startActivity(intent);
+
                                 }
 
 
                             }
                             //needs modifying
 
-                            i[0]++;
-                            if(i[0] == recycleViewAdapter.checkedUsers.size())
-                            {
-                                intent.putExtra("Lps", (Serializable) LPlist);
-                                startActivity(intent);
-                            }
+
+                            i[0] ++;
+
 
 
                         }
@@ -167,6 +187,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                      LPlist.clear();
+
                     }
 
                     @Override

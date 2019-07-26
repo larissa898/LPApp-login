@@ -53,4 +53,6 @@
     <string name="back_to_team">Back</string>
     <string name="back_to_calendar">Back</string>
     <string name="done_confirming">Done</string>
+    <string name="hint_phone">Enter your mobile phone</string>
+    <string name="register_number">Enter your register number</string>
 </resources>
