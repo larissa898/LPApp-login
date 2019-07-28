@@ -22,7 +22,7 @@
         app:mcv_showOtherDates="all" />
 
     <Button
-        android:id="@+id/backTeamButton"
+        android:id="@+id/backToTeam"
         android:layout_width="98dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"

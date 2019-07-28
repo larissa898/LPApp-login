@@ -8,6 +8,7 @@ import java.util.Date;
 public class LP implements Serializable {
 
 
+    private String id;
     private String from;
     private String to;
     private Float total;
@@ -35,8 +36,8 @@ public class LP implements Serializable {
 
 
 
-    public LP(String nume, String from, String to, Float total, String status) {
-
+    public LP(String id,String nume, String from, String to, Float total, String status) {
+        this.id = id;
         this.from = from;
         this.to = to;
         this.total = total;
@@ -45,7 +46,8 @@ public class LP implements Serializable {
     }
 
 
-    public LP(String from, String to, Float total, String status, String nume, String data) {
+    public LP(String id,String from, String to, Float total, String status, String nume, String data) {
+        this.id = id;
         this.from = from;
         this.to = to;
         this.total = total;
@@ -82,6 +84,13 @@ public class LP implements Serializable {
     }
 
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public LP() {
     }

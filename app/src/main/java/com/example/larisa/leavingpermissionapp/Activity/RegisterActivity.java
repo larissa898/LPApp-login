@@ -1,6 +1,8 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -194,14 +196,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
+                    Context context = RegisterActivity.this;
+                    SharedPreferences sharedPref = context.getSharedPreferences(
+                          "LPAppSharedPreferences"  , Context.MODE_PRIVATE);
                     FirebaseUser user =  mAuth.getCurrentUser();
                     user.sendEmailVerification();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                    intent.putExtra("registerFullName", registerFullName);
-                    intent.putExtra("registerFunction", registerFunction);
-                    intent.putExtra("registerNumber", number);
-                    intent.putExtra("registerPhone", registerPhone);
-                    intent.putExtra("message","Success");
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("registerFullName", registerFullName);
+                    editor.putString("registerFunction", registerFunction);
+                    editor.putString("registerNumber", number);
+                    editor.putString("registerPhone", registerPhone);
+                    editor.apply();
+//                    intent.putExtra("registerFullName", registerFullName);
+//                    intent.putExtra("registerFunction", registerFunction);
+//                    intent.putExtra("registerNumber", number);
+//                    intent.putExtra("registerPhone", registerPhone);
+//                    intent.putExtra("message","Success");
                     startActivity(intent);
                 }
                 else

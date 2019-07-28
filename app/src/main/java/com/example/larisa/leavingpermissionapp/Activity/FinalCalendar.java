@@ -52,37 +52,7 @@ public class FinalCalendar extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-//       DatabaseReference dbReference;
-//        dbReference = FirebaseDatabase.getInstance().getReference("Users");
-//        dbReference.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 //
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                finish();
-//                Intent intent2 = new Intent(FinalCalendar.this, FinalCalendar.class);
-//                startActivity(intent2);
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
 
 
@@ -91,7 +61,7 @@ public class FinalCalendar extends AppCompatActivity {
        setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
         final List<CalendarDay> EventDays = new ArrayList<>();
-        backToTeam=findViewById(R.id.backTeamButton);
+        backToTeam=findViewById(R.id.backToTeam);
 
 
 
@@ -162,7 +132,7 @@ public class FinalCalendar extends AppCompatActivity {
                   intent.putExtra("TodayLP", (Serializable)sendLP);
                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                   startActivity(intent);
-                  finish();
+//                  finish();
                   sendLP.clear();
 
 
@@ -184,7 +154,7 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
        startActivity(intent);
-
+//finish();
 
 
     }
@@ -215,8 +185,7 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     {
         finish();
         Intent intent = new Intent(this,ViewTeam.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
     }
