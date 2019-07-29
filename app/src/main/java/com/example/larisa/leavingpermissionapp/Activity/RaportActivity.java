@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.valueOf;
 
@@ -265,7 +266,8 @@ public class RaportActivity extends AppCompatActivity {
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
                                 }
-                                LP lp = new LP(nume, From.getSelectedItem().toString()
+                                UUID id =  UUID.randomUUID();
+                                LP lp = new LP(id.toString(),nume, From.getSelectedItem().toString()
                                         , To.getSelectedItem().toString(), total, status);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance()
@@ -309,7 +311,8 @@ public class RaportActivity extends AppCompatActivity {
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
                                 }
-                                LP lp = new LP(nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                UUID id =  UUID.randomUUID();
+                                LP lp = new LP(id.toString(),nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
                                 FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
                             }
                         }

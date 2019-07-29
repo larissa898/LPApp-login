@@ -95,16 +95,16 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 final List<LP> LPlist = new ArrayList<>();
 
                 final DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
-                final int[] i = {1};
+                final int[] i = {0};
+                i[0]=0;
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
 
-
+                    i[0] ++;
 
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
@@ -115,13 +115,11 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
                                                 String date = snapshot1.getKey();
                                                 String fullName  = snapshot.child("fullName").getValue(String.class);
-//
                                                 String functie = snapshot.child("functie").getValue(String.class);
                                                 String telefon = snapshot.child("telefon").getValue(String.class);
                                                 String nrMatricol = snapshot.child("nrMatricol").getValue(String.class);
 
                                                 User user = new User(fullName,functie, telefon, nrMatricol);
-
 
 
                                                 lp.setUser(user);
@@ -138,13 +136,8 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     }
 
 
-//                                    if(i[0] == recycleViewAdapter.checkedUsers.size())
-//                                    {
-//                                        intent.putExtra("Lps", (Serializable) LPlist);
-//                                        startActivity(intent);
-//                                    }
-                                    intent.putExtra("Lps", (Serializable) LPlist);
-                                    startActivity(intent);
+//                                    intent.putExtra("Lps", (Serializable) LPlist);
+//                                    startActivity(intent);
 
                                 }
 
@@ -153,8 +146,13 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                             //needs modifying
 
 
-//                            i[0] ++;
+//
+//                             if(i[0]== recycleViewAdapter.checkedUsers.size())
+//                                {
+                                    intent.putExtra("Lps", (Serializable) LPlist);
+                                    startActivity(intent);
 
+//                                }
 
 
                         }
@@ -184,7 +182,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                     LPlist.clear();
+                        LPlist.clear();
 
                     }
 

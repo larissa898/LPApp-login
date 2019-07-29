@@ -1,6 +1,8 @@
 package com.example.larisa.leavingpermissionapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -31,40 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.poifs.macros.VBAMacroReader;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Picture;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.util.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Button login;
@@ -85,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.textView3);
-
-
 
 
 
@@ -162,55 +129,54 @@ public class MainActivity extends AppCompatActivity {
                                         //check if the user is a team leader or not
 
 
-                                        Intent intent = getIntent();
-                                        if(intent.getExtras() != null)
-                                        {
-                                        if(intent.getExtras().containsKey("message")) {
-                                            if (intent.getExtras().get("message").equals(
-                                                    "Success")) {
-                                                String registerFullName = intent.getExtras().getString("registerFullName");
-                                                String registerFunction = intent.getExtras().getString("registerFunction");
-                                                String registerNumber =  intent.getExtras().getString("registerNumber");
-                                                String registerPhone =  intent.getExtras().getString("registerPhone");
-
-                                                User registerUser = new User(registerFullName, registerFunction,
-                                                        registerPhone, registerNumber);
-                                                FirebaseDatabase.getInstance().getReference("Users")
-                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-                                                        addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-
-                                                                    Toast.makeText(MainActivity.this, "User has been successfully created, please " +
-                                                                            "verify your email adress", Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            }
-                                                        });
+//                                        Intent intent = getIntent();
+//                                        if(intent.getExtras() != null)
+//                                        {
+//                                        if(intent.getExtras().containsKey("message")) {
+//                                            if (intent.getExtras().get("message").equals(
+//                                                    "Success")) {
+//                                                String registerFullName = intent.getExtras().getString("registerFullName");
+//                                                String registerFunction = intent.getExtras().getString("registerFunction");
+//                                                String registerNumber =  intent.getExtras().getString("registerNumber");
+//                                                String registerPhone =  intent.getExtras().getString("registerPhone");
+//
+//                                                User registerUser = new User(registerFullName, registerFunction,
+//                                                        registerPhone, registerNumber);
+//                                                FirebaseDatabase.getInstance().getReference("Users")
+//                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
+//                                                        addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                            @Override
+//                                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                                if (task.isSuccessful()) {
+//
+//                                                                    Toast.makeText(MainActivity.this, "User has been successfully created, please " +
+//                                                                            "verify your email adress", Toast.LENGTH_SHORT).show();
+//                                                                }
+//                                                            }
+//                                                        });
+//                                                redirectUser(userId);
+//                                            }
+//                                        }
+//
+//                                        } else {
+//                                            if(intent.getExtras() != null) {
+//                                                if (intent.getExtras().containsKey("message")) {
+//
+//                                                    if (intent.getExtras().get("message").equals("Failed")) {
+//                                                        Toast.makeText(MainActivity.this, "User has not been created " +
+//                                                                "please try again", Toast.LENGTH_SHORT).show();
+//
+//                                                    }
+//                                                }
+//                                            }
+//                                            if (intent.getExtras() == null)
+//                                            {
+                                                createUser(userId);
                                                 redirectUser(userId);
-                                            }
+
+//                                            }
                                         }
-
-                                        } else {
-                                            if(intent.getExtras() != null) {
-                                                if (intent.getExtras().containsKey("message")) {
-
-                                                    if (intent.getExtras().get("message").equals("Failed")) {
-                                                        Toast.makeText(MainActivity.this, "User has not been created " +
-                                                                "please try again", Toast.LENGTH_SHORT).show();
-
-                                                    }
-                                                }
-                                            }
-                                            if (intent.getExtras() == null)
-                                            {
-                                                redirectUser(userId);
-
-                                            }
-                                        }
-
-
-                                    } else {
+                                    else {
                                         if (!user.isEmailVerified()) {
                                             Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
                                         } else {
@@ -220,7 +186,10 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                }
+
+                                    }
+
+
 
 
                             });
@@ -248,6 +217,61 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+           public void createUser(String userId)
+           {
+               DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
+               Query query = functionRef.child(userId);
+               query.addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                       if(!dataSnapshot.exists()) {
+                           SharedPreferences sharedPref = getSharedPreferences("LPAppSharedPreferences", Context.MODE_PRIVATE);
+                           String registerFullName = sharedPref.getString("registerFullName", "");
+                           final String registerFunction = sharedPref.getString("registerFunction", "");
+                           String registerNumber = sharedPref.getString("registerNumber", "");
+                           String registerPhone = sharedPref.getString("registerPhone", "");
+
+                               User registerUser = new User(registerFullName, registerFunction,
+                                       registerPhone, registerNumber);
+                               FirebaseDatabase.getInstance().getReference("Users")
+                                       .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
+                                       addOnCompleteListener(new OnCompleteListener<Void>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<Void> task) {
+                                               if (task.isSuccessful()) {
+
+                                                   Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
+                                                   if(registerFunction.equals("Team Leader"))
+                                                   {
+                                                       Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                                                       startActivity(intent);
+                                                       userNM.setText("");
+                                                       password.setText("");
+                                                   }
+                                                   else
+                                                   {
+                                                       Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                                                       startActivity(intent);
+                                                       userNM.setText("");
+                                                       password.setText("");
+                                                   }
+
+
+                                               }
+                                           }
+                                       });
+
+                       }
+                   }
+
+                   @Override
+                   public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                   }
+               });
+
+           }
 
 
             public void redirectUser(String userId) {
