@@ -203,16 +203,17 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                             e.printStackTrace();
                                                         }
                                                         snapshot2.child("status").getRef().setValue("confirmat");
-                                                        break;
+//                                                        return;
 
 
                                                     }
                                                    else if(lp.getStatus()== ("refuzat"))
                                                     {
                                                         snapshot2.child("status").getRef().setValue("refuzat");
-                                                        break;
+//                                                        return;
 
                                                     }
+                                                   break;
 
                                               }
                                                 else
