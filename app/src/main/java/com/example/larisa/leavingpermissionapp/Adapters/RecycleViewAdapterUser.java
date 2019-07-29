@@ -220,6 +220,8 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                     intent.putExtra("LpTotal", LpTotal);
                     intent.putExtra("key", keyLP);
                     intent.putExtra("total", total);
+                    intent.putExtra("idLp", id);
+                    intent.putExtra("idLp", id);
                     intent.putExtra("TotalLpActual", lp.getTotal());
                     intent.putExtra("day", day);
                     intent.putExtra("month", month);
