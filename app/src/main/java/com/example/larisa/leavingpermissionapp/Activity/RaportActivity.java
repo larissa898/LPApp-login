@@ -251,7 +251,8 @@ public class RaportActivity extends AppCompatActivity {
                             //Generate ToList
                             ToList = GenerateList(listFrom, FromHour, FromMinutes ,toListFirebase , fromListFirebase);
                             //create adapterTo
-                            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
+                            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this,
+                                    android.R.layout.simple_spinner_dropdown_item, ToList);
                             To.setAdapter(adapterTo);
                         }
                         @Override
