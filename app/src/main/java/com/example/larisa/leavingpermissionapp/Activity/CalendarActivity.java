@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +48,26 @@ public class CalendarActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     public String Current;
     private String actualM;
+    private ImageView userProfileIV;
+
+
+    private void initImageView() {
+        userProfileIV = findViewById(R.id.userProfileIV);
+        userProfileIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(CalendarActivity.this, UserProfileActivity.class));
+            }
+        });
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+
+        initImageView();
 
         //months of the year
         final String[] strMonths = {"January",
