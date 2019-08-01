@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +33,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView userPhoneTV;
     private TextView userNrMatricolTV;
     private ImageView userSignatureIV;
+    SignatureCanvasView signatureCanvasView;
 
     // Firebase
     private DatabaseReference usersRef;
