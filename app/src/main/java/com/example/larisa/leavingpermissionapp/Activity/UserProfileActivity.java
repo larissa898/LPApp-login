@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,13 +35,17 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView userPhoneTV;
     private TextView userNrMatricolTV;
     private ImageView userSignatureIV;
+    private Button addEditSignatureButton;
     SignatureCanvasView signatureCanvasView;
 
     // Firebase
     private DatabaseReference usersRef;
 
     // Vars
-    String userId;
+    private String userId;
+    private boolean isSignatureSet;
+
+
 
 
     private void initUI() {
@@ -48,13 +54,21 @@ public class UserProfileActivity extends AppCompatActivity {
         userPhoneTV = findViewById(R.id.userPhoneTV);
         userNrMatricolTV = findViewById(R.id.userNrMatricolTV);
         userSignatureIV = findViewById(R.id.userSignatureIV);
+        addEditSignatureButton = findViewById(R.id.addEditSignatureButton);
 
-        usersRef = FirebaseDatabase.getInstance().getReference("Users");
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(isSignatureSet) {
+            addEditSignatureButton.setText("Change Signature");
+        }
+
+
+
 
     }
 
     private void getUserData() {
+        usersRef = FirebaseDatabase.getInstance().getReference("Users");
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         Query query = usersRef.child(userId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -83,12 +97,21 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         initUI();
         getUserData();
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
 
-
-
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
