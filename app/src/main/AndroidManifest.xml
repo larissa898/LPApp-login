@@ -16,7 +16,6 @@
         <activity android:name=".Activity.UserProfileActivity"></activity>
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.SignatureActivity"></activity>
-        <activity android:name=".Activity.LPCalendarList" />
         <activity android:name=".Activity.FinalCalendar" />
         <activity android:name=".Activity.RegisterActivity" />
         <activity android:name=".Activity.CalendarActivity" />
