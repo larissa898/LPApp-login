@@ -44,7 +44,7 @@ public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private List<LP> sendLP = new ArrayList<>();
     private Button backToTeam;
-
+   public CalendarDay newDate;
 
 
 
@@ -71,6 +71,7 @@ public class FinalCalendar extends AppCompatActivity {
       if(lp.getStatus().equals("neconfirmat"))
       {  String dateFormat = lp.getData();
           final CalendarDay newDate = dayConverter(dateFormat);
+          Log.d("Avfdvgsfs",newDate.toString());
           calendarView.addDecorator(new DayViewDecorator() {
               @Override
               public boolean shouldDecorate(CalendarDay day) {
@@ -90,12 +91,10 @@ public class FinalCalendar extends AppCompatActivity {
 
               }
           });
-
-//
       }
   else {
        String dateFormat = lp.getData();
-      final CalendarDay newDate = dayConverter(dateFormat);
+       final CalendarDay newDate = dayConverter(dateFormat);
        calendarView.addDecorator(new DayViewDecorator() {
            public boolean shouldDecorate(CalendarDay day) {
                if(newDate.equals(day))
@@ -171,12 +170,13 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
         String[] convertedDate = new String[0];
         try {
             convertedDate = (sdf2.format(sdf.parse(date))).split("-");
+            newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]), Integer.valueOf(convertedDate[2]));
 
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        CalendarDay newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]), Integer.valueOf(convertedDate[2]));
+
         return newDate;
 
     }
