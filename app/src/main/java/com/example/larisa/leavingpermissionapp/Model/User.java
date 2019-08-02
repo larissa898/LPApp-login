@@ -1,5 +1,8 @@
 package com.example.larisa.leavingpermissionapp.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,7 +16,6 @@ public class User implements Serializable {
     private String nrMatricol;
 
     private List<LP> lps;
-
 
 
     public User(String nume, String prenume, String functie) {
@@ -30,17 +32,13 @@ public class User implements Serializable {
         this.prenume = prenume;
         this.lps = lps;
     }
-    public User(String fullName,String functie, String telefon, String nrMatricol) {
+
+    public User(String fullName, String functie, String telefon, String nrMatricol) {
         this.fullName = fullName;
         this.functie = functie;
         this.telefon = telefon;
         this.nrMatricol = nrMatricol;
     }
-
-
-
-
-
 
     public User() {
     }
@@ -49,8 +47,7 @@ public class User implements Serializable {
     }
 
 
-
-    public  String getNume() {
+    public String getNume() {
         return nume;
     }
 
@@ -81,6 +78,7 @@ public class User implements Serializable {
     public void setLps(List<LP> lps) {
         this.lps = lps;
     }
+
     public String getTelefon() {
         return telefon;
     }
@@ -105,10 +103,21 @@ public class User implements Serializable {
         this.fullName = fullName;
     }
 
-    public User( String fullName,String functie) {
+    public User(String fullName, String functie) {
         this.fullName = fullName;
-
         this.functie = functie;
+    }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "nume='" + nume + '\'' +
+                ", prenume='" + prenume + '\'' +
+                ", functie='" + functie + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", telefon='" + telefon + '\'' +
+                ", nrMatricol='" + nrMatricol + '\'' +
+                ", lps=" + lps +
+                '}';
     }
 }
