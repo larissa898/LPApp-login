@@ -1,6 +1,7 @@
 package com.example.larisa.leavingpermissionapp.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.HardwarePropertiesManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -126,7 +127,9 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                 case R.id.acceptButton:
                     int position = getAdapterPosition();
                     LP LivingPerm = lps.get(position);
-                    acceptLP(LivingPerm, position);
+                    acceptLP(LivingPerm);
+                    status.setTextColor(Color.GREEN);
+                    statusLabel.setTextColor(Color.GREEN);
                     this.itemClickListener.onItemClick(v, getLayoutPosition());
 
 
@@ -134,6 +137,8 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                 case R.id.refuseButton:
                     position = getAdapterPosition();
                      LP LivingPerm2 = lps.get(position);
+                    status.setTextColor(Color.RED);
+                    statusLabel.setTextColor(Color.RED);
 
                     refuseLP(LivingPerm2);
                     this.itemClickListener.onItemClick(v, getLayoutPosition());
@@ -147,9 +152,9 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
 
         }
 
-        public void acceptLP(final LP LivingPerm, final int position) {
+        public void acceptLP(final LP LivingPerm) {
             LivingPerm.setStatus("confirmat");
-            notifyItemChanged(position);
+            notifyDataSetChanged();
 
         }
 

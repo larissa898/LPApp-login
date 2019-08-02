@@ -104,7 +104,6 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
 
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
                 for ( final String key : recycleViewAdapterLP.modifiedLP.keySet()) {
-                    found[0] = false;
                   final  LP lp = recycleViewAdapterLP.modifiedLP.get(key);
 
                   dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -209,18 +208,15 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                                    e.printStackTrace();
                                                                }
                                                                snapshot2.child("status").getRef().setValue("confirmat");
-//                                                        recycleViewAdapterLP.notifyItemChanged(i);
-                                                               found[0] = true;
 
-//                                                           break search;
+
 
 
                                                            } else  {
-//                                                               snapshot2.child("status").getRef().setValue("");
+//
                                                                snapshot2.child("status").getRef().setValue("refuzat");
-//                                                        recycleViewAdapterLP.notifyItemChanged(i);
-                                                               found[0] = true;
-//                                                           break search;
+
+//
 //
 
                                                            }

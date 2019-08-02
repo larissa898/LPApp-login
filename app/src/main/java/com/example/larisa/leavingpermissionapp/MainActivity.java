@@ -3,8 +3,6 @@ package com.example.larisa.leavingpermissionapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +12,7 @@ import android.view.View;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,27 +47,29 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mStateListener;
     private TextView textView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        if(isUserLoggedIn()) {
+        if (isUserLoggedIn()) {
             finish();
         }
 
 
-
         login = findViewById(R.id.button);
-        cancel = findViewById(R.id.button2);
+
         userNM = findViewById(R.id.editTextNM);
+        cancel = findViewById(R.id.button2);
         password = findViewById(R.id.editText);
         register = findViewById(R.id.registerButton);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("message");
         databaseReference.setValue("Hello there");
+
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,70 +112,22 @@ public class MainActivity extends AppCompatActivity {
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
 
                                     //check that the user has validated the email
-                                    if (task.isSuccessful() && user.isEmailVerified()) {
-                                        //check if the user is a team leader or not
-
-
-//                                        Intent intent = getIntent();
-//                                        if(intent.getExtras() != null)
-//                                        {
-//                                        if(intent.getExtras().containsKey("message")) {
-//                                            if (intent.getExtras().get("message").equals(
-//                                                    "Success")) {
-//                                                String registerFullName = intent.getExtras().getString("registerFullName");
-//                                                String registerFunction = intent.getExtras().getString("registerFunction");
-//                                                String registerNumber =  intent.getExtras().getString("registerNumber");
-//                                                String registerPhone =  intent.getExtras().getString("registerPhone");
-//
-//                                                User registerUser = new User(registerFullName, registerFunction,
-//                                                        registerPhone, registerNumber);
-//                                                FirebaseDatabase.getInstance().getReference("Users")
-//                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-//                                                        addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                            @Override
-//                                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                                if (task.isSuccessful()) {
-//
-//                                                                    Toast.makeText(MainActivity.this, "User has been successfully created, please " +
-//                                                                            "verify your email adress", Toast.LENGTH_SHORT).show();
-//                                                                }
-//                                                            }
-//                                                        });
-//                                                redirectUser(userId);
-//                                            }
-//                                        }
-//
-//                                        } else {
-//                                            if(intent.getExtras() != null) {
-//                                                if (intent.getExtras().containsKey("message")) {
-//
-//                                                    if (intent.getExtras().get("message").equals("Failed")) {
-//                                                        Toast.makeText(MainActivity.this, "User has not been created " +
-//                                                                "please try again", Toast.LENGTH_SHORT).show();
-//
-//                                                    }
-//                                                }
-//                                            }
-//                                            if (intent.getExtras() == null)
-//                                            {
-                                        createUser(userId);
-                                        redirectUser(userId);
-                                        finish();
+                                    if (task.isSuccessful() && FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        createUser(user.getUid());
+                                        redirectUser(user.getUid());
 
 //                                            }
                                     } else {
-                                        if (!user.isEmailVerified()) {
-                                            Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
-                                        } else {
+//                                        if (!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+//                                            Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
+//                                        } else {
                                             Toast.makeText(MainActivity.this, "Wrong Credentials", Toast.LENGTH_LONG).show();
                                             userNM.setText("");
                                             password.setText("");
-                                        }
+//                                        }
                                     }
 
 
@@ -203,14 +156,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
     }
 
 
     public boolean isUserLoggedIn() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null) {
+        if (user != null) {
             Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
             startActivity(intent);
             return true;
@@ -307,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
 
     }
-
 
 
 }

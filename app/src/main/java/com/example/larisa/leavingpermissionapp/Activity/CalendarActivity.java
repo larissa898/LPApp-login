@@ -38,6 +38,8 @@ public class CalendarActivity extends AppCompatActivity {
     private static final long DOUBLE_PRESS_INTERVAL = 250; // in millis
     private long lastPressTime;
     private Button signOutButton;
+    private Button CancelCalendar;
+    private Button OpenDay;
     private CalendarView calendarView;
     private boolean mHasDoubleClicked = false;
     private TextView Angajat;
@@ -91,6 +93,7 @@ public class CalendarActivity extends AppCompatActivity {
         signOutButton = findViewById(R.id.signOutButton);
         calendarView = findViewById(R.id.calendarViewID);
         Angajat = findViewById(R.id.NumeAngajatCalendar);
+        OpenDay = findViewById(R.id.OpenDay);
         recyclerView = findViewById(R.id.recyclerViewUser);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -167,7 +170,25 @@ public class CalendarActivity extends AppCompatActivity {
                                         , "It's weekend, choose a working day", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getApplicationContext()
-                                        , "Press Double-Click to make a request", Toast.LENGTH_SHORT).show();
+                                        , "Press Double-Click to make a request or select Open Button",
+                                        Toast.LENGTH_SHORT).show();
+                                OpenDay.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intent = new Intent(CalendarActivity.this
+                                                , LeavingPermissionList.class);
+                                        actualM = strMonths[month];
+                                        intent.putExtra("day", dayOfMonth);
+                                        intent.putExtra("month", month);
+                                        intent.putExtra("year", year);
+                                        intent.putExtra("actualDay", actualDay);
+                                        intent.putExtra("actualMonth", actualMonth);
+                                        intent.putExtra("actualYear", actualYear);
+                                        intent.putExtra("monthActual", actualM);
+                                        Current = (actualDay + " " + actualMonth + " " + actualYear);
+                                        startActivity(intent);
+                                    }
+                                });
                             }
                         }
                     };

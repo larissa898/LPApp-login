@@ -1,6 +1,5 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -15,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,7 +46,7 @@ public class RaportActivity extends AppCompatActivity {
     private TextView date;
     private TextView Nume;
     private Button Backraport;
-    public int minnn;
+    public int minutes;
     public int ora;
     private TextView TotalOre;
     private int day;
@@ -62,7 +58,6 @@ public class RaportActivity extends AppCompatActivity {
     private Float total;
     private String first = "";
     private String second = "";
-    private int minn;
     private String[] listFinal;
     private String[] listFinalEdit;
     private boolean[] takenIntervals;
@@ -78,13 +73,9 @@ public class RaportActivity extends AppCompatActivity {
     private String[] hourMinTo;
     private  ArrayAdapter<String> adapter;
     private ArrayAdapter<String> adapteredit;
-    private String LpTotal;
     private String key ;
-    private LP LpList;
     private Float TotalLpActual;
     private String[] hourMinFrom;
-    private int idLp;
-    private String  s_name, s_course;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -105,15 +96,13 @@ public class RaportActivity extends AppCompatActivity {
         Confirm = findViewById(R.id.ConfirmButtonRaport);
         From = findViewById(spinnerFrom);
         To = findViewById(spinnerTo);
-        TotalOre = findViewById(R.id.TotalTextView);
+        TotalOre = findViewById(R.id.lblUserRep);
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
         Backraport = findViewById(R.id.buttonBackRaport);
-        LpTotal = getIntent().getStringExtra("LpTotal");
         //If you get into this activity from editing you get "edit" in Flag
         //If you get into this activity from add you get "add" in the Flag
         Flag = getIntent().getStringExtra("Flag");
-        idLp = getIntent().getIntExtra("idLp", 0);
         fromEdit = getIntent().getStringExtra("fromEdit");
         toEdit = getIntent().getStringExtra("toEdit");
         day = getIntent().getIntExtra("day", 0);
@@ -306,7 +295,7 @@ public class RaportActivity extends AppCompatActivity {
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
                                 Log.d("data", "exists");
                                 Float total;
-                                if (minnn == 30) {
+                                if (minutes == 30) {
                                     total = Float.valueOf(ora + ".5");
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
@@ -351,7 +340,7 @@ public class RaportActivity extends AppCompatActivity {
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
                                 Log.d("data", "exists");
                                 Float total;
-                                if (minnn == 30) {
+                                if (minutes == 30) {
                                     total = Float.valueOf(valueOf(ora + ".5"));
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
@@ -586,15 +575,17 @@ public class RaportActivity extends AppCompatActivity {
         if ((((result + (total % 10) - TotalLpActual) > 3)||
                 ((((hourResult + (total % 10) + plus - TotalLpActual)) == 3)
                         && (minfin != 0)))) {
-            TotalOre.setText("Select again!");
+            TotalOre.setTextSize(14);
+            TotalOre.setText("You exceeded 3 hours a day. Choose another interval!");
             Confirm.setEnabled(false);
         } else {
+            TotalOre.setTextSize(18);
             TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
             if(hourResult==0 && minResult==0){
                 Confirm.setEnabled(false);
             }
             Confirm.setEnabled(true);
-            minnn = minResult;
+            minutes = minResult;
             ora = hourResult;
         }
 
