@@ -15,24 +15,38 @@ import android.view.View;
 
 public class SignatureCanvasView extends View {
 
-    private Paint paint;
+    private Paint signPaint;
     private Path path;
 
-    public SignatureCanvasView(Context context) {
-        super(context);
+    private boolean clearCanvas = false;
+
+    public SignatureCanvasView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         path = new Path();
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.BLACK);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeWidth(15f);
+        initSigningPaint();
+    }
+
+    private void initSigningPaint() {
+        signPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        signPaint.setColor(Color.BLACK);
+        signPaint.setStrokeJoin(Paint.Join.ROUND);
+        signPaint.setStyle(Paint.Style.STROKE);
+        signPaint.setStrokeCap(Paint.Cap.ROUND);
+        signPaint.setStrokeWidth(10f);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawPath(path, paint);
+
+        if (clearCanvas) {
+            path = new Path();
+            canvas.drawColor(Color.WHITE);
+            clearCanvas = false;
+        } else {
+            canvas.drawPath(path, signPaint);
+        }
+
     }
 
     @Override
@@ -40,7 +54,7 @@ public class SignatureCanvasView extends View {
         float x = event.getX();
         float y = event.getY();
 
-        switch(event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
                 return true;
@@ -55,4 +69,10 @@ public class SignatureCanvasView extends View {
         invalidate();
         return true;
     }
+
+    public void clear() {
+        clearCanvas = true;
+        invalidate();
+    }
+
 }

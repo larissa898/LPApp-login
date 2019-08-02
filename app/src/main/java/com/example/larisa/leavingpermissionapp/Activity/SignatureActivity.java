@@ -6,16 +6,23 @@ package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
+import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class SignatureActivity extends AppCompatActivity {
 
-    SignatureCanvasView signatureCanvasView;
+    private SignatureCanvasView signatureCanvasView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signatureCanvasView = new SignatureCanvasView(this);
-        setContentView(signatureCanvasView);
+        setContentView(R.layout.activity_signature_canvas);
+        signatureCanvasView = findViewById(R.id.signatureCanvas);
+    }
+
+    public void clear(View view){
+        signatureCanvasView.clear();
     }
 }
