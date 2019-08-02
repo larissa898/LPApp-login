@@ -47,7 +47,7 @@ public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private List<LP> sendLP = new ArrayList<>();
     private Button backToTeam;
-    public CalendarDay newDate;
+//    public CalendarDay newDate;
 
 
     @Override
@@ -115,6 +115,7 @@ public class FinalCalendar extends AppCompatActivity {
                                 @Override
                                 public boolean shouldDecorate(CalendarDay day) {
                                     if (newDate.equals(day)) {
+                                        EventDays.add(day);
                                     }
                                     return newDate.equals(day);
                                 }
@@ -205,7 +206,7 @@ public class FinalCalendar extends AppCompatActivity {
         calendarView.setOnDateLongClickListener(new OnDateLongClickListener() {
             @Override
             public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
-                Log.d(TAG, "onDateLongClick: date=" + date.toString());
+                Log.d(TAG, "onDateLongCli EventDays.add(day);ck: date=" + date.toString());
                 if (EventDays.contains(date)) {
                     Log.d(TAG, "onDateLongClick: EVENTDAYS contains such a date");
                     Intent intent = new Intent(FinalCalendar.this, LPCalendarList.class);
@@ -233,12 +234,13 @@ public class FinalCalendar extends AppCompatActivity {
         String[] convertedDate = new String[0];
         try {
             convertedDate = (sdf2.format(sdf.parse(date))).split("-");
-            newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]),
-                    Integer.valueOf(convertedDate[2]));
+
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        CalendarDay newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]),
+                Integer.valueOf(convertedDate[2]));
 
         return newDate;
 
