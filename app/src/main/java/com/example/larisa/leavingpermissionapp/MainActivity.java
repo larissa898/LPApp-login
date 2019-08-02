@@ -3,18 +3,14 @@ package com.example.larisa.leavingpermissionapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-
-
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
@@ -47,21 +43,19 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mStateListener;
-   private TextView textView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = findViewById(R.id.textView3);
-
 
 
 
 
 
         login = findViewById(R.id.button);
-        cancel = findViewById(R.id.button2);
+
         userNM = findViewById(R.id.editTextNM);
         password = findViewById(R.id.editText);
         register = findViewById(R.id.registerButton);
@@ -69,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("message");
         databaseReference.setValue("Hello there");
+
+
+
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -114,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 //
 
 
-//Authenticate with fire basepa
+//Authenticate with fire base
 
                     firebaseAuth.signInWithEmailAndPassword(email, pwd)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
@@ -126,51 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     //check that the user has validated the email
                                     if (task.isSuccessful() && user.isEmailVerified()) {
-                                        //check if the user is a team leader or not
-
-
-//                                        Intent intent = getIntent();
-//                                        if(intent.getExtras() != null)
-//                                        {
-//                                        if(intent.getExtras().containsKey("message")) {
-//                                            if (intent.getExtras().get("message").equals(
-//                                                    "Success")) {
-//                                                String registerFullName = intent.getExtras().getString("registerFullName");
-//                                                String registerFunction = intent.getExtras().getString("registerFunction");
-//                                                String registerNumber =  intent.getExtras().getString("registerNumber");
-//                                                String registerPhone =  intent.getExtras().getString("registerPhone");
 //
-//                                                User registerUser = new User(registerFullName, registerFunction,
-//                                                        registerPhone, registerNumber);
-//                                                FirebaseDatabase.getInstance().getReference("Users")
-//                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-//                                                        addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                            @Override
-//                                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                                if (task.isSuccessful()) {
-//
-//                                                                    Toast.makeText(MainActivity.this, "User has been successfully created, please " +
-//                                                                            "verify your email adress", Toast.LENGTH_SHORT).show();
-//                                                                }
-//                                                            }
-//                                                        });
-//                                                redirectUser(userId);
-//                                            }
-//                                        }
-//
-//                                        } else {
-//                                            if(intent.getExtras() != null) {
-//                                                if (intent.getExtras().containsKey("message")) {
-//
-//                                                    if (intent.getExtras().get("message").equals("Failed")) {
-//                                                        Toast.makeText(MainActivity.this, "User has not been created " +
-//                                                                "please try again", Toast.LENGTH_SHORT).show();
-//
-//                                                    }
-//                                                }
-//                                            }
-//                                            if (intent.getExtras() == null)
-//                                            {
                                                 createUser(userId);
                                                 redirectUser(userId);
 
@@ -209,12 +162,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        cancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
     }
 
 

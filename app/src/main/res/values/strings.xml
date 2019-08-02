@@ -1,10 +1,9 @@
 <resources>
-    <string name="app_name">LeavingPermissionApp</string>
     <string name="NumarMatricol">NumarMatricol</string>
     <string name="password">password</string>
     <string name="LoginButton">Login</string>
-    <string name="CancelButton">Cancel</string>
-    <string name="Cancel">Cancel</string>
+    <string name="CancelButton">Exit</string>
+    <string name="Cancel">Exit</string>
     <string name="SelectZi">Selecteaza ziua</string>
     <string name="CancelList">Cancel</string>
     <string name="AddItemList">Add</string>
@@ -40,7 +39,7 @@
     <string name="register_cancel">Cancel</string>
     <string name="register_form_button"> Register </string>
     <string name="hint_email_login">Email</string>
-    <string name="confirm_button">Confirm</string>
+    <string name="confirm_button">Select</string>
     <string name="lista_angajati">Selectati angajatii pentru a putea vizualiza LP-urile.</string>
     <string name="BACK">BACK</string>
     <string name="sure_text">Are you sure?</string>
