@@ -45,7 +45,7 @@ public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private List<LP> sendLP = new ArrayList<>();
     private Button backToTeam;
-
+    public  CalendarDay newDate;
 
 
 
@@ -241,10 +241,7 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
 
-//       Intent intent = new Intent(FinalCalendar.this,ViewTeam.class);
-//       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//       startActivity(intent);
+
 finish();
 
 
@@ -262,12 +259,13 @@ finish();
         String[] convertedDate = new String[0];
         try {
             convertedDate = (sdf2.format(sdf.parse(date))).split("-");
-
+            newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]),
+                   Integer.valueOf(convertedDate[2]));
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        CalendarDay newDate = CalendarDay.from(Integer.valueOf(convertedDate[0]), Integer.valueOf(convertedDate[1]), Integer.valueOf(convertedDate[2]));
+
         return newDate;
 
     }
