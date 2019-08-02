@@ -5,20 +5,28 @@
 package com.example.larisa.leavingpermissionapp.View;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.larisa.leavingpermissionapp.Activity.SignatureActivity;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class SignatureCanvasView extends View {
 
     private Paint signPaint;
+    private Bitmap bitmap;
     private Path path;
-
-    private boolean clearCanvas = false;
 
     public SignatureCanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,15 +46,7 @@ public class SignatureCanvasView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        if (clearCanvas) {
-            path = new Path();
-            canvas.drawColor(Color.WHITE);
-            clearCanvas = false;
-        } else {
-            canvas.drawPath(path, signPaint);
-        }
-
+        canvas.drawPath(path, signPaint);
     }
 
     @Override
@@ -71,8 +71,33 @@ public class SignatureCanvasView extends View {
     }
 
     public void clear() {
-        clearCanvas = true;
+        path.reset();
         invalidate();
+    }
+
+    public void save(SignatureActivity signatureActivity) {
+        if (bitmap == null) {
+            bitmap = Bitmap.createBitmap(this.getMeasuredWidth(), this.getMeasuredHeight(), Bitmap.Config.RGB_565);
+        }
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        this.draw(canvas);
+
+        String dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        File file = new File(dirPath, "signature.png");
+        try {
+            FileOutputStream mFileOutStream = new FileOutputStream(file);
+
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, mFileOutStream);
+            mFileOutStream.flush();
+            mFileOutStream.close();
+
+            signatureActivity.onSuccesfulImageSave();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

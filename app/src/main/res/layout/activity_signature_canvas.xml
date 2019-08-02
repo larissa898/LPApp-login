@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:onClick="clear"
+                android:onClick="save"
                 android:src="@drawable/ic_save" />
 
         </RelativeLayout>
