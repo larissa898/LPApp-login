@@ -72,7 +72,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(UserProfileActivity.this, "Error:" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCancelled: " + databaseError.getMessage());
             }
         });
