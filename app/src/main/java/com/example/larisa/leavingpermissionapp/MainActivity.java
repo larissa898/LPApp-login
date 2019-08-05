@@ -3,8 +3,6 @@ package com.example.larisa.leavingpermissionapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,11 +10,12 @@ import android.util.Log;
 import android.view.View;
 
 
-
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
@@ -34,7 +33,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
-
 public class MainActivity extends AppCompatActivity {
     private Button login;
     private Button cancel;
@@ -47,22 +45,24 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mStateListener;
-   private TextView textView;
+    private TextView textView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //textView = findViewById(R.id.textView3);
 
-
-
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        if (isUserLoggedIn()) {
+            finish();
+        }
 
 
         login = findViewById(R.id.button);
-        cancel = findViewById(R.id.button2);
+
         userNM = findViewById(R.id.editTextNM);
+        cancel = findViewById(R.id.button2);
         password = findViewById(R.id.editText);
         register = findViewById(R.id.registerButton);
 
@@ -70,13 +70,12 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = database.getReference("message");
         databaseReference.setValue("Hello there");
 
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
                 Log.d("Message", "Reading from the database" + value);
-
-
             }
 
             @Override
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        firebaseAuth = FirebaseAuth.getInstance();
+
         mStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -109,94 +108,34 @@ public class MainActivity extends AppCompatActivity {
                 if (email.equals("") || pwd.equals("")) {
                     Toast.makeText(MainActivity.this, "Please enter your credentials", Toast.LENGTH_SHORT).show();
                 } else {
-
-//
-//
-
-
-//Authenticate with fire basepa
-
                     firebaseAuth.signInWithEmailAndPassword(email, pwd)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
 
                                     //check that the user has validated the email
-                                    if (task.isSuccessful() && user.isEmailVerified()) {
-                                        //check if the user is a team leader or not
+                                    if (task.isSuccessful() && FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        createUser(user.getUid());
+                                        redirectUser(user.getUid());
 
-
-//                                        Intent intent = getIntent();
-//                                        if(intent.getExtras() != null)
-//                                        {
-//                                        if(intent.getExtras().containsKey("message")) {
-//                                            if (intent.getExtras().get("message").equals(
-//                                                    "Success")) {
-//                                                String registerFullName = intent.getExtras().getString("registerFullName");
-//                                                String registerFunction = intent.getExtras().getString("registerFunction");
-//                                                String registerNumber =  intent.getExtras().getString("registerNumber");
-//                                                String registerPhone =  intent.getExtras().getString("registerPhone");
-//
-//                                                User registerUser = new User(registerFullName, registerFunction,
-//                                                        registerPhone, registerNumber);
-//                                                FirebaseDatabase.getInstance().getReference("Users")
-//                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-//                                                        addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                            @Override
-//                                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                                if (task.isSuccessful()) {
-//
-//                                                                    Toast.makeText(MainActivity.this, "User has been successfully created, please " +
-//                                                                            "verify your email adress", Toast.LENGTH_SHORT).show();
-//                                                                }
-//                                                            }
-//                                                        });
-//                                                redirectUser(userId);
 //                                            }
-//                                        }
-//
+                                    } else {
+//                                        if (!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+//                                            Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
 //                                        } else {
-//                                            if(intent.getExtras() != null) {
-//                                                if (intent.getExtras().containsKey("message")) {
-//
-//                                                    if (intent.getExtras().get("message").equals("Failed")) {
-//                                                        Toast.makeText(MainActivity.this, "User has not been created " +
-//                                                                "please try again", Toast.LENGTH_SHORT).show();
-//
-//                                                    }
-//                                                }
-//                                            }
-//                                            if (intent.getExtras() == null)
-//                                            {
-                                                createUser(userId);
-                                                redirectUser(userId);
-
-//                                            }
-                                        }
-                                    else {
-                                        if (!user.isEmailVerified()) {
-                                            Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
-                                        } else {
                                             Toast.makeText(MainActivity.this, "Wrong Credentials", Toast.LENGTH_LONG).show();
                                             userNM.setText("");
                                             password.setText("");
-                                        }
+//                                        }
                                     }
 
 
-                                    }
-
-
+                                }
 
 
                             });
                 }
-
-
-
 
 
             }
@@ -215,103 +154,113 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
     }
 
 
-           public void createUser(String userId)
-           {
-               DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
-               Query query = functionRef.child(userId);
-               query.addValueEventListener(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                       if(!dataSnapshot.exists()) {
-                           SharedPreferences sharedPref = getSharedPreferences("LPAppSharedPreferences", Context.MODE_PRIVATE);
-                           String registerFullName = sharedPref.getString("registerFullName", "");
-                           final String registerFunction = sharedPref.getString("registerFunction", "");
-                           String registerNumber = sharedPref.getString("registerNumber", "");
-                           String registerPhone = sharedPref.getString("registerPhone", "");
-
-                               User registerUser = new User(registerFullName, registerFunction,
-                                       registerPhone, registerNumber);
-                               FirebaseDatabase.getInstance().getReference("Users")
-                                       .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-                                       addOnCompleteListener(new OnCompleteListener<Void>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<Void> task) {
-                                               if (task.isSuccessful()) {
-
-                                                   Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
-                                                   if(registerFunction.equals("Team Leader"))
-                                                   {
-                                                       Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                                                       startActivity(intent);
-                                                       userNM.setText("");
-                                                       password.setText("");
-                                                   }
-                                                   else
-                                                   {
-                                                       Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                                                       startActivity(intent);
-                                                       userNM.setText("");
-                                                       password.setText("");
-                                                   }
+    public boolean isUserLoggedIn() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+            startActivity(intent);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
-                                               }
-                                           }
-                                       });
+    public void createUser(String userId) {
+        DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
+        Query query = functionRef.child(userId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    SharedPreferences sharedPref = getSharedPreferences("LPAppSharedPreferences", Context.MODE_PRIVATE);
+                    String registerFullName = sharedPref.getString("registerFullName", "");
+                    final String registerFunction = sharedPref.getString("registerFunction", "");
+                    String registerNumber = sharedPref.getString("registerNumber", "");
+                    String registerPhone = sharedPref.getString("registerPhone", "");
 
-                       }
-                   }
+                    User registerUser = new User(registerFullName, registerFunction,
+                            registerPhone, registerNumber);
+                    FirebaseDatabase.getInstance().getReference("Users")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
+                            addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
 
-                   @Override
-                   public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
+                                        if (registerFunction.equals("Team Leader")) {
+                                            Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                                            startActivity(intent);
+                                            userNM.setText("");
+                                            password.setText("");
+                                        } else {
+                                            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                                            startActivity(intent);
+                                            userNM.setText("");
+                                            password.setText("");
+                                        }
 
-                   }
-               });
 
-           }
+                                    }
+                                }
+                            });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
 
-            public void redirectUser(String userId) {
+    public void redirectUser(String userId) {
 
-                DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
-                Query query = functionRef.child(userId);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            String functie = dataSnapshot.child("functie").getValue(String.class);
+        DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
+        Query query = functionRef.child(userId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String functie = dataSnapshot.child("functie").getValue(String.class);
 
-                            if (functie.equals("Team Leader")) {
-                                Log.d("Query", "This is a team leader");
-                                Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                                startActivity(intent);
-                                userNM.setText("");
-                                password.setText("");
-                            } else {
-                                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                                startActivity(intent);
-                                userNM.setText("");
-                                password.setText("");
-
-                            }
-                        }
+                    if (functie.equals("Team Leader")) {
+                        Log.d("Query", "This is a team leader");
+                        Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                        startActivity(intent);
+                        userNM.setText("");
+                        password.setText("");
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                        startActivity(intent);
+                        userNM.setText("");
+                        password.setText("");
 
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-                Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
-
+                }
 
             }
 
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
+
+    }
+
+
+}
 
 
 

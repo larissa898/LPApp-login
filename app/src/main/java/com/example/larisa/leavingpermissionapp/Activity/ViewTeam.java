@@ -14,9 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
+import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +38,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
     private RecycleViewAdapter recycleViewAdapter;
     private List<User> usersList;
     private Button confirmButton;
+    private Button logoutButton;
     private TextView welcomText;
 
 
@@ -50,6 +53,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         confirmButton = findViewById(R.id.confirmButton);
         welcomText = findViewById(R.id.welcomeText);
+        logoutButton = findViewById(R.id.logoutButton);
 
         usersList = new ArrayList<>();
 
@@ -208,8 +212,17 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
         });
-
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(ViewTeam.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
     }
+
 
 }
