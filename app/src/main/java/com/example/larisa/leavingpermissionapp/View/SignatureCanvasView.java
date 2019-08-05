@@ -75,7 +75,7 @@ public class SignatureCanvasView extends View {
         invalidate();
     }
 
-    public void save(SignatureActivity signatureActivity) {
+    public void saveLocal(SignatureActivity signatureActivity) {
         if (bitmap == null) {
             bitmap = Bitmap.createBitmap(this.getMeasuredWidth(), this.getMeasuredHeight(), Bitmap.Config.RGB_565);
         }
@@ -92,12 +92,14 @@ public class SignatureCanvasView extends View {
             mFileOutStream.flush();
             mFileOutStream.close();
 
-            signatureActivity.onSuccesfulImageSave();
+            signatureActivity.onSuccesfulImageSave(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/signature.png");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
 }
