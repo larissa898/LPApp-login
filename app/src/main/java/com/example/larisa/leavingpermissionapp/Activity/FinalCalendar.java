@@ -207,34 +207,38 @@ public class FinalCalendar extends AppCompatActivity {
 
 
 
-      calendarView.setOnDateLongClickListener(new OnDateLongClickListener() {
-          @Override
-          public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
-              if(EventDays.contains(date))
-              {
-                  Intent intent = new Intent(FinalCalendar.this, LPCalendarList.class);
-                  for(LP lp :lps)
-                  {
-                      if(dayConverter(lp.getData()).equals(date))
-                      {
-                          sendLP.add(lp);
-                      }
-                  }
-                  intent.putExtra("TodayLP", (Serializable)sendLP);
-//                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                  startActivity(intent);
-//                  finish();
-                  sendLP.clear();
-
-
-
-              }
 
 
           }
-      });
 
-  }
+        calendarView.setOnDateLongClickListener(new OnDateLongClickListener() {
+                                                    @Override
+                                                    public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
+                                                        if(EventDays.contains(date))
+                                                        {
+                                                            Intent intent = new Intent(FinalCalendar.this, LPCalendarList.class);
+                                                            for(LP lp :lps)
+                                                            {
+                                                                if(dayConverter(lp.getData()).equals(date))
+                                                                {
+                                                                    sendLP.add(lp);
+                                                                }
+                                                            }
+                                                            intent.putExtra("TodayLP", (Serializable)sendLP);
+//                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                            startActivity(intent);
+//                  finish();
+                                                            sendLP.clear();
+
+
+
+                                                        }
+
+                                                    };
+
+
+
+  });
 
 
 backToTeam.setOnClickListener(new View.OnClickListener() {

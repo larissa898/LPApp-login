@@ -118,18 +118,23 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
 
                                     //check that the user has validated the email
-                                    if (task.isSuccessful() && user.isEmailVerified()) {
+                                    if (task.isSuccessful()) {
+
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        if(user.isEmailVerified()) {
 //
-                                                createUser(userId);
-                                                redirectUser(userId);
+                                            createUser(userId);
+                                            redirectUser(userId);
 
 //                                            }
                                         }
+                                        }
                                     else {
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         if (!user.isEmailVerified()) {
                                             Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
                                         } else {

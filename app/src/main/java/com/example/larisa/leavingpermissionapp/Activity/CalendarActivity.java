@@ -120,7 +120,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                     // If double click...
                     if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
-                        //If it is weekend you can not add LPs
+                        //If it is weekend you can not add LPsadd
                         //Otherwise double click will send you the next activity <<Leaving Permission List>>
                         if ( dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday"))){
                             Toast.makeText(getApplicationContext(), "It's weekend, choose a working day"

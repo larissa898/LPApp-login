@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
 import com.example.larisa.leavingpermissionapp.Model.LP;
@@ -83,6 +84,16 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
             }
         });
+//        selectedUsers = recycleViewAdapter.checkedUsers;
+//        if(selectedUsers.size() == 0)
+//        {
+//            confirmButton.setEnabled(false);
+//        }
+//        else
+//        {
+//            confirmButton.setEnabled(true);
+//        }
+
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -99,12 +110,16 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 final int[] i = {0};
                 i[0] = 0;
 
-                selectedUsers = recycleViewAdapter.checkedUsers;
 
 
 
-                intent.putExtra("Lps", (Serializable) selectedUsers);
-                startActivity(intent);
+
+
+                    intent.putExtra("Lps", (Serializable) selectedUsers);
+                    startActivity(intent);
+
+
+
 
 
 
