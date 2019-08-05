@@ -25,8 +25,8 @@
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:ellipsize="end"
-            android:maxLength="12"
-            android:maxLines="3"
+            android:maxLength="22"
+            android:maxLines="2"
             android:text="User name"
             android:textSize="24sp"
             android:textStyle="bold" />
