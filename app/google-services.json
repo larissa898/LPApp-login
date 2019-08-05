@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "374833103687-j60isb8m6s975qk2hme7siqfu54dlo7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.larisa.leavingpermissionapp",
+            "certificate_hash": "99d6bab7c77273746e073546bd4f6717ac18fb4e"
+          }
+        },
+        {
           "client_id": "374833103687-aj06e22b5llu4eqar8ficmru0qe6go0f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

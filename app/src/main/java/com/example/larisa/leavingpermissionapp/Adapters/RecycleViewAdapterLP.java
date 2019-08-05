@@ -137,10 +137,9 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
                 case R.id.refuseButton:
                     position = getAdapterPosition();
                      LP LivingPerm2 = lps.get(position);
+                    refuseLP(LivingPerm2);
                     status.setTextColor(Color.RED);
                     statusLabel.setTextColor(Color.RED);
-
-                    refuseLP(LivingPerm2);
                     this.itemClickListener.onItemClick(v, getLayoutPosition());
 
 
@@ -155,6 +154,7 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
         public void acceptLP(final LP LivingPerm) {
             LivingPerm.setStatus("confirmat");
             notifyDataSetChanged();
+
 
         }
 
