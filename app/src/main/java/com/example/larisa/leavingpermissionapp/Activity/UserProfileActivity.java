@@ -68,6 +68,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void checkSignatureExists() {
 
+        getSupportActionBar().setTitle("Leaving Permission App");
         signatureRef.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
