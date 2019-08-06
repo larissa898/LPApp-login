@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
+import com.example.larisa.leavingpermissionapp.dialogs.EditPhoneNumberDialog;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,6 +53,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView userPhoneTV;
     private TextView userNrMatricolTV;
     private ImageView userSignatureIV;
+    private ImageView editPhoneNumberButton;
     private Button addEditSignatureButton;
     private SignatureCanvasView signatureCanvasView;
 
@@ -63,7 +65,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private String userId;
     private boolean isSignatureSet;
     private String signaturePath = "";
-
 
 
     private void checkSignatureExists() {
@@ -92,6 +93,7 @@ public class UserProfileActivity extends AppCompatActivity {
         userNrMatricolTV = findViewById(R.id.userNrMatricolTV);
         userSignatureIV = findViewById(R.id.userSignatureIV);
         addEditSignatureButton = findViewById(R.id.addEditSignatureButton);
+        editPhoneNumberButton = findViewById(R.id.editPhoneNumberButton);
 
         addEditSignatureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,10 +103,16 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-
+        editPhoneNumberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new EditPhoneNumberDialog().show(getSupportFragmentManager(), "Edit phone number");
+            }
+        });
 
 
     }
+
 
     private void getUserData() {
 
@@ -112,7 +120,7 @@ public class UserProfileActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     User user = dataSnapshot.getValue(User.class);
                     Log.d(TAG, "onDataChange: user: " + user);
 
@@ -163,7 +171,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         if (requestCode == SIGNATURE_REQUEST_CODE) {
 
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 signaturePath = data.getStringExtra("path");
                 Toast.makeText(this, "signaturePath = " + signaturePath, Toast.LENGTH_SHORT).show();
 
@@ -186,7 +194,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if(!task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             throw task.getException();
                         }
 
@@ -209,4 +217,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
     }
+
+
 }
