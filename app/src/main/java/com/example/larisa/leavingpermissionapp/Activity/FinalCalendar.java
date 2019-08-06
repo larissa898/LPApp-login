@@ -11,23 +11,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterLP;
 import com.example.larisa.leavingpermissionapp.Model.LP;
-import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
-import com.prolificinteractive.materialcalendarview.format.DayFormatter;
+
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.io.Serializable;
@@ -129,9 +121,7 @@ public class FinalCalendar extends AppCompatActivity {
                       }
                   }
                   intent.putExtra("TodayLP", (Serializable)sendLP);
-//                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                   startActivity(intent);
-//                  finish();
                   sendLP.clear();
 
 
@@ -149,11 +139,12 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
 
-       Intent intent = new Intent(FinalCalendar.this,ViewTeam.class);
+       Intent intent = new Intent( FinalCalendar.this,ViewTeam.class);
        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+       finish();
        startActivity(intent);
-//finish();
+
 
 
     }

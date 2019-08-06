@@ -1,5 +1,7 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
@@ -30,6 +32,7 @@ import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ViewTeam extends AppCompatActivity implements Serializable {
@@ -99,12 +102,9 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 final List<LP> LPlist = new ArrayList<>();
 
                 final DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
-                final int[] i = {0};
-                i[0]=0;
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
 
-                    i[0] ++;
 
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -140,23 +140,20 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     }
 
 
-//                                    intent.putExtra("Lps", (Serializable) LPlist);
-//                                    startActivity(intent);
+
 
                                 }
 
 
                             }
-                            //needs modifying
 
 
-//
-//                             if(i[0]== recycleViewAdapter.checkedUsers.size())
-//                                {
+
+
                                     intent.putExtra("Lps", (Serializable) LPlist);
                                     startActivity(intent);
+//                                    finish();
 
-//                                }
 
 
                         }
@@ -212,11 +209,13 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
         });
+
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(ViewTeam.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }

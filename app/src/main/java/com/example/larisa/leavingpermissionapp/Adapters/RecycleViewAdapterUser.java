@@ -168,7 +168,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
                                        lp.clear();
-                                       return;
+                                       break;
                                    }
                                }
                                 notifyDataSetChanged();
