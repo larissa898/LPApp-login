@@ -84,7 +84,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
             }
         });
-//        selectedUsers = recycleViewAdapter.checkedUsers;
+
 //        if(selectedUsers.size() == 0)
 //        {
 //            confirmButton.setEnabled(false);
@@ -101,9 +101,9 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
             @Override
             public void onClick(View v) {
+                selectedUsers = recycleViewAdapter.checkedUsers;
 
-
-                final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
+                final Intent intent = new Intent( ViewTeam.this, FinalCalendar.class);
                 final List<LP> LPlist = new ArrayList<>();
 
                 final DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");

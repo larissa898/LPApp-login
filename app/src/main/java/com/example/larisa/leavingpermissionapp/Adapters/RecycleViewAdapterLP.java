@@ -1,6 +1,8 @@
 package com.example.larisa.leavingpermissionapp.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.HardwarePropertiesManager;
 import android.support.annotation.NonNull;
@@ -154,7 +156,18 @@ public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapt
 
         public void acceptLP(final LP LivingPerm) {
             LivingPerm.setStatus("confirmat");
+//            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//            builder.setMessage("Confirming this leaving permission will take you through the steps of completing the " +
+//                    "excel file.Do you want to proceed?");
+//            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                }
+//            });
+
             notifyDataSetChanged();
+
 
         }
 
