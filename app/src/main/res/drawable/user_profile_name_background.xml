@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <stroke
+        android:width="0.5dp"
+        android:color="#111111" />
+
+    <!--overall color-->
+    <solid android:color="#ffffff" />
+
+
+    <corners
+        android:bottomLeftRadius="8dp"
+        android:bottomRightRadius="8dp"
+        android:topLeftRadius="8dp"
+        android:topRightRadius="8dp"/>
+
+</shape>
