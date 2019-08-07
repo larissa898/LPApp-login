@@ -1,25 +1,24 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
-import com.example.larisa.leavingpermissionapp.Activity.FinalCalendar;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
 import com.example.larisa.leavingpermissionapp.Model.User;
@@ -35,12 +34,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-
-import org.apache.poi.hssf.record.DBCellRecord;
-
-import java.util.Iterator;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     // UI
     private Button login;
-    private Button cancel;
     private EditText userNM;
     private EditText password;
     private TextView register;
@@ -62,10 +54,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        login = findViewById(R.id.button);
-        userNM = findViewById(R.id.editTextNM);
-        cancel = findViewById(R.id.button2);
-        password = findViewById(R.id.editText);
+        login = findViewById(R.id.loginButton);
+        userNM = findViewById(R.id.userNameET);
+        password = findViewById(R.id.passwordET);
         register = findViewById(R.id.registerButton);
     }
 
@@ -74,57 +65,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setTitle("Leaving Permission App");
+
         initFirebase();
         init();
 
         if (isUserLoggedIn()) {
-
-            DatabaseReference databaseReference =
-                    FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.getCurrentUser().getUid());
-           databaseReference.addValueEventListener(new ValueEventListener() {
-               @Override
-               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                   if(dataSnapshot.exists())
-                   {
-                       String functie = dataSnapshot.child("functie").getValue(String.class);
-                       Log.d("jgnhfbd",functie);
-                       if(functie.equals("Team Leader"))
-                       {
-                           Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                           startActivity(intent);
-                           finish();
-                       }
-                       else
-                       {
-                           Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                           startActivity(intent);
-                           finish();
-                       }
-
-
-                   }
-               }
-
-               @Override
-               public void onCancelled(@NonNull DatabaseError databaseError) {
-
-               }
-           });
-
-
-        }
-
-                ActivityManager m = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE );
-        List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  m.getRunningTasks(10);
-        Iterator<ActivityManager.RunningTaskInfo> itr = runningTaskInfoList.iterator();
-        while(itr.hasNext())
-        {
-            ActivityManager.RunningTaskInfo runningTaskInfo = (ActivityManager.RunningTaskInfo)itr.next();
-            int id = runningTaskInfo.id;
-            CharSequence desc= runningTaskInfo.description;
-            String topActivity = runningTaskInfo.topActivity.getShortClassName();
-            int numOfActivities = runningTaskInfo.numActivities;
-            Log.d("jbjnfd",String.valueOf(numOfActivities));
+            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+            startActivity(intent);
+            finish();
         }
 
 
@@ -184,12 +133,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
 
     }
@@ -266,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String functie = dataSnapshot.child("functie").getValue(String.class);
-
 
                     if (functie.equals("Team Leader")) {
                         Log.d("Query", "This is a team leader");

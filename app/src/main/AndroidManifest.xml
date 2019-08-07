@@ -5,20 +5,19 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.GET_TASKS"/>
 
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity android:name=".Activity.LPCalendarList"></activity>
         <activity android:name=".Activity.UserProfileActivity"></activity>
         <activity
             android:name=".Activity.SignatureActivity"
             android:screenOrientation="landscape"></activity>
-        <activity android:name=".Activity.FinalCalendar"   />
+        <activity android:name=".Activity.FinalCalendar" />
         <activity android:name=".Activity.RegisterActivity" />
         <activity android:name=".Activity.CalendarActivity" />
         <activity

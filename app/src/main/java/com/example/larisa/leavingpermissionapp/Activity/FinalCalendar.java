@@ -1,13 +1,14 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompatSideChannelService;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,17 +20,12 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
-
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.HashMap;
 import java.util.List;
 
 public class FinalCalendar extends AppCompatActivity {
@@ -121,7 +117,9 @@ public class FinalCalendar extends AppCompatActivity {
                       }
                   }
                   intent.putExtra("TodayLP", (Serializable)sendLP);
+//                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                   startActivity(intent);
+//                  finish();
                   sendLP.clear();
 
 
@@ -139,12 +137,11 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
 
-       Intent intent = new Intent( FinalCalendar.this,ViewTeam.class);
+       Intent intent = new Intent(FinalCalendar.this, ViewTeam.class);
        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-       finish();
+       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
        startActivity(intent);
-
+//finish();
 
 
     }
@@ -175,7 +172,7 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     public void onBackPressed()
     {
         finish();
-        Intent intent = new Intent(this,ViewTeam.class);
+        Intent intent = new Intent(this, ViewTeam.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 

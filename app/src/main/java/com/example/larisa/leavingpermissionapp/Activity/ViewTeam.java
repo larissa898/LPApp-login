@@ -1,13 +1,14 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp.Activity;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
-import android.renderscript.Sampler;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,8 +19,8 @@ import android.widget.TextView;
 import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
 import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.LP;
-import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Model.User;
+import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -28,11 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ViewTeam extends AppCompatActivity implements Serializable {
@@ -102,9 +100,12 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                 final List<LP> LPlist = new ArrayList<>();
 
                 final DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
+                final int[] i = {0};
+                i[0]=0;
 
                 for (final User u : recycleViewAdapter.checkedUsers) {
 
+                    i[0] ++;
 
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -140,20 +141,23 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     }
 
 
-
+//                                    intent.putExtra("Lps", (Serializable) LPlist);
+//                                    startActivity(intent);
 
                                 }
 
 
                             }
+                            //needs modifying
 
 
-
-
+//
+//                             if(i[0]== recycleViewAdapter.checkedUsers.size())
+//                                {
                                     intent.putExtra("Lps", (Serializable) LPlist);
                                     startActivity(intent);
-//                                    finish();
 
+//                                }
 
 
                         }
@@ -209,13 +213,11 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
         });
-
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(ViewTeam.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
