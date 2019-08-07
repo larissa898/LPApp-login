@@ -59,4 +59,6 @@
     <string name="Logout">Logout</string>
     <string name="save">Save</string>
     <string name="enter_new_phone_number">Enter new phone number</string>
+    <string name="detalii_angajati">Selectati un angajat pentru a ii vizualiza detaliile.</string>
+    <string name="nr_matricol">Nr Matricol:</string>
 </resources>

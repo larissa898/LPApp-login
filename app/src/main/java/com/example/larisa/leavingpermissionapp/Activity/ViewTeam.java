@@ -56,7 +56,7 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         confirmButton = findViewById(R.id.confirmButton);
-        welcomText = findViewById(R.id.welcomeText);
+        welcomText = findViewById(R.id.welcomeText2);
 
 
         usersList = new ArrayList<>();

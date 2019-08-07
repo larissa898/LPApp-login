@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
@@ -94,15 +95,14 @@ public class MainActivity extends AppCompatActivity {
 
                                     //check that the user has validated the email
                                     if (task.isSuccessful()) {
-                                        if (FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                        if (user.isEmailVerified()) {
                                             Log.d(TAG, "onComplete: isEmailVerified = " + FirebaseAuth.getInstance().getCurrentUser().isEmailVerified());
-                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             createUser(user.getUid());
                                             redirectUser(user.getUid());
 
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             Log.d(TAG, "onComplete: isEmailVerified = " + FirebaseAuth.getInstance().getCurrentUser().isEmailVerified());
                                             Toast.makeText(MainActivity.this, "Please verify your Email first", Toast.LENGTH_SHORT).show();
                                         }
@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(registerIntent, 111);
             }
         });
-
 
 
     }
@@ -211,8 +210,12 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String functie = dataSnapshot.child("functie").getValue(String.class);
-
-                    if (functie.equals("Team Leader")) {
+                    if (functie.equals("admin")) {
+                        Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                        startActivity(intent);
+                        userNM.setText("");
+                        password.setText("");
+                    } else if (functie.equals("Team Leader")) {
                         Log.d("Query", "This is a team leader");
                         Intent intent = new Intent(MainActivity.this, ViewTeam.class);
                         startActivity(intent);
@@ -244,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Please check your email to activate your account", Toast.LENGTH_SHORT).show();
             }
-
 
 
         }
