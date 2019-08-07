@@ -40,7 +40,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(RecycleViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecycleViewAdapter.ViewHolder holder, final int position) {
 
         final User user = users.get(position);
         holder.numeAngajat.setText(user.getFullName());
