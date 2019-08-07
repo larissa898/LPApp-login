@@ -13,12 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class SignatureActivity extends AppCompatActivity {
 

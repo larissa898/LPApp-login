@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.PhoneNumberUtils;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
@@ -114,7 +113,7 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 LinearLayout container = new LinearLayout(UserProfileActivity.this);
                 container.setOrientation(LinearLayout.VERTICAL);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 lp.setMargins(200, 200, 200, 200);
                 EditText number = new EditText(UserProfileActivity.this);
                 number.setHint("Enter new phone number");
@@ -127,10 +126,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 builder.setView(number)
                         .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
-                                if (number.getText().toString().isEmpty()) {
-                                    number.setError("The register number field cannot be empty");
-                                    number.requestFocus();
+                                if (!phoneNumberIsValid(number.getText().toString())) {
+                                    Toast.makeText(UserProfileActivity.this, "Not a valid Romanian phone number.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     changePhoneNumber(number.getText().toString());
                                 }
@@ -141,8 +138,18 @@ public class UserProfileActivity extends AppCompatActivity {
                 builder.create().show();
             }
         });
+    }
 
-
+    private boolean phoneNumberIsValid(String number) {
+        if (number.isEmpty() ||
+                (number.length() != 9 && number.length() != 10 && number.length() != 13) ||
+                (number.length() == 9 && !number.startsWith("7")) ||
+                (number.length() == 10 && !number.startsWith("07")) ||
+                (number.length() == 13 && !number.startsWith("00407"))) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void changePhoneNumber(String number) {
