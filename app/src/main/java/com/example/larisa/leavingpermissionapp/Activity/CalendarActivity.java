@@ -10,6 +10,9 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -37,8 +40,6 @@ public class CalendarActivity extends AppCompatActivity {
 
     private static final long DOUBLE_PRESS_INTERVAL = 250; // in millis
     private long lastPressTime;
-    private Button signOutButton;
-    private Button CancelCalendar;
     private Button OpenDay;
     private CalendarView calendarView;
     private boolean mHasDoubleClicked = false;
@@ -52,16 +53,10 @@ public class CalendarActivity extends AppCompatActivity {
     private String actualM;
     private ImageView userProfileIV;
 
+    private int mYear, mMonth, mDayOfMonth;
 
-    private void initImageView() {
-        userProfileIV = findViewById(R.id.userProfileIV);
-        userProfileIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(CalendarActivity.this, UserProfileActivity.class));
-            }
-        });
-    }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -69,7 +64,8 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
-        initImageView();
+        getSupportActionBar().setTitle("Leaving Permission App");
+
 
         //months of the year
         final String[] strMonths = {"January",
@@ -90,9 +86,7 @@ public class CalendarActivity extends AppCompatActivity {
         actualDay = calendar.get(Calendar.DATE);
         actualMonth = calendar.get(Calendar.MONTH);
         actualYear = calendar.get(Calendar.YEAR);
-        signOutButton = findViewById(R.id.signOutButton);
         calendarView = findViewById(R.id.calendarViewID);
-        Angajat = findViewById(R.id.NumeAngajatCalendar);
         OpenDay = findViewById(R.id.OpenDay);
         recyclerView = findViewById(R.id.recyclerViewUser);
 
@@ -100,25 +94,6 @@ public class CalendarActivity extends AppCompatActivity {
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
 
-        //Set the welcome message with the user name
-        Query query = functionRef.child(userId);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.exists()) {
-                    String nume = dataSnapshot.child("fullName").getValue(String.class);
-                    Angajat.setText("Buna " + nume + "!");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        //
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -172,23 +147,26 @@ public class CalendarActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext()
                                         , "Press Double-Click to make a request or select Open Button",
                                         Toast.LENGTH_SHORT).show();
-                                OpenDay.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Intent intent = new Intent(CalendarActivity.this
-                                                , LeavingPermissionList.class);
-                                        actualM = strMonths[month];
-                                        intent.putExtra("day", dayOfMonth);
-                                        intent.putExtra("month", month);
-                                        intent.putExtra("year", year);
-                                        intent.putExtra("actualDay", actualDay);
-                                        intent.putExtra("actualMonth", actualMonth);
-                                        intent.putExtra("actualYear", actualYear);
-                                        intent.putExtra("monthActual", actualM);
-                                        Current = (actualDay + " " + actualMonth + " " + actualYear);
-                                        startActivity(intent);
-                                    }
-                                });
+//                                OpenDay.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View view) {
+//                                        Intent intent = new Intent(CalendarActivity.this
+//                                                , LeavingPermissionList.class);
+//                                        actualM = strMonths[month];
+//                                        intent.putExtra("day", dayOfMonth);
+//                                        intent.putExtra("month", month);
+//                                        intent.putExtra("year", year);
+//                                        intent.putExtra("actualDay", actualDay);
+//                                        intent.putExtra("actualMonth", actualMonth);
+//                                        intent.putExtra("actualYear", actualYear);
+//                                        intent.putExtra("monthActual", actualM);
+//                                        Current = (actualDay + " " + actualMonth + " " + actualYear);
+//                                        startActivity(intent);
+//                                    }
+//                                });
+                                mYear = year;
+                                mDayOfMonth = dayOfMonth;
+                                mMonth = month;
                             }
                         }
                     };
@@ -201,25 +179,49 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
 
-        signOutButton.setOnClickListener(new View.OnClickListener() {
+        OpenDay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            public void onClick(View view) {
+                Intent intent = new Intent(CalendarActivity.this
+                        , LeavingPermissionList.class);
+                actualM = strMonths[mMonth];
+                intent.putExtra("day", mDayOfMonth);
+                intent.putExtra("month", mMonth);
+                intent.putExtra("year", mYear);
+                intent.putExtra("actualDay", actualDay);
+                intent.putExtra("actualMonth", actualMonth);
+                intent.putExtra("actualYear", actualYear);
+                intent.putExtra("monthActual", actualM);
+                Current = (actualDay + " " + actualMonth + " " + actualYear);
                 startActivity(intent);
-                finish();
             }
         });
+
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile_logout_menu, menu);
+        return true;
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_userProfile:
+                startActivity(new Intent(CalendarActivity.this, UserProfileActivity.class));
+                return true;
+
+            case R.id.menu_logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+
+        }
+
+        return true;
     }
 }

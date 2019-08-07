@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     // UI
     private Button login;
-    private Button cancel;
     private EditText userNM;
     private EditText password;
     private TextView register;
@@ -62,10 +61,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        login = findViewById(R.id.button);
-        userNM = findViewById(R.id.editTextNM);
-        cancel = findViewById(R.id.button2);
-        password = findViewById(R.id.editText);
+        login = findViewById(R.id.loginButton);
+        userNM = findViewById(R.id.userNameET);
+        password = findViewById(R.id.passwordET);
         register = findViewById(R.id.registerButton);
     }
 
@@ -73,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setTitle("Leaving Permission App");
 
         initFirebase();
         init();
@@ -184,12 +184,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
 
     }
