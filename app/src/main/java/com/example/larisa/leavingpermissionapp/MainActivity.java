@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
+import com.example.larisa.leavingpermissionapp.Activity.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
+import com.example.larisa.leavingpermissionapp.Activity.RegisterViewPagerActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,7 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-
+private FirebaseOps firebaseOps;
     // UI
     private Button login;
     private EditText userNM;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user;
 
     private void initFirebase() {
+        firebaseOps = FirebaseOps.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
@@ -130,7 +133,9 @@ public class MainActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+//                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                Intent registerIntent = new Intent(MainActivity.this, RegisterViewPagerActivity.class);
+
                 startActivityForResult(registerIntent, 111);
             }
         });

@@ -9,10 +9,14 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
+        android:label="potato"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.AdminActivity"></activity>
+        <activity android:name=".Activity.RegisterViewPagerActivity">
+
+        </activity>
+        <activity android:name=".Activity.AdminActivity" />
         <activity android:name=".Activity.LPCalendarList" />
         <activity android:name=".Activity.UserProfileActivity" />
         <activity android:name=".Activity.UserProfileAdminViewActivity" />
@@ -29,7 +33,9 @@
         <activity android:name=".Activity.AddUser" />
         <activity android:name=".Activity.RaportActivity" />
         <activity android:name=".Activity.LeavingPermissionList" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

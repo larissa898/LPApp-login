@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.RegisterFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp">
+
+        <EditText
+            android:id="@+id/registerNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/register_number"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/registerLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/registerNumber"
+            android:hint="@string/register_name"
+            android:inputType="textCapSentences" />
+
+        <EditText
+            android:id="@+id/registerFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/registerLastName"
+            android:hint="@string/register_firstName"
+            android:inputType="textCapSentences" />
+
+
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/registerFirstName"
+            android:hint="@string/hint_phone"
+            android:inputType="phone" />
+
+        <Spinner
+            android:id="@+id/teamLeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/phoneNumber"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/confirmRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@color/buttonColor"
+            android:text="@string/register_form_button"
+            android:textColor="@color/textColor"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+</FrameLayout>
