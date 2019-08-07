@@ -54,7 +54,7 @@ public class FinalCalendar extends AppCompatActivity {
         Intent intent = getIntent();
 //
 
-
+        getSupportActionBar().setTitle("Leaving Permission App");
 
 
        final List<LP> lps= (List<LP>) intent.getSerializableExtra("Lps");

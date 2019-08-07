@@ -46,9 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
     // Firebase
     private FirebaseAuth firebaseAuth;
+    FirebaseUser user;
 
     private void initFirebase() {
         firebaseAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void init() {
@@ -69,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         init();
 
         if (isUserLoggedIn()) {
-            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-            startActivity(intent);
+
+            redirectUser(user.getUid());
             finish();
         }
 

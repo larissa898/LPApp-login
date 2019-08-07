@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -53,9 +56,10 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         confirmButton = findViewById(R.id.confirmButton);
         welcomText = findViewById(R.id.welcomeText);
-        logoutButton = findViewById(R.id.logoutButton);
+
 
         usersList = new ArrayList<>();
+        getSupportActionBar().setTitle("Leaving Permission App");
 
 
 
@@ -140,23 +144,21 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                     }
 
 
-//                                    intent.putExtra("Lps", (Serializable) LPlist);
-//                                    startActivity(intent);
-
+//
                                 }
 
 
                             }
-                            //needs modifying
+
+
+
 
 
 //
-//                             if(i[0]== recycleViewAdapter.checkedUsers.size())
-//                                {
                                     intent.putExtra("Lps", (Serializable) LPlist);
                                     startActivity(intent);
 
-//                                }
+//
 
 
                         }
@@ -212,17 +214,34 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
 
 
         });
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile_logout_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_userProfile:
+                startActivity(new Intent(ViewTeam.this, UserProfileActivity.class));
+                return true;
+
+            case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(ViewTeam.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-            }
-        });
+                return true;
 
+        }
+
+        return true;
     }
-
-
 }
+
+
