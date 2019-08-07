@@ -77,7 +77,7 @@ public class SignatureActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Now you can saveLocal.", Toast.LENGTH_SHORT).show();
+            signatureCanvasView.saveLocal(this);
         }
     }
 
