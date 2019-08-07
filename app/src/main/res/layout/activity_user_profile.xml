@@ -99,18 +99,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/editPhoneNumberButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/userNrMatricolTV"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="40dp"
-            android:src="@drawable/ic_edit"
-            android:layout_alignParentRight="true"/>
-
         <View
             android:id="@+id/staticLine2"
             android:layout_width="match_parent"

@@ -5,20 +5,16 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +52,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView userPhoneTV;
     private TextView userNrMatricolTV;
     private ImageView userSignatureIV;
-    private ImageView editPhoneNumberButton;
     private Button addEditSignatureButton;
     private SignatureCanvasView signatureCanvasView;
 
@@ -70,9 +65,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private String signaturePath = "";
 
 
+
     private void checkSignatureExists() {
 
-        getSupportActionBar().setTitle("Leaving Permission App");
         signatureRef.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
@@ -97,7 +92,6 @@ public class UserProfileActivity extends AppCompatActivity {
         userNrMatricolTV = findViewById(R.id.userNrMatricolTV);
         userSignatureIV = findViewById(R.id.userSignatureIV);
         addEditSignatureButton = findViewById(R.id.addEditSignatureButton);
-        editPhoneNumberButton = findViewById(R.id.editPhoneNumberButton);
 
         addEditSignatureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,36 +101,10 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        editPhoneNumberButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText number = new EditText(UserProfileActivity.this);
-                number.setHint("Enter new phone number");
-                number.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
 
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
-
-                builder.setView(number)
-                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                if (number.getText().toString().isEmpty() ) {
-                                    number.setError("The register number field cannot be empty");
-                                    number.requestFocus();
-                                }
-                                Toast.makeText(getApplicationContext(), number.getText().toString(), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton("Cancel", (dialog, id) -> {
-                        });
-                builder.create().show();
-            }
-        });
 
 
     }
-
 
     private void getUserData() {
 
@@ -144,7 +112,7 @@ public class UserProfileActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
+                if(dataSnapshot.exists()) {
                     User user = dataSnapshot.getValue(User.class);
                     Log.d(TAG, "onDataChange: user: " + user);
 
@@ -195,7 +163,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         if (requestCode == SIGNATURE_REQUEST_CODE) {
 
-            if (resultCode == Activity.RESULT_OK) {
+            if(resultCode == Activity.RESULT_OK){
                 signaturePath = data.getStringExtra("path");
                 Toast.makeText(this, "signaturePath = " + signaturePath, Toast.LENGTH_SHORT).show();
 
@@ -218,7 +186,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
+                        if(!task.isSuccessful()) {
                             throw task.getException();
                         }
 
@@ -241,6 +209,4 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
     }
-
-
 }
