@@ -1,7 +1,8 @@
-package com.example.larisa.leavingpermissionapp.Model;
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
 
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.example.larisa.leavingpermissionapp.Model;
 
 import java.io.Serializable;
 import java.util.List;

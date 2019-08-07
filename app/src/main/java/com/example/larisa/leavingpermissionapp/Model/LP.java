@@ -1,12 +1,10 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp.Model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-
 import java.io.Serializable;
-import java.util.Date;
 
 public class LP implements Serializable {
 

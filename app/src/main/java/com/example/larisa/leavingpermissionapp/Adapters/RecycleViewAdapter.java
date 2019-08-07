@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp.Adapters;
 
 import android.content.Context;
@@ -7,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
 import com.example.larisa.leavingpermissionapp.Activity.ItemClickListener;
-import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Model.User;
+import com.example.larisa.leavingpermissionapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +34,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
 
 
     @Override
-    public RecycleViewAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
+    public RecycleViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_row, parent, false);
         return new ViewHolder(v, context) ;
     }

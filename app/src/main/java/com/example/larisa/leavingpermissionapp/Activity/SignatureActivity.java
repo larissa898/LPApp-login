@@ -13,12 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class SignatureActivity extends AppCompatActivity {
 
@@ -77,7 +74,7 @@ public class SignatureActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Now you can saveLocal.", Toast.LENGTH_SHORT).show();
+            signatureCanvasView.saveLocal(this);
         }
     }
 
