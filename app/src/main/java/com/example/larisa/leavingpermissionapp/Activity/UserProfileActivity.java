@@ -5,16 +5,20 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +26,6 @@ import android.widget.Toast;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
-import com.example.larisa.leavingpermissionapp.dialogs.EditPhoneNumberDialog;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -107,7 +110,27 @@ public class UserProfileActivity extends AppCompatActivity {
         editPhoneNumberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new EditPhoneNumberDialog().show(getSupportFragmentManager(), "Edit phone number");
+                EditText number = new EditText(UserProfileActivity.this);
+                number.setHint("Enter new phone number");
+                number.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
+
+                builder.setView(number)
+                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if (number.getText().toString().isEmpty() ) {
+                                    number.setError("The register number field cannot be empty");
+                                    number.requestFocus();
+                                }
+                                Toast.makeText(getApplicationContext(), number.getText().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", (dialog, id) -> {
+                        });
+                builder.create().show();
             }
         });
 
