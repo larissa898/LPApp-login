@@ -15,6 +15,7 @@ public class User implements Serializable {
     private String fullName;
     private String telefon;
     private String nrMatricol;
+    private String teamLeader;
 
     private List<LP> lps;
 
@@ -26,12 +27,33 @@ public class User implements Serializable {
 
     }
 
+
+    public User(String nume, String prenume, String functie, String fullName, String telefon, String nrMatricol, String teamLeader, List<LP> lps) {
+        this.nume = nume;
+        this.prenume = prenume;
+        this.functie = functie;
+        this.fullName = fullName;
+        this.telefon = telefon;
+        this.nrMatricol = nrMatricol;
+        this.teamLeader = teamLeader;
+        this.lps = lps;
+    }
+
     public User(String nume, String prenume, String functie, List<LP> lps) {
 
         this.nume = nume;
         this.functie = functie;
         this.prenume = prenume;
         this.lps = lps;
+    }
+
+    public String getTeamLeader() {
+        return teamLeader;
+    }
+
+
+    public void setTeamLeader(String teamLeader) {
+        this.teamLeader = teamLeader;
     }
 
     public User(String fullName, String functie, String telefon, String nrMatricol) {

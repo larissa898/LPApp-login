@@ -24,7 +24,7 @@
     <RelativeLayout
         android:id="@+id/relLayout"
         android:layout_width="300dp"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         app:layout_constraintBottom_toTopOf="@+id/textViewTotalresult"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
