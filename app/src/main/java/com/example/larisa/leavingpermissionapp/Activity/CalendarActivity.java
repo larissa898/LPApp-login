@@ -222,4 +222,9 @@ public class CalendarActivity extends AppCompatActivity {
 
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
