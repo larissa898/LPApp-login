@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,7 +34,6 @@ import java.util.List;
 
 public class LeavingPermissionList extends AppCompatActivity {
 
-    private Button CancelList;
     private Button AddButton;
     public Button editButton;
     private TextView CurrentDay;
@@ -55,6 +55,10 @@ public class LeavingPermissionList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+
         setContentView(R.layout.activity_leaving_permission_list);
         recyclerView = findViewById(R.id.recyclerViewUser);
         recyclerView.setHasFixedSize(true);
@@ -62,7 +66,6 @@ public class LeavingPermissionList extends AppCompatActivity {
         LpList = new ArrayList<>();
         CurrentDay = findViewById(R.id.textViewDayCurrent);
         AddButton = findViewById(R.id.buttonAddList);
-        CancelList = findViewById(R.id.buttonCancelList);
         TotalOreZi = findViewById(R.id.totalResult);
         editButton =  findViewById(R.id.editButton);
         day =  getIntent().getIntExtra("day",0);
@@ -166,16 +169,19 @@ public class LeavingPermissionList extends AppCompatActivity {
             });
         }
 
-        CancelList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LeavingPermissionList.this, CalendarActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }

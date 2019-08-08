@@ -124,6 +124,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
 
                 builder.setView(number)
+                        .setTitle("Edit phone number")
                         .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 if (!phoneNumberIsValid(number.getText().toString())) {
@@ -133,6 +134,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 }
                             }
                         })
+                        .setNegativeButton("Cancel", null)
                         .setNegativeButton("Cancel", (dialog, id) -> {
                         });
                 builder.create().show();
@@ -186,6 +188,9 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         usersRef = FirebaseDatabase.getInstance().getReference("Users");
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
