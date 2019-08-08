@@ -2,7 +2,7 @@
  * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
  */
 
-package com.example.larisa.leavingpermissionapp.Activity;
+package com.example.larisa.leavingpermissionapp.Utils;
 
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +36,7 @@ public class FirebaseOps {
         return instance;
     }
 
+
     private FirebaseOps() {
         usersRef = FirebaseDatabase.getInstance().getReference("Users");
         readData();
@@ -59,6 +60,7 @@ public class FirebaseOps {
             }
         });
     }
+
 
     public List<User> getUsersByRole(String role) {
 

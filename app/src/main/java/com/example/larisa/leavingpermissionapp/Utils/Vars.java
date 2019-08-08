@@ -1,6 +1,10 @@
-package com.example.larisa.leavingpermissionapp;
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
 
-public class Utils {
+package com.example.larisa.leavingpermissionapp.Utils;
+
+public class Vars {
     public final static String DATABASE = "LeavingPerm";
     public final static int DB_VERSION = 1;
     public final static String TABLE_USERS  ="Users";

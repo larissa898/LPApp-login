@@ -20,8 +20,7 @@ import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
-import com.example.larisa.leavingpermissionapp.Activity.FirebaseOps;
-import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterViewPagerActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
 import com.example.larisa.leavingpermissionapp.Model.User;
