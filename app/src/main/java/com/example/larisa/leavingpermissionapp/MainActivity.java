@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -132,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
                 Intent registerIntent = new Intent(MainActivity.this, RegisterViewPagerActivity.class);
 
                 startActivityForResult(registerIntent, 111);
@@ -158,39 +165,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
-
-                    SharedPreferences sharedPref = getSharedPreferences("LPAppSharedPreferences", Context.MODE_PRIVATE);
-                    String registerFullName = sharedPref.getString("registerFullName", "");
-                    final String registerFunction = sharedPref.getString("registerFunction", "");
-                    String registerNumber = sharedPref.getString("registerNumber", "");
-                    String registerPhone = sharedPref.getString("registerPhone", "");
-                    User registerUser = new User(registerFullName, registerFunction, registerPhone, registerNumber);
+                    User userToBeRegistered = new User();
+                    String dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+                    try {
+                        FileInputStream fileInputStream = new FileInputStream(new File(dirPath, "user.txt"));
+                        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                        userToBeRegistered = (User) objectInputStream.readObject();
+                        objectInputStream.close();
+                        fileInputStream.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
                     FirebaseDatabase.getInstance().getReference("Users")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser);
-//                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if (task.isSuccessful()) {
-//
-//                                        Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
-//                                        if (registerFunction.equals("Team Leader")) {
-//                                            Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-//                                            startActivity(intent);
-//                                            userNM.setText("");
-//                                            password.setText("");
-//                                        } else {
-//                                            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-//                                            startActivity(intent);
-//                                            userNM.setText("");
-//                                            password.setText("");
-//                                        }
-//
-//
-//                                    }
-//                                }
-//                            });
-
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userToBeRegistered);
                 }
             }
 
@@ -247,8 +239,6 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Please check your email to activate your account", Toast.LENGTH_SHORT).show();
             }
-
-
         }
     }
 }
