@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAdapterUser.ViewHolder> {
+public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePermissionForUserAdapter.ViewHolder> {
 
     private AlertDialog.Builder alertDialogBuilder;
     private AlertDialog dialog;
@@ -43,7 +43,7 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
     private int year;
 
 
-    public RecycleViewAdapterUser(Context context, List<LP> lp, int day, int month, int year, String monthActual) {
+    public LeavePermissionForUserAdapter(Context context, List<LP> lp, int day, int month, int year, String monthActual) {
         this.context = context;
         this.lp = lp;
         this.day = day;
@@ -54,13 +54,13 @@ public class  RecycleViewAdapterUser extends RecyclerView.Adapter <RecycleViewAd
 
     @NonNull
     @Override
-    public RecycleViewAdapterUser.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public LeavePermissionForUserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_lp, parent, false);
-        return new RecycleViewAdapterUser.ViewHolder(v, context);
+        return new LeavePermissionForUserAdapter.ViewHolder(v, context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewAdapterUser.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull LeavePermissionForUserAdapter.ViewHolder viewHolder, int i) {
         final LP mylist = lp.get(i);
         viewHolder.From.setText(mylist.getFrom());
         viewHolder.To.setText(mylist.getTo());

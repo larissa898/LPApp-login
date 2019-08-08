@@ -137,7 +137,7 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view) {
 
-       Intent intent = new Intent(FinalCalendar.this, ViewTeam.class);
+       Intent intent = new Intent(FinalCalendar.this, ViewTeamActivity.class);
        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
        startActivity(intent);
@@ -172,7 +172,7 @@ backToTeam.setOnClickListener(new View.OnClickListener() {
     public void onBackPressed()
     {
         finish();
-        Intent intent = new Intent(this, ViewTeam.class);
+        Intent intent = new Intent(this, ViewTeamActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 

@@ -19,28 +19,26 @@ import com.example.larisa.leavingpermissionapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter.ViewHolder> {
+public class UsersForTeamLeaderAdapter extends RecyclerView.Adapter<UsersForTeamLeaderAdapter.ViewHolder> {
 
     private Context context;
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
     public List<User> checkedUsers = new ArrayList<>();
 
-    public RecycleViewAdapter(Context context, List<User> users)
-    {
+    public UsersForTeamLeaderAdapter(Context context, List<User> users) {
         this.context = context;
         this.users = users;
     }
 
 
-
     @Override
-    public RecycleViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_row, parent, false);
-        return new ViewHolder(v, context) ;
+    public UsersForTeamLeaderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_row, parent, false);
+        return new ViewHolder(v, context);
     }
 
     @Override
-    public void onBindViewHolder(RecycleViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(UsersForTeamLeaderAdapter.ViewHolder holder, final int position) {
 
         final User user = users.get(position);
         holder.numeAngajat.setText(user.getFullName());
@@ -48,35 +46,32 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
             @Override
             public void onItemClick(View v, int pos) {
                 CheckBox ck = (CheckBox) v;
-                if(ck.isChecked())
-
-                {
-                  checkedUsers.add(users.get(position));
-                }
-                else
-                {
-                 checkedUsers.remove(users.get(position));
+                if (ck.isChecked()) {
+                    checkedUsers.add(users.get(position));
+                } else {
+                    checkedUsers.remove(users.get(position));
                 }
             }
         });
+    }
 
-
+    public void setList(List<User> newUsersList) {
+        users = newUsersList;
     }
 
     @Override
     public int getItemCount() {
         return users.size();
     }
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView numeAngajat;
         public CheckBox checkBox;
         ItemClickListener itemClickListener;
 
 
-        public ViewHolder(View v, final Context ctx)
-        {
+        public ViewHolder(View v, final Context ctx) {
             super(v);
             context = ctx;
             numeAngajat = v.findViewById(R.id.numeAngajat);
@@ -85,11 +80,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter <RecycleViewAdapter
 //
 
 
-
         }
-        public  void setItemClickListener(ItemClickListener ic)
-        {
-            this.itemClickListener  = ic;
+
+        public void setItemClickListener(ItemClickListener ic) {
+            this.itemClickListener = ic;
         }
 
         @Override

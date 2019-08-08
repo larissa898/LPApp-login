@@ -7,6 +7,9 @@ package com.example.larisa.leavingpermissionapp.Model;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *
+ */
 public class User implements Serializable {
 
     private String nume;
@@ -140,6 +143,7 @@ public class User implements Serializable {
                 ", fullName='" + fullName + '\'' +
                 ", telefon='" + telefon + '\'' +
                 ", nrMatricol='" + nrMatricol + '\'' +
+                ", teamLeader='" + teamLeader + '\'' +
                 ", lps=" + lps +
                 '}';
     }

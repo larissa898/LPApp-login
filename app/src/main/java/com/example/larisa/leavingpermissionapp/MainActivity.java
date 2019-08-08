@@ -22,7 +22,7 @@ import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterViewPagerActivity;
-import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
+import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //                                        Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
 //                                        if (registerFunction.equals("Team Leader")) {
-//                                            Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+//                                            Intent intent = new Intent(MainActivity.this, ViewTeamActivity.class);
 //                                            startActivity(intent);
 //                                            userNM.setText("");
 //                                            password.setText("");
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     } else if (functie.equals("Team Leader")) {
                         Log.d("Query", "This is a team leader");
-                        Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                        Intent intent = new Intent(MainActivity.this, ViewTeamActivity.class);
                         startActivity(intent);
                         finish();
                     } else {

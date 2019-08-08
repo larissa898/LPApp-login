@@ -22,29 +22,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RecycleViewAdapterLP extends RecyclerView.Adapter <RecycleViewAdapterLP.ViewHolder> {
+public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePermissionForTLAdapter.ViewHolder> {
 
     private Context context;
     private List<LP> lps = new ArrayList<>();
     public HashMap<String, LP> modifiedLP = new HashMap<>();
 
 
-        public RecycleViewAdapterLP(Context context, List<LP> lps) {
+        public LeavePermissionForTLAdapter(Context context, List<LP> lps) {
         this.context = context;
         this.lps = lps;
     }
 
     @NonNull
     @Override
-    public RecycleViewAdapterLP.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LeavePermissionForTLAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.lp_row, parent, false);
-        return new RecycleViewAdapterLP.ViewHolder(v, context);
+        return new LeavePermissionForTLAdapter.ViewHolder(v, context);
 
     }
 
 
     @Override
-    public void onBindViewHolder(RecycleViewAdapterLP.ViewHolder holder, final int position) {
+    public void onBindViewHolder(LeavePermissionForTLAdapter.ViewHolder holder, final int position) {
 
         LP lp = lps.get(position);
         holder.numeAngajat.setText(lp.getNume());

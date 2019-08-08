@@ -9,10 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterNoCheckbox;
+import com.example.larisa.leavingpermissionapp.Adapters.UsersForAdminAdapter;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +25,7 @@ import java.util.List;
 public class AdminActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RecycleViewAdapterNoCheckbox recycleViewAdapter;
+    private UsersForAdminAdapter recycleViewAdapter;
     private List<User> usersList;
 
 
@@ -55,7 +53,7 @@ public class AdminActivity extends AppCompatActivity {
                         User user = snapshot.getValue(User.class);
                         usersList.add(user);
                     }
-                    recycleViewAdapter = new RecycleViewAdapterNoCheckbox(AdminActivity.this, usersList);
+                    recycleViewAdapter = new UsersForAdminAdapter(AdminActivity.this, usersList);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();
                 }
