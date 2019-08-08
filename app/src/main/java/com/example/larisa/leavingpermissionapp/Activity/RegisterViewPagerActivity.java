@@ -12,8 +12,9 @@ import com.example.larisa.leavingpermissionapp.R;
 
 public class RegisterViewPagerActivity extends AppCompatActivity {
 
-    public static ViewPager viewPager;
+    public static SwipeDisabledViewPager viewPager;
     RegisterFragmentCollectionAdapter registerFragmentCollectionAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,5 +23,6 @@ public class RegisterViewPagerActivity extends AppCompatActivity {
         registerFragmentCollectionAdapter = new RegisterFragmentCollectionAdapter(getSupportFragmentManager());
         viewPager.setAdapter(registerFragmentCollectionAdapter);
     }
+
 
 }

@@ -10,7 +10,7 @@
     android:layout_height="match_parent"
     tools:context=".Activity.RegisterViewPagerActivity">
 
-    <android.support.v4.view.ViewPager
+    <com.example.larisa.leavingpermissionapp.Activity.SwipeDisabledViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/view_pager" />

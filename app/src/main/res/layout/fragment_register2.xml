@@ -51,11 +51,12 @@
             android:inputType="phone" />
 
         <Spinner
-            android:id="@+id/teamLeader"
+            android:id="@+id/userRole"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/phoneNumber"
-            android:spinnerMode="dropdown" />
+            android:layout_below="@+id/phoneNumber"
+            />
+
 
         <Button
             android:id="@+id/confirmRegister"
