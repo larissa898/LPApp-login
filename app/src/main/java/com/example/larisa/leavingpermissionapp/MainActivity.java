@@ -42,7 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-private FirebaseOps firebaseOps;
+    private FirebaseOps firebaseOps;
     // UI
     private Button login;
     private EditText userNM;
@@ -168,29 +168,29 @@ private FirebaseOps firebaseOps;
                     User registerUser = new User(registerFullName, registerFunction, registerPhone, registerNumber);
 
                     FirebaseDatabase.getInstance().getReference("Users")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-                            addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-
-                                        Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
-                                        if (registerFunction.equals("Team Leader")) {
-                                            Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                                            startActivity(intent);
-                                            userNM.setText("");
-                                            password.setText("");
-                                        } else {
-                                            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                                            startActivity(intent);
-                                            userNM.setText("");
-                                            password.setText("");
-                                        }
-
-
-                                    }
-                                }
-                            });
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser);
+//                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if (task.isSuccessful()) {
+//
+//                                        Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
+//                                        if (registerFunction.equals("Team Leader")) {
+//                                            Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+//                                            startActivity(intent);
+//                                            userNM.setText("");
+//                                            password.setText("");
+//                                        } else {
+//                                            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+//                                            startActivity(intent);
+//                                            userNM.setText("");
+//                                            password.setText("");
+//                                        }
+//
+//
+//                                    }
+//                                }
+//                            });
 
                 }
             }
@@ -218,20 +218,16 @@ private FirebaseOps firebaseOps;
                     if (functie.equals("admin")) {
                         Intent intent = new Intent(MainActivity.this, AdminActivity.class);
                         startActivity(intent);
-                        userNM.setText("");
-                        password.setText("");
+                        finish();
                     } else if (functie.equals("Team Leader")) {
                         Log.d("Query", "This is a team leader");
                         Intent intent = new Intent(MainActivity.this, ViewTeam.class);
                         startActivity(intent);
-                        userNM.setText("");
-                        password.setText("");
+                        finish();
                     } else {
                         Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
                         startActivity(intent);
-                        userNM.setText("");
-                        password.setText("");
-
+                        finish();
                     }
                 }
 

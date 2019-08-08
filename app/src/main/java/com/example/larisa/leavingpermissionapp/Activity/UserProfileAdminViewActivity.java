@@ -76,7 +76,8 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
 
     private void checkSignatureExists() {
 
-        getSupportActionBar().setTitle("Leaving Permission App");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         signatureRef.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
@@ -272,6 +273,7 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
 
 
     }
+
 
 
 }

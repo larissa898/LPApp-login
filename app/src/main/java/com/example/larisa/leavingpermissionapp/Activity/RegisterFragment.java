@@ -62,7 +62,6 @@ public class RegisterFragment extends Fragment {
             return view;
         }
     }
-//TODO: SYNC FIREBASEOPS WITH THIS
 
 
 }

@@ -29,8 +29,8 @@ public class FirebaseOps {
 
     private List<User> users;
 
-    public static FirebaseOps getInstance(){
-        if(instance == null){
+    public static FirebaseOps getInstance() {
+        if (instance == null) {
             instance = new FirebaseOps();
         }
         return instance;
@@ -42,7 +42,7 @@ public class FirebaseOps {
     }
 
 
-    private void readData(){
+    private void readData() {
         users = new ArrayList<>();
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -59,11 +59,12 @@ public class FirebaseOps {
             }
         });
     }
-    public List<User> getUsersByRole(String role){
 
-        List<User> teamLeaders = users.stream()
+    public List<User> getUsersByRole(String role) {
+
+        List<User> usersByRole = users.stream()
                 .filter(user -> user.getFunctie().equals(role))
                 .collect(Collectors.toList());
-        return teamLeaders;
+        return usersByRole;
     }
 }
