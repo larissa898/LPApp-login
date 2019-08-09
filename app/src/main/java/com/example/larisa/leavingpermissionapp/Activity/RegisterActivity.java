@@ -62,6 +62,7 @@ public class RegisterActivity extends AppCompatActivity
         editor.putString(REGISTRATION_NO, registrationNumber.toString());
         editor.putString(PHONE_NO, phoneNumber.toString());
         editor.putString(ROLE, role.toString());
+        editor.apply();
 
         setResult(RESULT_OK);
         finish();

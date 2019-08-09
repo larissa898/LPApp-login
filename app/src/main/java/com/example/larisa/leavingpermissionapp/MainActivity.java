@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
                     userToBeRegistered.setTelefon(sharedPreferences.getString(PHONE_NO, ""));
                     userToBeRegistered.setFunctie(sharedPreferences.getString(ROLE, ""));
 
-
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userToBeRegistered);
                 }
