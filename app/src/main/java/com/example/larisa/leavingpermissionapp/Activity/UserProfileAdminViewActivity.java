@@ -188,10 +188,10 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
                     User user = dataSnapshot.getValue(User.class);
                     Log.d(TAG, "onDataChange: user: " + user);
 
-                    userFullNameTV.setText(user.getFullName());
-                    userFunctieTV.setText(user.getFunctie());
-                    userNrMatricolTV.setText(user.getNrMatricol());
-                    userPhoneTV.setText(user.getTelefon());
+                    userFullNameTV.setText(user.getLastName() + " " + user.getFirstName());
+                    userFunctieTV.setText(user.getRole());
+                    userNrMatricolTV.setText(user.getRegistrationNumber());
+                    userPhoneTV.setText(user.getPhoneNumber());
                 }
             }
 

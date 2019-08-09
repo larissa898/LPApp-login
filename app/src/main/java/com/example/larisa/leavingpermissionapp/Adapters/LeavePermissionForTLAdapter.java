@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Activity.ItemClickListener;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 
 import java.util.ArrayList;
@@ -25,13 +25,13 @@ import java.util.List;
 public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePermissionForTLAdapter.ViewHolder> {
 
     private Context context;
-    private List<LP> lps = new ArrayList<>();
-    public HashMap<String, LP> modifiedLP = new HashMap<>();
+    private List<LeavingPermission> leavingPermissions = new ArrayList<>();
+    public HashMap<String, LeavingPermission> modifiedLP = new HashMap<>();
 
 
-        public LeavePermissionForTLAdapter(Context context, List<LP> lps) {
+        public LeavePermissionForTLAdapter(Context context, List<LeavingPermission> leavingPermissions) {
         this.context = context;
-        this.lps = lps;
+        this.leavingPermissions = leavingPermissions;
     }
 
     @NonNull
@@ -46,18 +46,18 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePerm
     @Override
     public void onBindViewHolder(LeavePermissionForTLAdapter.ViewHolder holder, final int position) {
 
-        LP lp = lps.get(position);
-        holder.numeAngajat.setText(lp.getNume());
-        holder.fromTime.setText(lp.getFrom());
-        holder.toTime.setText(lp.getTo());
-        holder.totalHours.setText(lp.getTotal().toString());
-        holder.status.setText(lp.getStatus());
+        LeavingPermission leavingPermission = leavingPermissions.get(position);
+        holder.numeAngajat.setText(leavingPermission.getNume());
+        holder.fromTime.setText(leavingPermission.getFrom());
+        holder.toTime.setText(leavingPermission.getTo());
+        holder.totalHours.setText(leavingPermission.getTotal().toString());
+        holder.status.setText(leavingPermission.getStatus());
         holder.setItemClickListener((new ItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
 
 
-                modifiedLP.put(lps.get(position).getId(),lps.get(position));
+                modifiedLP.put(leavingPermissions.get(position).getId(), leavingPermissions.get(position));
             }
         }));
 
@@ -68,7 +68,7 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePerm
 
     @Override
     public int getItemCount() {
-        return lps.size();
+        return leavingPermissions.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -120,7 +120,7 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePerm
             switch (v.getId()) {
                 case R.id.acceptButton:
                     int position = getAdapterPosition();
-                    LP LivingPerm = lps.get(position);
+                    LeavingPermission LivingPerm = leavingPermissions.get(position);
                     acceptLP(LivingPerm);
                     status.setTextColor(Color.GREEN);
                     statusLabel.setTextColor(Color.GREEN);
@@ -130,7 +130,7 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePerm
                     break;
                 case R.id.refuseButton:
                     position = getAdapterPosition();
-                     LP LivingPerm2 = lps.get(position);
+                     LeavingPermission LivingPerm2 = leavingPermissions.get(position);
                     refuseLP(LivingPerm2);
                     status.setTextColor(Color.RED);
                     statusLabel.setTextColor(Color.RED);
@@ -145,14 +145,14 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePerm
 
         }
 
-        public void acceptLP(final LP LivingPerm) {
+        public void acceptLP(final LeavingPermission LivingPerm) {
             LivingPerm.setStatus("confirmat");
             notifyDataSetChanged();
 
 
         }
 
-        public void refuseLP(final LP LivingPerm) {
+        public void refuseLP(final LeavingPermission LivingPerm) {
             LivingPerm.setStatus("refuzat");
             notifyDataSetChanged();
 

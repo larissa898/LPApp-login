@@ -42,7 +42,7 @@ public class UsersForAdminAdapter extends RecyclerView.Adapter<UsersForAdminAdap
     public void onBindViewHolder(UsersForAdminAdapter.ViewHolder holder, final int position) {
 
         final User user = users.get(position);
-        holder.numeAngajat.setText(user.getFullName());
+        holder.numeAngajat.setText(user.getLastName() + " " + user.getFirstName());
         holder.setItemClickListener((v, pos) -> {
             Intent intent = new Intent(context, UserProfileAdminViewActivity.class);
             context.startActivity(intent);

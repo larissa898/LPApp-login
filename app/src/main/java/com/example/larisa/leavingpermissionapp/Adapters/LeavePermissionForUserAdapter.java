@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Activity.RaportActivity;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +34,7 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
     private AlertDialog.Builder alertDialogBuilder;
     private AlertDialog dialog;
     private Context context;
-    private List<LP> lp = new ArrayList<>();
+    private List<LeavingPermission> leavingPermission = new ArrayList<>();
     private LayoutInflater inflater;
     private String monthActual;
     private Float total;
@@ -43,9 +43,9 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
     private int year;
 
 
-    public LeavePermissionForUserAdapter(Context context, List<LP> lp, int day, int month, int year, String monthActual) {
+    public LeavePermissionForUserAdapter(Context context, List<LeavingPermission> leavingPermission, int day, int month, int year, String monthActual) {
         this.context = context;
-        this.lp = lp;
+        this.leavingPermission = leavingPermission;
         this.day = day;
         this.month = month;
         this.year = year;
@@ -61,7 +61,7 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
 
     @Override
     public void onBindViewHolder(@NonNull LeavePermissionForUserAdapter.ViewHolder viewHolder, int i) {
-        final LP mylist = lp.get(i);
+        final LeavingPermission mylist = leavingPermission.get(i);
         viewHolder.From.setText(mylist.getFrom());
         viewHolder.To.setText(mylist.getTo());
         viewHolder.Status.setText(mylist.getStatus());
@@ -72,7 +72,7 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
     //Get list size
     @Override
     public int getItemCount() {
-        return lp.size();
+        return leavingPermission.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -110,12 +110,12 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
             switch (v.getId()){
                 case R.id.deleteButton:
                     int position = getAdapterPosition();
-                    LP LivingPermission = lp.get(position);
+                    LeavingPermission LivingPermission = leavingPermission.get(position);
                     deleteLP(position,LivingPermission);
                     break;
                 case R.id.editButton:
                     position = getAdapterPosition();
-                    LivingPermission = lp.get(position);
+                    LivingPermission = leavingPermission.get(position);
 
                     editLp(position,LivingPermission,v);
                     break;
@@ -123,8 +123,8 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
             }
         }
 
-        //delete LP
-        public void deleteLP (final int id, final LP lplp){
+        //delete LeavingPermission
+        public void deleteLP (final int id, final LeavingPermission lplp){
 
             //create alert dialog
             alertDialogBuilder = new AlertDialog.Builder(context);
@@ -145,13 +145,13 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
                 }
             });
 
-            //When press Yes,delete that LP from Firebase
+            //When press Yes,delete that LeavingPermission from Firebase
             yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
-                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
                             child(day+ " "+  monthActual+ " "+year);
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -170,7 +170,7 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
                                            "to").getValue().equals(lplp.getTo())) {
                                        snapshot.getRef().removeValue();
                                        dialog.dismiss();
-                                       lp.clear();
+                                       leavingPermission.clear();
                                        return;
                                    }
                                }
@@ -189,12 +189,12 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
         //Edit Lp
         //When editing an item you are redirected to report activity
         //Submit a Flag= "edit" that says you are editing and sending the necessary data from this activity
-        public void editLp(final int id, final LP lp, final View v){
+        public void editLp(final int id, final LeavingPermission leavingPermission, final View v){
 
             final String[] key = new String[6];
             final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             final DatabaseReference dbReference;
-            dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+            dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
                     child(day+ " "+  monthActual+ " "+year);
             dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -213,19 +213,19 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
                     }
                     String keyLP = key[id];
                     String Flag = "edit";
-                    String LpTotal = String.valueOf(lp.getTotal());
+                    String LpTotal = String.valueOf(leavingPermission.getTotal());
                     Context context = v.getContext();
                     Intent intent = new Intent(context, RaportActivity.class);
                     intent.putExtra("Flag", Flag);
-                    intent.putExtra("LpList", lp);
-                    intent.putExtra("fromEdit", lp.getFrom());
-                    intent.putExtra("toEdit", lp.getTo());
+                    intent.putExtra("LpList", leavingPermission);
+                    intent.putExtra("fromEdit", leavingPermission.getFrom());
+                    intent.putExtra("toEdit", leavingPermission.getTo());
                     intent.putExtra("LpTotal", LpTotal);
                     intent.putExtra("key", keyLP);
                     intent.putExtra("total", total);
                     intent.putExtra("idLp", id);
                     intent.putExtra("idLp", id);
-                    intent.putExtra("TotalLpActual", lp.getTotal());
+                    intent.putExtra("TotalLpActual", leavingPermission.getTotal());
                     intent.putExtra("day", day);
                     intent.putExtra("month", month);
                     intent.putExtra("year", year);

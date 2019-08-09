@@ -43,7 +43,7 @@ public class UnassignedUserForTeamLeaderAdapter extends RecyclerView.Adapter<Una
     public void onBindViewHolder(UnassignedUserForTeamLeaderAdapter.ViewHolder holder, final int position) {
 
         final User user = users.get(position);
-        holder.numeAngajat.setText(user.getFullName());
+        holder.numeAngajat.setText(user.getLastName() + " " + user.getFirstName());
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {

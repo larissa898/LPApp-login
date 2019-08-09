@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
-    private List<LP> sendLP = new ArrayList<>();
+    private List<LeavingPermission> sendLeavingPermission = new ArrayList<>();
     private Button backToTeam;
    public CalendarDay newDate;
 
@@ -45,7 +45,7 @@ public class FinalCalendar extends AppCompatActivity {
         getSupportActionBar().setTitle("Leaving Permission App");
 
 
-       final List<LP> lps= (List<LP>) intent.getSerializableExtra("Lps");
+       final List<LeavingPermission> leavingPermissions = (List<LeavingPermission>) intent.getSerializableExtra("Lps");
        setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
         final List<CalendarDay> EventDays = new ArrayList<>();
@@ -53,11 +53,11 @@ public class FinalCalendar extends AppCompatActivity {
 
 
 
-  for (final LP lp : lps)
+  for (final LeavingPermission leavingPermission : leavingPermissions)
   {
 
-      if(lp.getStatus().equals("neconfirmat"))
-      {  String dateFormat = lp.getData();
+      if(leavingPermission.getStatus().equals("neconfirmat"))
+      {  String dateFormat = leavingPermission.getData();
           final CalendarDay newDate = dayConverter(dateFormat);
           Log.d("Avfdvgsfs",newDate.toString());
           calendarView.addDecorator(new DayViewDecorator() {
@@ -81,7 +81,7 @@ public class FinalCalendar extends AppCompatActivity {
           });
       }
   else {
-       String dateFormat = lp.getData();
+       String dateFormat = leavingPermission.getData();
        final CalendarDay newDate = dayConverter(dateFormat);
        calendarView.addDecorator(new DayViewDecorator() {
            public boolean shouldDecorate(CalendarDay day) {
@@ -109,18 +109,18 @@ public class FinalCalendar extends AppCompatActivity {
               if(EventDays.contains(date))
               {
                   Intent intent = new Intent(FinalCalendar.this, LPCalendarList.class);
-                  for(LP lp :lps)
+                  for(LeavingPermission leavingPermission : leavingPermissions)
                   {
-                      if(dayConverter(lp.getData()).equals(date))
+                      if(dayConverter(leavingPermission.getData()).equals(date))
                       {
-                          sendLP.add(lp);
+                          sendLeavingPermission.add(leavingPermission);
                       }
                   }
-                  intent.putExtra("TodayLP", (Serializable)sendLP);
+                  intent.putExtra("TodayLP", (Serializable) sendLeavingPermission);
 //                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                   startActivity(intent);
 //                  finish();
-                  sendLP.clear();
+                  sendLeavingPermission.clear();
 
 
 

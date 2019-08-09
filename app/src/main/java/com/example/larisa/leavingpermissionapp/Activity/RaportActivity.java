@@ -19,7 +19,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -124,7 +124,7 @@ public class RaportActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
         final DatabaseReference dbReference;
-        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
                 child(day + " " + monthActual + " " + year);
         final List<String> listFrom = new ArrayList<>();
         final List<String> listTo = new ArrayList<>();
@@ -284,18 +284,18 @@ public class RaportActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //Edit LP
+                //Edit LeavingPermission
                 if(Flag.equals("edit")) {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
-                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
                             child(day+ " "+  monthActual+ " "+year);
                     dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            //Create new LP after edit origin LP in Firebase
+                            //Create new LeavingPermission after edit origin LeavingPermission in Firebase
                             if (dataSnapshot.exists()) {
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
                                 Log.d("data", "exists");
@@ -306,15 +306,15 @@ public class RaportActivity extends AppCompatActivity {
                                     total = Float.valueOf(valueOf(ora));
                                 }
                                 UUID id =  UUID.randomUUID();
-                                LP lp = new LP(id.toString(),nume, From.getSelectedItem().toString()
+                                LeavingPermission leavingPermission = new LeavingPermission(id.toString(),nume, From.getSelectedItem().toString()
                                         , To.getSelectedItem().toString(), total, status);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance()
                                                 .getCurrentUser().getUid())
-                                        .child("LP").child(date.getText()
-                                        .toString()).child(time).setValue(lp);
+                                        .child("LeavingPermission").child(date.getText()
+                                        .toString()).child(time).setValue(leavingPermission);
                             }
-                            //Delete origin LP from Firebase
+                            //Delete origin LeavingPermission from Firebase
                             if(dataSnapshot.exists()){
 
                                 for(DataSnapshot snapshot : dataSnapshot.getChildren())
@@ -340,7 +340,7 @@ public class RaportActivity extends AppCompatActivity {
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            //Add LP in Firebase
+                            //Add LeavingPermission in Firebase
                             if (dataSnapshot.exists()) {
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
                                 Log.d("data", "exists");
@@ -351,8 +351,8 @@ public class RaportActivity extends AppCompatActivity {
                                     total = Float.valueOf(valueOf(ora));
                                 }
                                 UUID id =  UUID.randomUUID();
-                                LP lp = new LP(id.toString(),nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
-                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
+                                LeavingPermission leavingPermission = new LeavingPermission(id.toString(),nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LeavingPermission").child(date.getText().toString()).child(time).setValue(leavingPermission);
                             }
                         }
 
@@ -379,7 +379,7 @@ public class RaportActivity extends AppCompatActivity {
                 hourMinFrom = first.split(":");
                                second = To.getSelectedItem().toString();
                 hourMinTo = second.split(":");
-                //Call Set Total to calculate the total hours on that LP
+                //Call Set Total to calculate the total hours on that LeavingPermission
                 SetTotal(hourMinFrom, hourMinTo);
                 if(first.equals(second)){
                     Confirm.setEnabled(false);

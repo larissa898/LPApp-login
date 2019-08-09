@@ -15,7 +15,7 @@
     <string name="Parola_Angajat">Parola</string>
     <string name="save_angajat">Save</string>
     <string name="cancel_angajat">Cancel</string>
-    <string name="nume">Nume Angajat:</string>
+    <string name="lastName">Nume Angajat:</string>
     <string name="ok_button">OK</string>
     <string name="add_employee">Add new employee</string>
     <string name="Total">Total Hours</string>

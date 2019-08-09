@@ -21,11 +21,10 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.example.larisa.leavingpermissionapp.Adapters.UsersForTeamLeaderAdapter;
 import com.example.larisa.leavingpermissionapp.MainActivity;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
@@ -110,7 +109,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                         User user = snapshot.getValue(User.class);
 
                         // if user in list has Team Leader nrMatricol the same as the currently logged in user
-                        if (user.getTeamLeader() != null && user.getTeamLeader().equals(firebaseOps.getCurrentUser().getNrMatricol()))
+                        if (user.getTeamLeader() != null && user.getTeamLeader().equals(firebaseOps.getCurrentUser().getRegistrationNumber()))
                             usersList.add(user);
 
                     }
@@ -135,7 +134,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(ViewTeamActivity.this, FinalCalendar.class);
-                final List<LP> LPlist = new ArrayList<>();
+                final List<LeavingPermission> leavingPermissionList = new ArrayList<>();
 
                 final DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
                 final int[] i = {0};
@@ -151,24 +150,26 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                    if (snapshot.child("fullName").getValue().equals(u.getFullName())) {
-                                        for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
+                                    if (snapshot.child("lastName").getValue().equals(u.getLastName())
+                                    && snapshot.child("firstName").getValue().equals(u.getFirstName())) {
+                                        for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
                                             for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                                LP lp = snapshot2.getValue(LP.class);
+                                                LeavingPermission leavingPermission = snapshot2.getValue(LeavingPermission.class);
 
                                                 String date = snapshot1.getKey();
-                                                String fullName = snapshot.child("fullName").getValue(String.class);
-                                                String functie = snapshot.child("functie").getValue(String.class);
-                                                String telefon = snapshot.child("telefon").getValue(String.class);
-                                                String nrMatricol = snapshot.child("nrMatricol").getValue(String.class);
+                                                String lastName = snapshot.child("lastName").getValue(String.class);
+                                                String firstName = snapshot.child("firstName").getValue(String.class);
 
-                                                User user = new User(fullName, functie, telefon, nrMatricol);
+                                                String role = snapshot.child("role").getValue(String.class);
+                                                String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
+                                                String registrationNumber = snapshot.child("registrationNumber").getValue(String.class);
 
+                                                User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
 
-                                                lp.setUser(user);
+                                                leavingPermission.setUser(user);
 
-                                                lp.setData(date);
-                                                LPlist.add(lp);
+                                                leavingPermission.setData(date);
+                                                leavingPermissionList.add(leavingPermission);
 
                                             }
                                         }
@@ -176,7 +177,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                                 }
                             }
 
-                            intent.putExtra("Lps", (Serializable) LPlist);
+                            intent.putExtra("Lps", (Serializable) leavingPermissionList);
                             startActivity(intent);
 
                         }
@@ -192,7 +193,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                 }
 
 
-                Log.d(TAG, String.valueOf(LPlist.size()));
+                Log.d(TAG, String.valueOf(leavingPermissionList.size()));
                 dbReference.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -201,7 +202,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        LPlist.clear();
+                        leavingPermissionList.clear();
 
                     }
 

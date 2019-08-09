@@ -6,7 +6,7 @@ package com.example.larisa.leavingpermissionapp.Model;
 
 import java.io.Serializable;
 
-public class LP implements Serializable {
+public class LeavingPermission implements Serializable {
 
 
     private String id;
@@ -37,7 +37,7 @@ public class LP implements Serializable {
 
 
 
-    public LP(String id,String nume, String from, String to, Float total, String status) {
+    public LeavingPermission(String id, String nume, String from, String to, Float total, String status) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -47,7 +47,7 @@ public class LP implements Serializable {
     }
 
 
-    public LP(String id,String from, String to, Float total, String status, String nume, String data) {
+    public LeavingPermission(String id, String from, String to, Float total, String status, String nume, String data) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -93,7 +93,7 @@ public class LP implements Serializable {
         this.id = id;
     }
 
-    public LP() {
+    public LeavingPermission() {
     }
     public User getUser() {
         return user;

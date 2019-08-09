@@ -123,7 +123,7 @@ public class FirebaseOps {
     public List<User> getUsersByRole(String role) {
 
         List<User> usersByRole = users.stream()
-                .filter(user -> user.getFunctie().equals(role))
+                .filter(user -> user.getRole().equals(role))
                 .collect(Collectors.toList());
         return usersByRole;
     }

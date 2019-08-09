@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Adapters.LeavePermissionForUserAdapter;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,7 +49,7 @@ public class LeavingPermissionList extends AppCompatActivity {
     private int year;
     private int actualDay;
     private int actualMonth;
-    private List<LP> LpList;
+    private List<LeavingPermission> leavingPermissionList;
     private int actualYear;
     private Float total;
     private String monthActual;
@@ -77,7 +77,7 @@ public class LeavingPermissionList extends AppCompatActivity {
 
         initUI();
 
-        LpList = new ArrayList<>();
+        leavingPermissionList = new ArrayList<>();
 
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
@@ -90,23 +90,23 @@ public class LeavingPermissionList extends AppCompatActivity {
         CurrentDay.setText(day + " "+ monthActual + " " + year);
 
         final DatabaseReference dbReference;
-        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
                 child(day + " " + monthActual + " " + year);
 
         //update with Firebase
         dbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-               LpList.clear();
+               leavingPermissionList.clear();
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                LpList.clear();
+                leavingPermissionList.clear();
             }
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                LpList.clear();
-                if(LpList.size() == 0){
+                leavingPermissionList.clear();
+                if(leavingPermissionList.size() == 0){
                     Intent intent = new Intent(LeavingPermissionList.this, LeavingPermissionList.class);
                     intent.putExtra("day", day);
                     intent.putExtra("total", total);
@@ -135,9 +135,9 @@ public class LeavingPermissionList extends AppCompatActivity {
                     float sum = 0;
                     for(DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
-                             LP lp  = snapshot.getValue(LP.class);
-                            LpList.add(lp);
-                            Log.i(LeavingPermissionList.class.getSimpleName(), "List Size: " + LpList.size());
+                             LeavingPermission leavingPermission = snapshot.getValue(LeavingPermission.class);
+                            leavingPermissionList.add(leavingPermission);
+                            Log.i(LeavingPermissionList.class.getSimpleName(), "List Size: " + leavingPermissionList.size());
                             String h = snapshot.child("total").getValue().toString();
                             sum = sum + Float.parseFloat(h);
                             total=sum;
@@ -145,7 +145,7 @@ public class LeavingPermissionList extends AppCompatActivity {
                     TotalOreZi.setText(String.valueOf(total));
                     if(total==3.0 ){AddButton.setEnabled(false);}
                     Current = String.valueOf(CurrentDay);
-                    recycleViewAdapter = new LeavePermissionForUserAdapter(LeavingPermissionList.this, LpList, day, month,
+                    recycleViewAdapter = new LeavePermissionForUserAdapter(LeavingPermissionList.this, leavingPermissionList, day, month,
                             year, monthActual);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();

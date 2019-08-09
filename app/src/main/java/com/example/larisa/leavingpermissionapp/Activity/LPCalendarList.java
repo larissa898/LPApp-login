@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Adapters.LeavePermissionForTLAdapter;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +46,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
 
     private RecyclerView recyclerView;
     private LeavePermissionForTLAdapter leavePermissionForTLAdapter;
-    private List<LP> lpList;
+    private List<LeavingPermission> leavingPermissionList;
     private Button backToCalendar;
     private Button doneConfirming;
     private TextView listDate;
@@ -62,17 +62,17 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        lpList = new ArrayList<>();
+        this.leavingPermissionList = new ArrayList<>();
         Intent intent = getIntent();
-        List<LP> lpList= (List<LP>) intent.getSerializableExtra("TodayLP");
+        List<LeavingPermission> leavingPermissionList = (List<LeavingPermission>) intent.getSerializableExtra("TodayLP");
 
 
-        if(lpList != null)
+        if(leavingPermissionList != null)
         {
-            listDate.setText(lpList.get(0).getData());
+            listDate.setText(leavingPermissionList.get(0).getData());
         }
 
-        leavePermissionForTLAdapter = new LeavePermissionForTLAdapter(LPCalendarList.this, lpList);
+        leavePermissionForTLAdapter = new LeavePermissionForTLAdapter(LPCalendarList.this, leavingPermissionList);
 
         recyclerView.setAdapter(leavePermissionForTLAdapter);
         leavePermissionForTLAdapter.notifyDataSetChanged();
@@ -99,7 +99,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
                 for ( final String key : leavePermissionForTLAdapter.modifiedLP.keySet()) {
 
-                  final LP lp = leavePermissionForTLAdapter.modifiedLP.get(key);
+                  final LeavingPermission leavingPermission = leavePermissionForTLAdapter.modifiedLP.get(key);
 
                   dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
@@ -109,13 +109,13 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                    search:
                                    {
                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                       if (snapshot.child("fullName").getValue(String.class).equals(lp.getNume())) {
-                                           for (DataSnapshot snapshot1 : snapshot.child("LP").getChildren()) {
-                                               if(snapshot1.getKey().equals(lp.getData())) {
+                                       if (snapshot.child("fullName").getValue(String.class).equals(leavingPermission.getNume())) {
+                                           for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
+                                               if(snapshot1.getKey().equals(leavingPermission.getData())) {
                                                    for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
 //
                                                        if (snapshot2.child("id").getValue().equals(key)) {
-                                                           if (lp.getStatus().equals("confirmat")) {
+                                                           if (leavingPermission.getStatus().equals("confirmat")) {
 
 
                                                                AssetManager assetManager = getAssets();
@@ -131,7 +131,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
 
                                                                    HSSFSheet mySheet = myWorkBook.getSheetAt(0);
 
-                                                                   String fullNume[] = lp.getUser().getFullName().split(" ");
+                                                                   String fullNume[] = leavingPermission.getUser().getFullName().split(" ");
 
                                                                    HSSFCell cell;
                                                                    //Nume
@@ -144,28 +144,28 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
 
                                                                    //Matricol
                                                                    cell = mySheet.getRow(8).getCell(2);
-                                                                   cell.setCellValue(lp.getUser().getNrMatricol());
+                                                                   cell.setCellValue(leavingPermission.getUser().getRegistrationNumber());
                                                                    //Absent de la
                                                                    cell = mySheet.getRow(8).getCell(5);
-                                                                   cell.setCellValue(lp.getData());
+                                                                   cell.setCellValue(leavingPermission.getData());
                                                                    //Absent pana la
                                                                    cell = mySheet.getRow(8).getCell(7);
-                                                                   cell.setCellValue(lp.getData());
+                                                                   cell.setCellValue(leavingPermission.getData());
                                                                    //De la ora
                                                                    cell = mySheet.getRow(12).getCell(5);
-                                                                   cell.setCellValue(lp.getFrom());
+                                                                   cell.setCellValue(leavingPermission.getFrom());
                                                                    //Pana la ora
                                                                    cell = mySheet.getRow(12).getCell(7);
-                                                                   cell.setCellValue(lp.getTo());
+                                                                   cell.setCellValue(leavingPermission.getTo());
                                                                    //Data depunere
                                                                    cell = mySheet.getRow(18).getCell(3);
-                                                                   cell.setCellValue(lp.getData());
+                                                                   cell.setCellValue(leavingPermission.getData());
                                                                    //Data confirmare
                                                                    cell = mySheet.getRow(18).getCell(8);
-                                                                   cell.setCellValue(lp.getData());
+                                                                   cell.setCellValue(leavingPermission.getData());
                                                                    //            //Adresa si numar de telefon
                                                                    cell = mySheet.getRow(21).getCell(1);
-                                                                   cell.setCellValue(lp.getUser().getTelefon());
+                                                                   cell.setCellValue(leavingPermission.getUser().getPhoneNumber());
 
 
                                                                    final InputStream stream =
@@ -194,7 +194,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                                    FileOutputStream outFile =
                                                                            new FileOutputStream(new File(path, "/" +
                                                                                    "Cerere_Absenta_" + fullNume[1].toUpperCase() + "_" + fullNume[0] + "_"
-                                                                                   + lp.getData() + "_" + lp.getFrom() + "_991" +
+                                                                                   + leavingPermission.getData() + "_" + leavingPermission.getFrom() + "_991" +
                                                                                    ".xls"));
                                                                    myWorkBook.write(outFile);
                                                                    outFile.close();

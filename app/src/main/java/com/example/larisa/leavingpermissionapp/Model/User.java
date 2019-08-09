@@ -7,140 +7,96 @@ package com.example.larisa.leavingpermissionapp.Model;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- */
 public class User implements Serializable {
 
-    private String nume;
-    private String prenume;
-    private String functie;
-    private String fullName;
-    private String telefon;
-    private String nrMatricol;
+    private String lastName;
+    private String firstName;
+    private String role;
+    private String phoneNumber;
+    private String registrationNumber;
     private String teamLeader;
+    private List<LeavingPermission> leavingPermissionList;
 
-    private List<LP> lps;
-
-
-    public User(String nume, String prenume, String functie) {
-        this.nume = nume;
-        this.prenume = prenume;
-        this.functie = functie;
-
+    public User() {
     }
 
-
-    public User(String nume, String prenume, String functie, String fullName, String telefon, String nrMatricol, String teamLeader, List<LP> lps) {
-        this.nume = nume;
-        this.prenume = prenume;
-        this.functie = functie;
-        this.fullName = fullName;
-        this.telefon = telefon;
-        this.nrMatricol = nrMatricol;
-        this.teamLeader = teamLeader;
-        this.lps = lps;
+    public User(String lastName, String firstName, String role, String phoneNumber, String registrationNumber) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
+        this.registrationNumber = registrationNumber;
     }
 
-    public User(String nume, String prenume, String functie, List<LP> lps) {
+    public String getLastName() {
+        return lastName;
+    }
 
-        this.nume = nume;
-        this.functie = functie;
-        this.prenume = prenume;
-        this.lps = lps;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
     public String getTeamLeader() {
         return teamLeader;
     }
 
-
     public void setTeamLeader(String teamLeader) {
         this.teamLeader = teamLeader;
     }
 
-    public User(String fullName, String functie, String telefon, String nrMatricol) {
-        this.fullName = fullName;
-        this.functie = functie;
-        this.telefon = telefon;
-        this.nrMatricol = nrMatricol;
+    public List<LeavingPermission> getLeavingPermissionList() {
+        return leavingPermissionList;
     }
 
-    public User() {
+    public void setLeavingPermissionList(List<LeavingPermission> leavingPermissionList) {
+        this.leavingPermissionList = leavingPermissionList;
     }
 
-    public String getNume() {
-        return nume;
-    }
-
-    public void setNume(String nume) {
-        this.nume = nume;
-    }
-
-    public String getPrenume() {
-        return prenume;
-    }
-
-    public void setPrenume(String prenume) {
-        this.prenume = prenume;
-    }
-
-    public String getFunctie() {
-        return functie;
-    }
-
-    public void setFunctie(String functie) {
-        this.functie = functie;
-    }
-
-    public List<LP> getLps() {
-        return lps;
-    }
-
-    public void setLps(List<LP> lps) {
-        this.lps = lps;
-    }
-
-    public String getTelefon() {
-        return telefon;
-    }
-
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
-    }
-
-    public String getNrMatricol() {
-        return nrMatricol;
-    }
-
-    public void setNrMatricol(String nrMatricol) {
-        this.nrMatricol = nrMatricol;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public User(String fullName, String functie) {
-        this.fullName = fullName;
-        this.functie = functie;
+    public String getFullName(){
+        return this.lastName + " " + this.firstName;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "nume='" + nume + '\'' +
-                ", prenume='" + prenume + '\'' +
-                ", functie='" + functie + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", telefon='" + telefon + '\'' +
-                ", nrMatricol='" + nrMatricol + '\'' +
+                "lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", role='" + role + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", registrationNumber='" + registrationNumber + '\'' +
                 ", teamLeader='" + teamLeader + '\'' +
-                ", lps=" + lps +
                 '}';
     }
 }

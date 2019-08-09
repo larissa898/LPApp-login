@@ -23,7 +23,6 @@ import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Model.User;
-import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
     private final int REGISTER_REQUEST_CODE = 111;
     private static final String TAG = "MainActivity";
     private FirebaseOps firebaseOps;
+
     // UI
     private Button login;
     private EditText userNM;
@@ -168,11 +168,11 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
 
                     User userToBeRegistered = new User();
-                    userToBeRegistered.setNume(sharedPreferences.getString(LAST_NAME, ""));
-                    userToBeRegistered.setPrenume(sharedPreferences.getString(FIRST_NAME, ""));
-                    userToBeRegistered.setNrMatricol(sharedPreferences.getString(REGISTRATION_NO, ""));
-                    userToBeRegistered.setTelefon(sharedPreferences.getString(PHONE_NO, ""));
-                    userToBeRegistered.setFunctie(sharedPreferences.getString(ROLE, ""));
+                    userToBeRegistered.setLastName(sharedPreferences.getString(LAST_NAME, ""));
+                    userToBeRegistered.setFirstName(sharedPreferences.getString(FIRST_NAME, ""));
+                    userToBeRegistered.setRegistrationNumber(sharedPreferences.getString(REGISTRATION_NO, ""));
+                    userToBeRegistered.setPhoneNumber(sharedPreferences.getString(PHONE_NO, ""));
+                    userToBeRegistered.setRole(sharedPreferences.getString(ROLE, ""));
 
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userToBeRegistered);
