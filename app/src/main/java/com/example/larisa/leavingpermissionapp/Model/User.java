@@ -66,10 +66,6 @@ public class User implements Serializable {
     public User() {
     }
 
-    public static void logOut() {
-    }
-
-
     public String getNume() {
         return nume;
     }

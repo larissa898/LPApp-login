@@ -4,11 +4,9 @@
 
 package com.example.larisa.leavingpermissionapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +19,10 @@ import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
-import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
-import com.example.larisa.leavingpermissionapp.Activity.RegisterViewPagerActivity;
+import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
 import com.example.larisa.leavingpermissionapp.Model.User;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -38,23 +36,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.FIRST_NAME;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.LAST_NAME;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.PHONE_NO;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.REGISTRATION_NO;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.ROLE;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.SHARED_PREFERENCES;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final int REGISTER_REQUEST_CODE = 111;
     private static final String TAG = "MainActivity";
     private FirebaseOps firebaseOps;
     // UI
     private Button login;
     private EditText userNM;
     private EditText password;
-    private TextView register;
+    private TextView registerButton;
 
     // Firebase
     private FirebaseAuth firebaseAuth;
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.loginButton);
         userNM = findViewById(R.id.userNameET);
         password = findViewById(R.id.passwordET);
-        register = findViewById(R.id.registerButton);
+        registerButton = findViewById(R.id.registerButton);
     }
 
     @Override
@@ -137,12 +135,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent registerIntent = new Intent(MainActivity.this, RegisterViewPagerActivity.class);
-
-                startActivityForResult(registerIntent, 111);
+                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivityForResult(registerIntent, REGISTER_REQUEST_CODE);
             }
         });
 
@@ -159,27 +156,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void createUser(String userId) {
-        DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
-        Query query = functionRef.child(userId);
-        query.addValueEventListener(new ValueEventListener() {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
+        Query queryCurrentUser = usersRef.child(userId);
+        queryCurrentUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
+                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+
                     User userToBeRegistered = new User();
-                    String dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
-                    try {
-                        FileInputStream fileInputStream = new FileInputStream(new File(dirPath, "user.txt"));
-                        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-                        userToBeRegistered = (User) objectInputStream.readObject();
-                        objectInputStream.close();
-                        fileInputStream.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    userToBeRegistered.setNume(sharedPreferences.getString(LAST_NAME, ""));
+                    userToBeRegistered.setPrenume(sharedPreferences.getString(FIRST_NAME, ""));
+                    userToBeRegistered.setNrMatricol(sharedPreferences.getString(REGISTRATION_NO, ""));
+                    userToBeRegistered.setTelefon(sharedPreferences.getString(PHONE_NO, ""));
+                    userToBeRegistered.setFunctie(sharedPreferences.getString(ROLE, ""));
 
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userToBeRegistered);
@@ -187,9 +177,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
 
     }
@@ -235,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 111) {
+        if (requestCode == REGISTER_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Please check your email to activate your account", Toast.LENGTH_SHORT).show();
             }
