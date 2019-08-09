@@ -9,10 +9,14 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="potato"
+        android:label="Leaving Permission App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".Activity.UnassignedUsersActivity"
+            android:theme="@style/AppTheme.NoActionBar.UnassignedUsersForTLActivity"></activity>
         <activity android:name=".Activity.RegisterActivity"></activity>
         <activity android:name=".Activity.AdminActivity" />
         <activity android:name=".Activity.LPCalendarList" />
@@ -24,7 +28,7 @@
         <activity android:name=".Activity.FinalCalendar" />
         <activity android:name=".Activity.CalendarActivity" />
         <activity
-            android:name=".Activity.ViewTeam"
+            android:name=".Activity.ViewTeamActivity"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleTask" />
         <activity android:name=".Activity.AddUser" />

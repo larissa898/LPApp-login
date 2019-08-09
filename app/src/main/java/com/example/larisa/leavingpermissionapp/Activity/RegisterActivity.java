@@ -14,10 +14,11 @@ import com.example.larisa.leavingpermissionapp.Fragments.RegisterDetailsFragment
 import com.example.larisa.leavingpermissionapp.Fragments.RegisterDetailsFragmentListener;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 
 public class RegisterActivity extends AppCompatActivity
         implements RegisterCredentialsFragmentListener,
-        RegisterDetailsFragmentListener {
+        RegisterDetailsFragmentListener, FirebaseOpsListener {
 
     private static final String TAG = "RegisterActivity";
     public static final String SHARED_PREFERENCES = "sharedPrefs";
@@ -26,9 +27,10 @@ public class RegisterActivity extends AppCompatActivity
     public static final String REGISTRATION_NO = "registrationNumber";
     public static final String PHONE_NO = "phoneNumber";
     public static final String ROLE = "role";
-    
+
     private RegisterCredentialsFragment credentialsFragment;
     private RegisterDetailsFragment detailsFragment;
+    private FirebaseOps firebaseOps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,8 @@ public class RegisterActivity extends AppCompatActivity
 
         credentialsFragment = new RegisterCredentialsFragment();
         detailsFragment = new RegisterDetailsFragment();
+        firebaseOps = FirebaseOps.getInstance();
+        firebaseOps.setListener(this);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.registrationPage, credentialsFragment)
@@ -66,5 +70,15 @@ public class RegisterActivity extends AppCompatActivity
 
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void onUsersCallback() {
+
+    }
+
+    @Override
+    public void onRolesCallback() {
+
     }
 }

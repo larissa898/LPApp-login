@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
+import com.example.larisa.leavingpermissionapp.Adapters.LeavePermissionForUserAdapter;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,22 +34,36 @@ import java.util.List;
 
 public class LeavingPermissionList extends AppCompatActivity {
 
+    // UI
     private Button AddButton;
     public Button editButton;
     private TextView CurrentDay;
+    private LeavePermissionForUserAdapter recycleViewAdapter;
+    private RecyclerView recyclerView;
+    private TextView TotalOreZi;
+
+    // Vars
     public String Current;
     private int  day;
     private int month;
     private int year;
     private int actualDay;
     private int actualMonth;
-    private RecycleViewAdapterUser recycleViewAdapter;
-    private RecyclerView recyclerView;
     private List<LP> LpList;
     private int actualYear;
     private Float total;
-    private TextView TotalOreZi;
     private String monthActual;
+
+    private void initUI() {
+        recyclerView = findViewById(R.id.recyclerViewUser);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        CurrentDay = findViewById(R.id.textViewDayCurrent);
+        AddButton = findViewById(R.id.buttonAddList);
+        TotalOreZi = findViewById(R.id.totalResult);
+        editButton =  findViewById(R.id.editButton);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +74,11 @@ public class LeavingPermissionList extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         setContentView(R.layout.activity_leaving_permission_list);
-        recyclerView = findViewById(R.id.recyclerViewUser);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        initUI();
+
         LpList = new ArrayList<>();
-        CurrentDay = findViewById(R.id.textViewDayCurrent);
-        AddButton = findViewById(R.id.buttonAddList);
-        TotalOreZi = findViewById(R.id.totalResult);
-        editButton =  findViewById(R.id.editButton);
+
         day =  getIntent().getIntExtra("day",0);
         actualDay =  getIntent().getIntExtra("actualDay",0);
         actualMonth =  getIntent().getIntExtra("actualMonth",0);
@@ -134,7 +145,7 @@ public class LeavingPermissionList extends AppCompatActivity {
                     TotalOreZi.setText(String.valueOf(total));
                     if(total==3.0 ){AddButton.setEnabled(false);}
                     Current = String.valueOf(CurrentDay);
-                    recycleViewAdapter = new RecycleViewAdapterUser(LeavingPermissionList.this, LpList, day, month,
+                    recycleViewAdapter = new LeavePermissionForUserAdapter(LeavingPermissionList.this, LpList, day, month,
                             year, monthActual);
                     recyclerView.setAdapter(recycleViewAdapter);
                     recycleViewAdapter.notifyDataSetChanged();

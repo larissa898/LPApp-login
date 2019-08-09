@@ -19,10 +19,12 @@ import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
-import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -43,7 +45,7 @@ import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.
 import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.ROLE;
 import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.SHARED_PREFERENCES;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FirebaseOpsListener {
 
     private final int REGISTER_REQUEST_CODE = 111;
     private static final String TAG = "MainActivity";
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFirebase() {
         firebaseOps = FirebaseOps.getInstance();
+        firebaseOps.setListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
@@ -200,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     } else if (functie.equals("Team Leader")) {
                         Log.d("Query", "This is a team leader");
-                        Intent intent = new Intent(MainActivity.this, ViewTeam.class);
+                        Intent intent = new Intent(MainActivity.this, ViewTeamActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
@@ -228,6 +231,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please check your email to activate your account", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onUsersCallback() {
+
+    }
+
+    @Override
+    public void onRolesCallback() {
+
     }
 }
 

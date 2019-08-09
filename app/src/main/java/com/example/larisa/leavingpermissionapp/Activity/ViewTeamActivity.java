@@ -16,14 +16,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapter;
+import com.example.larisa.leavingpermissionapp.Adapters.UsersForTeamLeaderAdapter;
 import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,14 +42,50 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewTeam extends AppCompatActivity implements Serializable {
+public class ViewTeamActivity extends AppCompatActivity implements Serializable, FirebaseOpsListener {
 
+    private static final String TAG = "ViewTeamActivity";
+
+    // UI
     private RecyclerView recyclerView;
-    private RecycleViewAdapter recycleViewAdapter;
-    private List<User> usersList;
+    private UsersForTeamLeaderAdapter usersForTeamLeaderAdapter;
     private Button confirmButton;
-    private Button logoutButton;
-    private TextView welcomText;
+    private ImageView unassignedUserIV;
+
+    // Vars
+    private List<User> usersList;
+    private User currentUser;
+
+    // Firebase
+    FirebaseOps firebaseOps;
+
+
+    public void initUI() {
+        recyclerView = findViewById(R.id.recycleViewActivity);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        confirmButton = findViewById(R.id.confirmButton);
+        unassignedUserIV = findViewById(R.id.unassignedUserIV);
+
+
+
+        //TODO: finish this part after adding/finishing the UnassignedUsersActivity code.
+        startBlinkingAnimation();
+        unassignedUserIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ViewTeamActivity.this, UnassignedUsersActivity.class));
+
+            }
+        });
+
+    }
+
+    public void initFirebase() {
+        firebaseOps = FirebaseOps.getInstance();
+        firebaseOps.setListener(this);
+    }
 
 
     @Override
@@ -51,35 +93,31 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_team);
 
-
-        recyclerView = findViewById(R.id.recycleViewActivity);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        confirmButton = findViewById(R.id.confirmButton);
-        welcomText = findViewById(R.id.welcomeText2);
-
-
-        usersList = new ArrayList<>();
+        initUI();
+        initFirebase();
         getSupportActionBar().setTitle("Leaving Permission App");
+        usersList = new ArrayList<>();
 
 
 
-        DatabaseReference dbReference;
-        dbReference = FirebaseDatabase.getInstance().getReference("Users");
-
-        dbReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference currentUserRef = firebaseOps.getUsersRef();
+        currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
-                        usersList.add(user);
+
+                        // if user in list has Team Leader nrMatricol the same as the currently logged in user
+                        if (user.getTeamLeader() != null && user.getTeamLeader().equals(firebaseOps.getCurrentUser().getNrMatricol()))
+                            usersList.add(user);
+
                     }
 
-                    recycleViewAdapter = new RecycleViewAdapter(ViewTeam.this, usersList);
-                    recyclerView.setAdapter(recycleViewAdapter);
-                    recycleViewAdapter.notifyDataSetChanged();
+                    usersForTeamLeaderAdapter = new UsersForTeamLeaderAdapter(ViewTeamActivity.this, usersList);
+                    recyclerView.setAdapter(usersForTeamLeaderAdapter);
+                    usersForTeamLeaderAdapter.notifyDataSetChanged();
 
                 }
 
@@ -92,24 +130,20 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
             }
         });
 
-
- confirmButton.setOnClickListener(new View.OnClickListener() {
-
+        confirmButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-
-                final Intent intent = new Intent(ViewTeam.this, FinalCalendar.class);
+                final Intent intent = new Intent(ViewTeamActivity.this, FinalCalendar.class);
                 final List<LP> LPlist = new ArrayList<>();
 
-                final DatabaseReference dbReference =  FirebaseDatabase.getInstance().getReference("Users");
+                final DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
                 final int[] i = {0};
-                i[0]=0;
+                i[0] = 0;
 
-                for (final User u : recycleViewAdapter.checkedUsers) {
+                for (final User u : usersForTeamLeaderAdapter.checkedUsers) {
 
-                    i[0] ++;
+                    i[0]++;
 
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -123,12 +157,12 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                                 LP lp = snapshot2.getValue(LP.class);
 
                                                 String date = snapshot1.getKey();
-                                                String fullName  = snapshot.child("fullName").getValue(String.class);
+                                                String fullName = snapshot.child("fullName").getValue(String.class);
                                                 String functie = snapshot.child("functie").getValue(String.class);
                                                 String telefon = snapshot.child("telefon").getValue(String.class);
                                                 String nrMatricol = snapshot.child("nrMatricol").getValue(String.class);
 
-                                                User user = new User(fullName,functie, telefon, nrMatricol);
+                                                User user = new User(fullName, functie, telefon, nrMatricol);
 
 
                                                 lp.setUser(user);
@@ -136,51 +170,29 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                                                 lp.setData(date);
                                                 LPlist.add(lp);
 
-
-
                                             }
-
-
                                         }
                                     }
-
-
-//
                                 }
-
-
                             }
 
-
-
-
-
-//
-                                    intent.putExtra("Lps", (Serializable) LPlist);
-                                    startActivity(intent);
-
-//
-
+                            intent.putExtra("Lps", (Serializable) LPlist);
+                            startActivity(intent);
 
                         }
 
 
                         @Override
-
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
 
                         }
 
                     });
 
-
-
                 }
 
 
-
-                Log.d("AAbCDS", String.valueOf(LPlist.size()));
+                Log.d(TAG, String.valueOf(LPlist.size()));
                 dbReference.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -209,15 +221,30 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
                     }
                 });
 
-
-
             }
 
 
         });
 
-
     }
+
+
+
+
+    private void startBlinkingAnimation() {
+        Animation animation = new AlphaAnimation(1, 0);
+        animation.setDuration(1000);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.REVERSE);
+        unassignedUserIV.setAnimation(animation);
+    }
+
+    private void stopBlinkingAnimation() {
+        unassignedUserIV.setAnimation(null);
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -229,19 +256,28 @@ public class ViewTeam extends AppCompatActivity implements Serializable {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_userProfile:
-                startActivity(new Intent(ViewTeam.this, UserProfileActivity.class));
+                startActivity(new Intent(ViewTeamActivity.this, UserProfileActivity.class));
                 return true;
 
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(ViewTeam.this, MainActivity.class);
+                Intent intent = new Intent(ViewTeamActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
-
         }
-
         return true;
+    }
+
+
+    @Override
+    public void onUsersCallback() {
+
+    }
+
+    @Override
+    public void onRolesCallback() {
+
     }
 }
 

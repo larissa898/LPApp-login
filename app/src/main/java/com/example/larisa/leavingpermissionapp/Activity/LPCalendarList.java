@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterLP;
+import com.example.larisa.leavingpermissionapp.Adapters.LeavePermissionForTLAdapter;
 import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -45,7 +45,7 @@ import java.util.List;
 public class LPCalendarList extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView recyclerView;
-    private RecycleViewAdapterLP recycleViewAdapterLP;
+    private LeavePermissionForTLAdapter leavePermissionForTLAdapter;
     private List<LP> lpList;
     private Button backToCalendar;
     private Button doneConfirming;
@@ -72,10 +72,10 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
             listDate.setText(lpList.get(0).getData());
         }
 
-        recycleViewAdapterLP = new RecycleViewAdapterLP(LPCalendarList.this, lpList);
+        leavePermissionForTLAdapter = new LeavePermissionForTLAdapter(LPCalendarList.this, lpList);
 
-        recyclerView.setAdapter(recycleViewAdapterLP);
-        recycleViewAdapterLP.notifyDataSetChanged();
+        recyclerView.setAdapter(leavePermissionForTLAdapter);
+        leavePermissionForTLAdapter.notifyDataSetChanged();
         backToCalendar = findViewById(R.id.backToCalendar);
         doneConfirming =findViewById(R.id.finishedReviewing);
 
@@ -97,9 +97,9 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
 //
 
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
-                for ( final String key : recycleViewAdapterLP.modifiedLP.keySet()) {
+                for ( final String key : leavePermissionForTLAdapter.modifiedLP.keySet()) {
 
-                  final LP lp = recycleViewAdapterLP.modifiedLP.get(key);
+                  final LP lp = leavePermissionForTLAdapter.modifiedLP.get(key);
 
                   dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                        @Override
