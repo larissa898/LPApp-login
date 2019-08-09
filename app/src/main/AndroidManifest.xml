@@ -26,7 +26,6 @@
             android:name=".Activity.SignatureActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".Activity.FinalCalendar" />
-        <activity android:name=".Activity.RegisterActivity" />
         <activity android:name=".Activity.CalendarActivity" />
         <activity
             android:name=".Activity.ViewTeamActivity"

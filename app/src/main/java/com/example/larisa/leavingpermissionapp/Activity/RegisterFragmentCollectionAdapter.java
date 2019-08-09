@@ -17,9 +17,12 @@ public class RegisterFragmentCollectionAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        RegisterFragment registerFragment = new RegisterFragment();
-        Bundle bundle = new Bundle();
 
+        RegisterFragment registerFragment = new RegisterFragment();
+        if (i==0){
+
+        }
+        Bundle bundle = new Bundle();
         bundle.putString("pageNumber", String.valueOf(i));
         registerFragment.setArguments(bundle);
         return registerFragment;
@@ -29,4 +32,6 @@ public class RegisterFragmentCollectionAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return 2;
     }
+
+
 }
