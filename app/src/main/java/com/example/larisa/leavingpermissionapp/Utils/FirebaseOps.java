@@ -170,12 +170,11 @@ public class FirebaseOps {
         return roles;
     }
 
-    public void createUser(String registerEmail, String registerPassword){
+    public void createCredentials(String registerEmail, String registerPassword){
         mAuth.createUserWithEmailAndPassword(registerEmail, registerPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "onComplete: xxxxxx");
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             user.sendEmailVerification();

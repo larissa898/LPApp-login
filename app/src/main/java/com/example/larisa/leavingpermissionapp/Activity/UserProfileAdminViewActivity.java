@@ -212,7 +212,6 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         signatureRef = FirebaseStorage.getInstance().getReference().child("signatures").child(userId);
 
-        checkSignatureExists();
         initUI();
         getUserData();
 

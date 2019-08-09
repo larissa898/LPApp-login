@@ -47,8 +47,8 @@ public class AdminActivity extends AppCompatActivity {
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                usersList.clear();
                 if (dataSnapshot.exists()) {
+                    usersList.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
                         usersList.add(user);

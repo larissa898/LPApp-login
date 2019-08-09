@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String functie = dataSnapshot.child("functie").getValue(String.class);
+                    String functie = dataSnapshot.child("role").getValue(String.class);
                     if (functie.equals("admin")) {
                         Intent intent = new Intent(MainActivity.this, AdminActivity.class);
                         startActivity(intent);

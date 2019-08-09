@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity
     @Override
     public void onCredentialsSent(CharSequence email, CharSequence password) {
 
-        FirebaseOps.getInstance().createUser(email.toString(), password.toString());
+        FirebaseOps.getInstance().createCredentials(email.toString(), password.toString());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.registrationPage, detailsFragment)
                 .commit();

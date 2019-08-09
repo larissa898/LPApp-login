@@ -266,7 +266,8 @@ public class RaportActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String nume = dataSnapshot.child("fullName").getValue(String.class);
+                    String nume = dataSnapshot.child("lastName").getValue(String.class) + " "
+                            + dataSnapshot.child("firstName").getValue(String.class);
                     Nume.setText(nume);
                 }
             }
