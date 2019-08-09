@@ -13,9 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.RegisterViewPagerActivity">
-
-        </activity>
+        <activity android:name=".Activity.RegisterActivity"></activity>
         <activity android:name=".Activity.AdminActivity" />
         <activity android:name=".Activity.LPCalendarList" />
         <activity android:name=".Activity.UserProfileActivity" />

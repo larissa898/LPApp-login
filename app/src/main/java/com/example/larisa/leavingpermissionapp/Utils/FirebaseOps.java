@@ -106,14 +106,12 @@ public class FirebaseOps {
 
 
     public void createUser(String registerEmail, String registerPassword){
-        Log.d(TAG, "createUser: xxxxxx");
         mAuth.createUserWithEmailAndPassword(registerEmail, registerPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "onComplete: xxxxxx");
                         if (task.isSuccessful()) {
-
                             FirebaseUser user = mAuth.getCurrentUser();
                             user.sendEmailVerification();
                             mAuth.signOut();
@@ -122,7 +120,7 @@ public class FirebaseOps {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: xxxxxx" + e.getLocalizedMessage());
+                Log.d(TAG, "onFailure: " + e.getLocalizedMessage());
             }
         });
     }
