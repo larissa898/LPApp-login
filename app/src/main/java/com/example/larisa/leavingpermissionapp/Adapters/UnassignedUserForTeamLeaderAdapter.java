@@ -6,6 +6,7 @@ package com.example.larisa.leavingpermissionapp.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +22,20 @@ import java.util.List;
 
 public class UnassignedUserForTeamLeaderAdapter extends RecyclerView.Adapter<UnassignedUserForTeamLeaderAdapter.ViewHolder> {
 
+    private static final String TAG = "UnassignedUserForTeamLe";
     private Context context;
     private List<User> users;
     public List<User> checkedUsers = new ArrayList<>();
 
     public UnassignedUserForTeamLeaderAdapter(Context context, List<User> users) {
         this.context = context;
-        this.users = users;
+        this.users = new ArrayList<>(users);
     }
 
 
     @Override
     public UnassignedUserForTeamLeaderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_row, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.unassigned_user_row, parent, false);
         return new ViewHolder(v, context);
     }
 
@@ -56,7 +58,11 @@ public class UnassignedUserForTeamLeaderAdapter extends RecyclerView.Adapter<Una
     }
 
     public void setList(List<User> newUsersList) {
-        users = newUsersList;
+        Log.d(TAG, "setList: newUserList = " + newUsersList);
+        users.clear();
+        users.addAll(newUsersList);
+        Log.d(TAG, "setList: users = " + users);
+        this.notifyDataSetChanged();
     }
 
     @Override

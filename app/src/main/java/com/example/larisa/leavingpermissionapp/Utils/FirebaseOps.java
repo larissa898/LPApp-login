@@ -32,6 +32,7 @@ public class FirebaseOps {
     private FirebaseAuth mAuth;
     private DatabaseReference usersRef;
     private DatabaseReference rolesRef;
+    private FirebaseOpsListener listener;
 
     private StorageReference signatureRef;
 
@@ -50,40 +51,51 @@ public class FirebaseOps {
         usersRef = FirebaseDatabase.getInstance().getReference("Users");
         rolesRef = FirebaseDatabase.getInstance().getReference("Roles");
         mAuth = FirebaseAuth.getInstance();
+        users = new ArrayList<>();
+        roles = new ArrayList<>();
         readUsers();
         readRoles();
         trackCurrentUser();
     }
 
+    public void setListener(FirebaseOpsListener listener) {
+        this.listener = listener;
+    }
+
+
 
     private void readUsers() {
-        users = new ArrayList<>();
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        ValueEventListener vel = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                users.clear();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    users.clear();
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         users.add(issue.getValue(User.class));
                     }
+                    listener.onUsersCallback();
                 }
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
-        });
+        };
+        usersRef.addValueEventListener(vel);
+
     }
 
     private void readRoles() {
-        roles = new ArrayList<>();
         rolesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                roles.clear();
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         roles.add(issue.getValue(String.class));
                     }
+                    listener.onRolesCallback();
                 }
             }
 
@@ -154,24 +166,9 @@ public class FirebaseOps {
         return usersRef;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public List<String> getRoles(){
         return roles;
     }
-
 
     public void createUser(String registerEmail, String registerPassword){
         Log.d(TAG, "createUser: xxxxxx");
@@ -194,4 +191,13 @@ public class FirebaseOps {
             }
         });
     }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+
+
+
+
 }

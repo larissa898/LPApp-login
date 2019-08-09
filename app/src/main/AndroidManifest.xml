@@ -16,7 +16,7 @@
 
         <activity
             android:name=".Activity.UnassignedUsersActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.UnassignedUsersForTLActivity"></activity>
         <activity android:name=".Activity.RegisterViewPagerActivity"></activity>
         <activity android:name=".Activity.AdminActivity" />
         <activity android:name=".Activity.LPCalendarList" />

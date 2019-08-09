@@ -49,7 +49,6 @@ import java.io.ObjectInputStream;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private FirebaseOps firebaseOps;
     // UI
     private Button login;
     private EditText userNM;
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user;
 
     private void initFirebase() {
-        firebaseOps = FirebaseOps.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
     }

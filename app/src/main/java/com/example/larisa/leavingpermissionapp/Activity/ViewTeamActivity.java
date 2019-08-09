@@ -21,6 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.larisa.leavingpermissionapp.Adapters.UsersForTeamLeaderAdapter;
 import com.example.larisa.leavingpermissionapp.MainActivity;
@@ -28,6 +29,7 @@ import com.example.larisa.leavingpermissionapp.Model.LP;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +42,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewTeamActivity extends AppCompatActivity implements Serializable {
+public class ViewTeamActivity extends AppCompatActivity implements Serializable, FirebaseOpsListener {
 
     private static final String TAG = "ViewTeamActivity";
 
@@ -67,13 +69,14 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable 
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
 
 
+
         //TODO: finish this part after adding/finishing the UnassignedUsersActivity code.
         startBlinkingAnimation();
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopBlinkingAnimation();
-                unassignedUserIV.setVisibility(View.GONE);
+                startActivity(new Intent(ViewTeamActivity.this, UnassignedUsersActivity.class));
+
             }
         });
 
@@ -81,6 +84,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable 
 
     public void initFirebase() {
         firebaseOps = FirebaseOps.getInstance();
+        firebaseOps.setListener(this);
     }
 
 
@@ -105,7 +109,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
 
-                        // if user in list has currently loged in user as Team Leader
+                        // if user in list has Team Leader nrMatricol the same as the currently logged in user
                         if (user.getTeamLeader() != null && user.getTeamLeader().equals(firebaseOps.getCurrentUser().getNrMatricol()))
                             usersList.add(user);
 
@@ -266,6 +270,15 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable 
     }
 
 
+    @Override
+    public void onUsersCallback() {
+
+    }
+
+    @Override
+    public void onRolesCallback() {
+
+    }
 }
 
 

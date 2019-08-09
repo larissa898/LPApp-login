@@ -20,6 +20,7 @@ import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Utils.ExternalStoragePermission;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.example.larisa.leavingpermissionapp.Utils.Validator;
 
 import java.io.File;
@@ -31,7 +32,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements FirebaseOpsListener {
 
     private static final String TAG = "RegisterFragment";
     private static String email;
@@ -41,6 +42,7 @@ public class RegisterFragment extends Fragment {
 
     public RegisterFragment() {
         firebaseOps = FirebaseOps.getInstance();
+        firebaseOps.setListener(this);
     }
 
 
@@ -140,4 +142,13 @@ public class RegisterFragment extends Fragment {
 
     }
 
+    @Override
+    public void onUsersCallback() {
+
+    }
+
+    @Override
+    public void onRolesCallback() {
+
+    }
 }
