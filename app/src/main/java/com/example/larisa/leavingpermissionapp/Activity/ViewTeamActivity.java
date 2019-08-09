@@ -128,11 +128,8 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
 
-
             @Override
             public void onClick(View v) {
-
-
                 final Intent intent = new Intent(ViewTeamActivity.this, FinalCalendar.class);
                 final List<LP> LPlist = new ArrayList<>();
 

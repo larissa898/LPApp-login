@@ -91,6 +91,7 @@ public class FirebaseOps {
 
 
     private void trackCurrentUser() {
+
         // if getCurrentFirebaseUser() == null, then we are in the login / register page
         if (getCurrentFirebaseUser() != null) {
             String currentUserUid = getCurrentFirebaseUser().getUid();
