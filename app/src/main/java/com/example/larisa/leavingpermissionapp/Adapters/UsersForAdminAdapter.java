@@ -6,6 +6,7 @@ package com.example.larisa.leavingpermissionapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ public class UsersForAdminAdapter extends RecyclerView.Adapter<UsersForAdminAdap
 
     @Override
     public UsersForAdminAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.admin_user_row, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_row_admin, parent, false);
         return new ViewHolder(v, context);
     }
 
@@ -45,6 +46,7 @@ public class UsersForAdminAdapter extends RecyclerView.Adapter<UsersForAdminAdap
         holder.numeAngajat.setText(user.getLastName() + " " + user.getFirstName());
         holder.setItemClickListener((v, pos) -> {
             Intent intent = new Intent(context, UserProfileAdminViewActivity.class);
+            intent.putExtra("userData", user);
             context.startActivity(intent);
         });
 
