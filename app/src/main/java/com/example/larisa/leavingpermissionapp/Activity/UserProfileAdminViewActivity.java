@@ -91,6 +91,7 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
                 inEditMode = false;
                 changeValue("firstName", userFirstNameEditText.getText().toString());
                 changeValue("lastName", userLastNameEditText.getText().toString());
+                changeValue("fullName", userLastNameEditText.getText().toString() + " " + userFirstNameEditText.getText().toString());
                 changeValue("role", userRoleEditText.getText().toString());
                 changeValue("phoneNumber", userPhoneNumberEditText.getText().toString());
                 changeValue("registrationNumber", userRegistrationNumberEditText.getText().toString());
