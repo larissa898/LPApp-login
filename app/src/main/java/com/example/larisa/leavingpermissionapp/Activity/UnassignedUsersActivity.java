@@ -4,9 +4,8 @@
 
 package com.example.larisa.leavingpermissionapp.Activity;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -70,12 +69,12 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
         firebaseOps.setListener(this);
     }
 
-    private void setWindowSize(double widthRatio, double heightRatio){
+    private void setWindowSize(double widthRatio, double heightRatio) {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-        getWindow().setLayout((int)(width*widthRatio), (int)(height*heightRatio));
+        getWindow().setLayout((int) (width * widthRatio), (int) (height * heightRatio));
 
     }
 
@@ -90,7 +89,6 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
 
         adapter = new UnassignedUserForTeamLeaderAdapter(this, firebaseOps.getUsers());
         recyclerView.setAdapter(adapter);
-
     }
 
 
@@ -102,7 +100,6 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
 
     @Override
     public void onRolesCallback() {
-
     }
 
 }

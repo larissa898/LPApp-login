@@ -4,9 +4,9 @@
 
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -38,7 +38,6 @@ public class AdminActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         usersList = new ArrayList<>();
         getSupportActionBar().setTitle("Leaving Permission App");
-
 
 
         DatabaseReference dbReference;

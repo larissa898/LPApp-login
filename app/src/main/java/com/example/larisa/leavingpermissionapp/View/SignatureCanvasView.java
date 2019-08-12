@@ -101,5 +101,4 @@ public class SignatureCanvasView extends View {
     }
 
 
-
 }

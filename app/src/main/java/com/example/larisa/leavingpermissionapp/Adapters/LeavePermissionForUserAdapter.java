@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePermissionForUserAdapter.ViewHolder> {
+public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePermissionForUserAdapter.ViewHolder> {
 
     private AlertDialog.Builder alertDialogBuilder;
     private AlertDialog dialog;
@@ -90,9 +90,9 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
             From = v.findViewById(R.id.textViewFrom);
             To = v.findViewById(R.id.textViewTo);
             Total = v.findViewById(R.id.textViewTotal);
-            Status=  v.findViewById(R.id.textViewStatus);
+            Status = v.findViewById(R.id.textViewStatus);
             editButton = v.findViewById(R.id.editButton);
-            deleteButton =  v.findViewById(R.id.deleteButton);
+            deleteButton = v.findViewById(R.id.deleteButton);
             editButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
 
@@ -107,24 +107,24 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
 
         //When you click edit or delete
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.deleteButton:
                     int position = getAdapterPosition();
                     LeavingPermission LivingPermission = leavingPermission.get(position);
-                    deleteLP(position,LivingPermission);
+                    deleteLP(position, LivingPermission);
                     break;
                 case R.id.editButton:
                     position = getAdapterPosition();
                     LivingPermission = leavingPermission.get(position);
 
-                    editLp(position,LivingPermission,v);
+                    editLp(position, LivingPermission, v);
                     break;
 
             }
         }
 
         //delete LeavingPermission
-        public void deleteLP (final int id, final LeavingPermission lplp){
+        public void deleteLP(final int id, final LeavingPermission lplp) {
 
             //create alert dialog
             alertDialogBuilder = new AlertDialog.Builder(context);
@@ -134,8 +134,8 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
             dialog = alertDialogBuilder.create();
             dialog.show();
 
-            Button noButton =  view.findViewById(R.id.noButton);
-            Button yesButton =  view.findViewById(R.id.yesButton);
+            Button noButton = view.findViewById(R.id.noButton);
+            Button yesButton = view.findViewById(R.id.yesButton);
 
             //When you select No, nothing happens, the dialog closes
             noButton.setOnClickListener(new View.OnClickListener() {
@@ -152,31 +152,31 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
                     dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
-                            child(day+ " "+  monthActual+ " "+year);
+                            child(day + " " + monthActual + " " + year);
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             String[] key = new String[6];
-                            int j=0;
+                            int j = 0;
 
-                            if(dataSnapshot.exists()){
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                    key[j]=String.valueOf(snapshot.getKey());
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    key[j] = String.valueOf(snapshot.getKey());
                                     j++;
                                 }
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren())
-                               {
-                                   if (snapshot.child("from").getValue().equals(lplp.getFrom()) && snapshot.child(
-                                           "to").getValue().equals(lplp.getTo())) {
-                                       snapshot.getRef().removeValue();
-                                       dialog.dismiss();
-                                       leavingPermission.clear();
-                                       return;
-                                   }
-                               }
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    if (snapshot.child("from").getValue().equals(lplp.getFrom()) && snapshot.child(
+                                            "to").getValue().equals(lplp.getTo())) {
+                                        snapshot.getRef().removeValue();
+                                        dialog.dismiss();
+                                        leavingPermission.clear();
+                                        return;
+                                    }
+                                }
                                 notifyDataSetChanged();
                             }
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
@@ -189,26 +189,26 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter <LeavePe
         //Edit Lp
         //When editing an item you are redirected to report activity
         //Submit a Flag= "edit" that says you are editing and sending the necessary data from this activity
-        public void editLp(final int id, final LeavingPermission leavingPermission, final View v){
+        public void editLp(final int id, final LeavingPermission leavingPermission, final View v) {
 
             final String[] key = new String[6];
             final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             final DatabaseReference dbReference;
             dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
-                    child(day+ " "+  monthActual+ " "+year);
+                    child(day + " " + monthActual + " " + year);
             dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    int j=0;
+                    int j = 0;
                     float sum = 0;
 
-                    if(dataSnapshot.exists()){
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            key[j]=String.valueOf(snapshot.getKey());
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            key[j] = String.valueOf(snapshot.getKey());
                             j++;
                             String h = snapshot.child("total").getValue().toString();
                             sum = sum + Float.parseFloat(h);
-                            total=sum;
+                            total = sum;
                         }
                     }
                     String keyLP = key[id];

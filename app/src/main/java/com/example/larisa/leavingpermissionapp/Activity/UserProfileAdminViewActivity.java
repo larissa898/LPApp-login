@@ -76,7 +76,6 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
 
     private void checkSignatureExists() {
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         signatureRef.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -272,7 +271,6 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }

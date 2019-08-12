@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,6 +63,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private SignatureCanvasView signatureCanvasView;
 
     // Firebase
+    private FirebaseOps firebaseOps = FirebaseOps.getInstance();
     private DatabaseReference usersRef;
     private StorageReference signatureRef;
 
@@ -134,9 +136,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 }
                             }
                         })
-                        .setNegativeButton("Cancel", null)
-                        .setNegativeButton("Cancel", (dialog, id) -> {
-                        });
+                        .setNegativeButton("Cancel", null);
                 builder.create().show();
             }
         });
@@ -155,7 +155,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void changePhoneNumber(String number) {
-        usersRef.child(userId).child("telefon").setValue(number);
+        usersRef.child(userId).child("phoneNumber").setValue(number);
         userPhoneTV.setText(number);
     }
 
@@ -193,7 +193,7 @@ public class UserProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         usersRef = FirebaseDatabase.getInstance().getReference("Users");
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userId = firebaseOps.getCurrentFirebaseUser().getUid();
         signatureRef = FirebaseStorage.getInstance().getReference().child("signatures").child(userId);
 
         checkSignatureExists();
@@ -215,22 +215,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == SIGNATURE_REQUEST_CODE) {
-
             if (resultCode == Activity.RESULT_OK) {
                 signaturePath = data.getStringExtra("path");
-                Toast.makeText(this, "signaturePath = " + signaturePath, Toast.LENGTH_SHORT).show();
-
                 saveToFirebase(signaturePath);
-
-
             }
-
-
         }
-
     }
 
     private void saveToFirebase(String signaturePath) {
@@ -258,13 +248,8 @@ public class UserProfileActivity extends AppCompatActivity {
                             new File(signaturePath).delete();
 
                             Picasso.get().load(downloadUri).into(userSignatureIV);
-
                         }
                     }
                 });
-
-
     }
-
-
 }

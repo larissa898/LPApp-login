@@ -31,7 +31,6 @@
             android:name=".Activity.ViewTeamActivity"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleTask" />
-        <activity android:name=".Activity.AddUser" />
         <activity android:name=".Activity.RaportActivity" />
         <activity android:name=".Activity.LeavingPermissionList" />
         <activity

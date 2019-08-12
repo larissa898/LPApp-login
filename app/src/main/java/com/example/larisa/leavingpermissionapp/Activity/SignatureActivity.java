@@ -18,10 +18,7 @@ import com.example.larisa.leavingpermissionapp.View.SignatureCanvasView;
 
 public class SignatureActivity extends AppCompatActivity {
 
-
-    // UI
     private SignatureCanvasView signatureCanvasView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +50,7 @@ public class SignatureActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == ExternalStoragePermission.REQUEST_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             signatureCanvasView.saveLocal(this);
         }
     }

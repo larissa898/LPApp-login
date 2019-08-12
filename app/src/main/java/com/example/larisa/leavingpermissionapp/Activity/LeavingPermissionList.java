@@ -44,7 +44,7 @@ public class LeavingPermissionList extends AppCompatActivity {
 
     // Vars
     public String Current;
-    private int  day;
+    private int day;
     private int month;
     private int year;
     private int actualDay;
@@ -62,7 +62,7 @@ public class LeavingPermissionList extends AppCompatActivity {
         CurrentDay = findViewById(R.id.textViewDayCurrent);
         AddButton = findViewById(R.id.buttonAddList);
         TotalOreZi = findViewById(R.id.totalResult);
-        editButton =  findViewById(R.id.editButton);
+        editButton = findViewById(R.id.editButton);
     }
 
     @Override
@@ -79,15 +79,15 @@ public class LeavingPermissionList extends AppCompatActivity {
 
         leavingPermissionList = new ArrayList<>();
 
-        day =  getIntent().getIntExtra("day",0);
-        actualDay =  getIntent().getIntExtra("actualDay",0);
-        actualMonth =  getIntent().getIntExtra("actualMonth",0);
-        actualYear =  getIntent().getIntExtra("actualYear",0);
-        month = getIntent().getIntExtra("month",0);
+        day = getIntent().getIntExtra("day", 0);
+        actualDay = getIntent().getIntExtra("actualDay", 0);
+        actualMonth = getIntent().getIntExtra("actualMonth", 0);
+        actualYear = getIntent().getIntExtra("actualYear", 0);
+        month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
-        monthActual =  getIntent().getStringExtra("monthActual");
+        monthActual = getIntent().getStringExtra("monthActual");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        CurrentDay.setText(day + " "+ monthActual + " " + year);
+        CurrentDay.setText(day + " " + monthActual + " " + year);
 
         final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
@@ -97,16 +97,18 @@ public class LeavingPermissionList extends AppCompatActivity {
         dbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-               leavingPermissionList.clear();
+                leavingPermissionList.clear();
             }
+
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 leavingPermissionList.clear();
             }
+
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 leavingPermissionList.clear();
-                if(leavingPermissionList.size() == 0){
+                if (leavingPermissionList.size() == 0) {
                     Intent intent = new Intent(LeavingPermissionList.this, LeavingPermissionList.class);
                     intent.putExtra("day", day);
                     intent.putExtra("total", total);
@@ -118,9 +120,11 @@ public class LeavingPermissionList extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -130,20 +134,20 @@ public class LeavingPermissionList extends AppCompatActivity {
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
+                if (dataSnapshot.exists()) {
                     float sum = 0;
-                    for(DataSnapshot snapshot : dataSnapshot.getChildren())
-                    {
-                             LeavingPermission leavingPermission = snapshot.getValue(LeavingPermission.class);
-                            leavingPermissionList.add(leavingPermission);
-                            Log.i(LeavingPermissionList.class.getSimpleName(), "List Size: " + leavingPermissionList.size());
-                            String h = snapshot.child("total").getValue().toString();
-                            sum = sum + Float.parseFloat(h);
-                            total=sum;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        LeavingPermission leavingPermission = snapshot.getValue(LeavingPermission.class);
+                        leavingPermissionList.add(leavingPermission);
+                        Log.i(LeavingPermissionList.class.getSimpleName(), "List Size: " + leavingPermissionList.size());
+                        String h = snapshot.child("total").getValue().toString();
+                        sum = sum + Float.parseFloat(h);
+                        total = sum;
                     }
                     TotalOreZi.setText(String.valueOf(total));
-                    if(total==3.0 ){AddButton.setEnabled(false);}
+                    if (total == 3.0) {
+                        AddButton.setEnabled(false);
+                    }
                     Current = String.valueOf(CurrentDay);
                     recycleViewAdapter = new LeavePermissionForUserAdapter(LeavingPermissionList.this, leavingPermissionList, day, month,
                             year, monthActual);
@@ -151,6 +155,7 @@ public class LeavingPermissionList extends AppCompatActivity {
                     recycleViewAdapter.notifyDataSetChanged();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -158,9 +163,9 @@ public class LeavingPermissionList extends AppCompatActivity {
         });
 
         //AddButton
-        if((day < actualDay  &&  month < actualMonth && year < actualYear) || (month < actualMonth ) || (year < actualYear) || (day < actualDay && month==actualMonth) ){
+        if ((day < actualDay && month < actualMonth && year < actualYear) || (month < actualMonth) || (year < actualYear) || (day < actualDay && month == actualMonth)) {
             AddButton.setEnabled(false);
-        }else{
+        } else {
             AddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -175,11 +180,9 @@ public class LeavingPermissionList extends AppCompatActivity {
                     Log.d("luna", String.valueOf(month));
                     startActivity(intent);
                     finish();
-
                 }
             });
         }
-
     }
 
 
