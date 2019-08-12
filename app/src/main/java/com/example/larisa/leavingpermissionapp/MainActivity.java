@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextView registerButton;
+    private ProgressBar progressBar;
 
     // Firebase
     private FirebaseAuth firebaseAuth;
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
         emailEditText = findViewById(R.id.userNameET);
         passwordEditText = findViewById(R.id.passwordET);
         registerButton = findViewById(R.id.registerButton);
+        progressBar = findViewById(R.id.loginProgressBar);
+        progressBar.setVisibility(View.GONE);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
         initUI();
 
         if (firebaseOps.isUserLoggedIn()) {
+            toggleProgressBar();
             currentUserManager.retrieveCurrentUserObj(firebaseOps.getCurrentFirebaseUser().getUid());
         }
     }
@@ -181,6 +186,14 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
         }
     }
 
+    public void toggleProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        emailEditText.setVisibility(View.GONE);
+        passwordEditText.setVisibility(View.GONE);
+        loginButton.setVisibility(View.GONE);
+        registerButton.setVisibility(View.GONE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REGISTER_REQUEST_CODE) {
@@ -202,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
 
     @Override
     public void onCurrentUserRetrieved(User user) {
-//        user = firebaseOps.getCurrentUserObject();
+        toggleProgressBar();
         openActivityForRole(user.getRole());
     }
 }
