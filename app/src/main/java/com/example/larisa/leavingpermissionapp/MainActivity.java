@@ -130,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
         });
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
 
         initFirebase();
         initUI();
-
+        getSupportActionBar().hide();
         if (firebaseOps.isUserLoggedIn()) {
             toggleProgressBar();
             currentUserManager.retrieveCurrentUserObj(firebaseOps.getCurrentFirebaseUser().getUid());
