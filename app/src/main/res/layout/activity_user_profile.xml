@@ -2,7 +2,7 @@
   ~ Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,135 +10,152 @@
     android:background="#EAE3FD"
     tools:context=".Activity.UserProfileActivity">
 
+
     <RelativeLayout
         android:id="@+id/relLayout1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:background="@drawable/user_profile_name_background">
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/relLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.34"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/staticUserFullNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Full name:"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+        <EditText
             android:id="@+id/userFullNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"
-            android:ellipsize="end"
-            android:maxLength="22"
-            android:maxLines="2"
-            android:text="User name"
-            android:textSize="24sp"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@+id/staticUserFullNameTV"
+            android:text="Full Name"
+            android:textSize="20sp"
             android:textStyle="bold" />
-
 
     </RelativeLayout>
 
 
     <RelativeLayout
         android:id="@+id/relLayout2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/relLayout1"
-        android:layout_marginHorizontal="2dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/user_profile_name_background">
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/relLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
 
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relLayout1">
 
-        <TextView
+        <ImageView
             android:id="@+id/staticUserNrMatricolTV"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="8dp"
-            android:text="Nr Matricol: "
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:src="@drawable/ic_registration_number" />
 
 
-        <TextView
+        <EditText
             android:id="@+id/userNrMatricolTV"
-            android:layout_width="wrap_content"
+            android:layout_width="294dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:text="Nr Matricol"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-
-        <View
-            android:id="@+id/staticLine1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/userNrMatricolTV"
-            android:background="@android:color/darker_gray" />
-
-        <TextView
-            android:id="@+id/staticUserPhoneNumberTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/staticLine1"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="45dp"
             android:layout_marginBottom="8dp"
-            android:text="Phone No.: "
-            android:textSize="18sp"
+            android:layout_toRightOf="@id/staticUserNrMatricolTV"
+            android:singleLine="true"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/userPhoneTV"
-            android:layout_width="wrap_content"
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relLayout2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/relLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/adminStaticUserPhoneNumberTV"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/userNrMatricolTV"
-            android:layout_centerHorizontal="true"
-            android:layout_toRightOf="@id/staticUserPhoneNumberTV"
-            android:layout_margin="8dp"
-            android:text="User Phone Nr"
-            android:textSize="18sp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/ic_phone" />
+
+        <EditText
+            android:id="@+id/userPhoneTV"
+            android:layout_width="294dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="8dp"
+
+            android:layout_toRightOf="@id/adminStaticUserPhoneNumberTV"
+            android:singleLine="true"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/editPhoneNumberButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/userNrMatricolTV"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="40dp"
-            android:src="@drawable/ic_edit"
-            android:layout_alignParentRight="true"/>
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="45dp"
+            android:src="@drawable/ic_edit" />
 
-        <View
-            android:id="@+id/staticLine2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/userPhoneTV"
-            android:background="@android:color/darker_gray" />
+    </RelativeLayout>
 
-        <TextView
+    <RelativeLayout
+        android:id="@+id/relLayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relLayout3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/userSignatureIV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
             android:id="@+id/staticUserFunctieTV"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/staticLine2"
+            android:layout_centerVertical="true"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_position" />
 
-            android:text="Functie: "
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
+        <EditText
             android:id="@+id/userFunctieTV"
-            android:layout_width="wrap_content"
+            android:layout_width="294dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/userPhoneTV"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:text="Functie"
-            android:textSize="18sp"
+            android:layout_marginLeft="-3dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/staticUserFunctieTV"
+            android:singleLine="true"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
 
@@ -149,13 +166,16 @@
         android:id="@+id/userSignatureIV"
         android:layout_width="match_parent"
         android:layout_height="200sp"
-        android:layout_below="@id/relLayout2"
+        android:layout_below="@id/relLayout4"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="4dp"
-        android:layout_marginTop="22dp"
-
+        android:layout_marginBottom="16dp"
         android:src="#fff"
-        android:text="Nr Matricol" />
+        android:text="Nr Matricol"
+        app:layout_constraintBottom_toTopOf="@+id/addEditSignatureButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/addEditSignatureButton"
@@ -163,13 +183,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/userSignatureIV"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@color/buttonColor"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:text="Add signature"
-        android:textColor="@color/textColor" />
+        android:textColor="@color/textColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
