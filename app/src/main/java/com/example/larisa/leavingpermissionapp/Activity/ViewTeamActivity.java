@@ -68,9 +68,10 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
 
 
-
         //TODO: finish this part after adding/finishing the UnassignedUsersActivity code.
+
         startBlinkingAnimation();
+
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +99,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         usersList = new ArrayList<>();
 
 
-
         DatabaseReference currentUserRef = firebaseOps.getUsersRef();
         currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -107,6 +107,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
+
 
                         // if user in list has Team Leader nrMatricol the same as the currently logged in user
                         if (user.getTeamLeader() != null && user.getTeamLeader().equals(firebaseOps.getCurrentUser().getRegistrationNumber()))
@@ -118,7 +119,9 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     recyclerView.setAdapter(usersForTeamLeaderAdapter);
                     usersForTeamLeaderAdapter.notifyDataSetChanged();
 
+
                 }
+
 
             }
 
@@ -128,6 +131,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
             }
         });
+
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
 
@@ -151,7 +155,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                                     if (snapshot.child("lastName").getValue().equals(u.getLastName())
-                                    && snapshot.child("firstName").getValue().equals(u.getFirstName())) {
+                                            && snapshot.child("firstName").getValue().equals(u.getFirstName())) {
                                         for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
                                             for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
                                                 LeavingPermission leavingPermission = snapshot2.getValue(LeavingPermission.class);
@@ -228,8 +232,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         });
 
     }
-
-
 
 
     private void startBlinkingAnimation() {

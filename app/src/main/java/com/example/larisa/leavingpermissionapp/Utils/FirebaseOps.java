@@ -63,7 +63,6 @@ public class FirebaseOps {
     }
 
 
-
     private void readUsers() {
 
         ValueEventListener vel = new ValueEventListener() {
@@ -77,6 +76,7 @@ public class FirebaseOps {
                     listener.onUsersCallback();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -105,7 +105,6 @@ public class FirebaseOps {
         });
 
 
-
     }
 
     public String getCurrentUserUid() {
@@ -126,6 +125,26 @@ public class FirebaseOps {
                 .filter(user -> user.getRole().equals(role))
                 .collect(Collectors.toList());
         return usersByRole;
+    }
+
+    public void setTeamLeader(String registerNumber, String teamLeader) {
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        if (dataSnapshot1.child("registrationNumber").getValue().equals(registerNumber)) {
+                            dataSnapshot1.child("teamLeader").getRef().setValue(teamLeader);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -155,6 +174,7 @@ public class FirebaseOps {
 
     /**
      * The current User model corresponding to the logged in {@link FirebaseUser}
+     *
      * @return a User object, or null if no {@link FirebaseUser} is currently logged in
      */
     public User getCurrentUser() {
@@ -166,11 +186,11 @@ public class FirebaseOps {
         return usersRef;
     }
 
-    public List<String> getRoles(){
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void createCredentials(String registerEmail, String registerPassword){
+    public void createCredentials(String registerEmail, String registerPassword) {
         mAuth.createUserWithEmailAndPassword(registerEmail, registerPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -189,12 +209,10 @@ public class FirebaseOps {
         });
     }
 
+
     public List<User> getUsers() {
         return users;
     }
-
-
-
 
 
 }

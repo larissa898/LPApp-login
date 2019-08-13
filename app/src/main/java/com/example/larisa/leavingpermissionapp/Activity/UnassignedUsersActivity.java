@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,12 +23,13 @@ import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class UnassignedUsersActivity extends AppCompatActivity implements FirebaseOpsListener {
+public class UnassignedUsersActivity extends AppCompatActivity implements FirebaseOpsListener, View.OnClickListener {
 
     private static final String TAG = "UnassignedUsersActivity";
 
@@ -38,6 +40,8 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
     private UnassignedUserForTeamLeaderAdapter adapter;
     private Button addButton;
     private Button cancelButton;
+    private List<User> unassignedUsers;
+
 
     // Vars
     private List<User> userList;
@@ -49,11 +53,9 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
         rL = findViewById(R.id.unassignedUserRelativeLayout);
 
         chooseTeamMemberTV = findViewById(R.id.chooseTeamMemberTV);
-
         recyclerView = findViewById(R.id.unassignedUsersRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         addButton = findViewById(R.id.addUsersToTeamButton);
         cancelButton = findViewById(R.id.cancelUsersToTeamButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -70,12 +72,12 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
         firebaseOps.setListener(this);
     }
 
-    private void setWindowSize(double widthRatio, double heightRatio){
+    private void setWindowSize(double widthRatio, double heightRatio) {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-        getWindow().setLayout((int)(width*widthRatio), (int)(height*heightRatio));
+        getWindow().setLayout((int) (width * widthRatio), (int) (height * heightRatio));
 
     }
 
@@ -87,9 +89,21 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
         initFirebase();
 
         setWindowSize(0.83, 0.82);
+        unassignedUsers = new ArrayList<>();
 
-        adapter = new UnassignedUserForTeamLeaderAdapter(this, firebaseOps.getUsers());
+        for (User user : firebaseOps.getUsers()) {
+            if (user.getTeamLeader() != null) {
+                if (user.getTeamLeader().equals("")) {
+                    unassignedUsers.add(user);
+                }
+            }
+
+        }
+
+
+        adapter = new UnassignedUserForTeamLeaderAdapter(this, unassignedUsers);
         recyclerView.setAdapter(adapter);
+        addButton.setOnClickListener(this);
 
     }
 
@@ -105,4 +119,12 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
 
     }
 
+    @Override
+    public void onClick(View view) {
+        for (User user : adapter.checkedUsers) {
+            firebaseOps.setTeamLeader(user.getRegistrationNumber(),
+                    firebaseOps.getCurrentUser().getRegistrationNumber());
+        }
+        finish();
+    }
 }
