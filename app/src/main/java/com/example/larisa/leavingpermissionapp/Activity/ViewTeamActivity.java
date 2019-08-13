@@ -60,6 +60,9 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     FirebaseOps firebaseOps;
 
 
+
+
+
     public void initUI() {
         recyclerView = findViewById(R.id.recycleViewActivity);
         recyclerView.setHasFixedSize(true);
@@ -67,9 +70,13 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
         confirmButton = findViewById(R.id.confirmButton);
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
+        unassignedUserIV.setVisibility(View.GONE);
+
+//        checkUnassignedUsersExist();
 
 
-        startBlinkingAnimation();
+
+
 
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +104,10 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         getSupportActionBar().setTitle("Leaving Permission App");
         usersList = new ArrayList<>();
 
+//        onUsersCallback();
 
+
+        // Fill recyclerView with team of currently loged in TeamLeader
         DatabaseReference currentUserRef = firebaseOps.getAllUsersRef();
         currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -108,7 +118,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                         User user = snapshot.getValue(User.class);
 
 
-                        // if user in list has Team Leader nrMatricol the same as the currently logged in user
+                        // if user in list has Team Leader fullName the same as the currently logged in user
                         if (user.getTeamLeader() != null && user.getTeamLeader().equals(CurrentUserManager.currentUser.getFullName()))
                             usersList.add(user);
 
@@ -234,6 +244,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
 
     private void startBlinkingAnimation() {
+        unassignedUserIV.setVisibility(View.VISIBLE);
         Animation animation = new AlphaAnimation(1, 0);
         animation.setDuration(1000);
         animation.setInterpolator(new LinearInterpolator());
@@ -244,6 +255,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
     private void stopBlinkingAnimation() {
         unassignedUserIV.setAnimation(null);
+        unassignedUserIV.setVisibility(View.GONE);
     }
 
 
@@ -263,6 +275,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
+
                 Intent intent = new Intent(ViewTeamActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -272,14 +285,37 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     }
 
 
+
     @Override
     public void onUsersCallback() {
-
+        List unassignedUsersList = new ArrayList();
+        for (User user : firebaseOps.getUsers()) {
+            if (user.getTeamLeader() == null && !user.getRole().equals("Team Leader")) {
+                Log.d(TAG, "onUsersCallback: found unassigned user.");
+                startBlinkingAnimation();
+                return;
+            }
+        }
+        Log.d(TAG, "onUsersCallback: no unassigned user found");
+        stopBlinkingAnimation();
     }
 
     @Override
     public void onRolesCallback() {
 
+    }
+
+    @Override
+    protected void onResume() {
+        firebaseOps = FirebaseOps.getInstance();
+        firebaseOps.setListener(this);
+
+        // when returning to this activity from UnassignedUsersActivity, onUsersCallback must be set back to this
+        // class's listener. It will trigger before it will be set. That's why it's called again here
+        //TODO: fix??
+        onUsersCallback();
+
+        super.onResume();
     }
 }
 
