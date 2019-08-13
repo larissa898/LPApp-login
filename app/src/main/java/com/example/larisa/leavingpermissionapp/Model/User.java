@@ -9,6 +9,8 @@ import java.util.List;
 
 public class User implements Serializable {
 
+
+    private String id;
     private String lastName;
     private String firstName;
     private String role;
@@ -26,6 +28,14 @@ public class User implements Serializable {
         this.role = role;
         this.phoneNumber = phoneNumber;
         this.registrationNumber = registrationNumber;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLastName() {
@@ -84,7 +94,7 @@ public class User implements Serializable {
         this.leavingPermissionList = leavingPermissionList;
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return this.lastName + " " + this.firstName;
     }
 

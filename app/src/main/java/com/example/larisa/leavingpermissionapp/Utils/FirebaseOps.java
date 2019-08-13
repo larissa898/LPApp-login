@@ -37,7 +37,6 @@ public class FirebaseOps {
     private StorageReference signatureRef;
 
     private List<User> users;
-    private User user;
     private List<String> roles;
 
     public static FirebaseOps getInstance() {
@@ -54,8 +53,7 @@ public class FirebaseOps {
         users = new ArrayList<>();
         roles = new ArrayList<>();
         readUsers();
-        readRoles();
-        trackCurrentUser();
+
     }
 
     public void setListener(FirebaseOpsListener listener) {
@@ -64,15 +62,17 @@ public class FirebaseOps {
 
 
     private void readUsers() {
-
         ValueEventListener vel = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     users.clear();
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        users.add(issue.getValue(User.class));
+                        User someUser = issue.getValue(User.class);
+                        users.add(someUser);
+
                     }
+
                     listener.onUsersCallback();
                 }
             }
@@ -105,14 +105,6 @@ public class FirebaseOps {
         });
 
 
-    }
-
-    public String getCurrentUserUid() {
-        return mAuth.getCurrentUser().getUid();
-    }
-
-    public DatabaseReference getCurrentUserRef() {
-        return getUsersRef().child(getCurrentUserUid());
     }
 
     public FirebaseUser getCurrentFirebaseUser() {
@@ -148,41 +140,14 @@ public class FirebaseOps {
     }
 
 
-    private void trackCurrentUser() {
-
-        // if getCurrentFirebaseUser() == null, then we are in the login / register page
-        if (getCurrentFirebaseUser() != null) {
-            String currentUserUid = getCurrentFirebaseUser().getUid();
-            DatabaseReference currentUserRef = usersRef.child(currentUserUid);
-
-            currentUserRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        user = dataSnapshot.getValue(User.class);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-    }
-
     /**
      * The current User model corresponding to the logged in {@link FirebaseUser}
      *
      * @return a User object, or null if no {@link FirebaseUser} is currently logged in
      */
-    public User getCurrentUser() {
-        return user;
 
-    }
 
-    public DatabaseReference getUsersRef() {
+    public DatabaseReference getAllUsersRef() {
         return usersRef;
     }
 
@@ -213,6 +178,11 @@ public class FirebaseOps {
     public List<User> getUsers() {
         return users;
     }
+
+    public boolean isUserLoggedIn() {
+        return mAuth.getCurrentUser() != null;
+    }
+
 
 
 }

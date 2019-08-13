@@ -22,14 +22,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePermissionForTLAdapter.ViewHolder> {
+public class LeavePermissionForTLAdapter extends RecyclerView.Adapter<LeavePermissionForTLAdapter.ViewHolder> {
 
     private Context context;
     private List<LeavingPermission> leavingPermissions = new ArrayList<>();
     public HashMap<String, LeavingPermission> modifiedLP = new HashMap<>();
 
 
-        public LeavePermissionForTLAdapter(Context context, List<LeavingPermission> leavingPermissions) {
+    public LeavePermissionForTLAdapter(Context context, List<LeavingPermission> leavingPermissions) {
         this.context = context;
         this.leavingPermissions = leavingPermissions;
     }
@@ -60,7 +60,6 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePerm
                 modifiedLP.put(leavingPermissions.get(position).getId(), leavingPermissions.get(position));
             }
         }));
-
 
 
     }
@@ -130,7 +129,7 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter <LeavePerm
                     break;
                 case R.id.refuseButton:
                     position = getAdapterPosition();
-                     LeavingPermission LivingPerm2 = leavingPermissions.get(position);
+                    LeavingPermission LivingPerm2 = leavingPermissions.get(position);
                     refuseLP(LivingPerm2);
                     status.setTextColor(Color.RED);
                     statusLabel.setTextColor(Color.RED);

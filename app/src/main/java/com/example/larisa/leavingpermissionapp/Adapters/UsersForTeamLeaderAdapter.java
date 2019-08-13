@@ -60,7 +60,7 @@ public class UsersForTeamLeaderAdapter extends RecyclerView.Adapter<UsersForTeam
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            FirebaseOps.getInstance().setTeamLeader(user.getRegistrationNumber(), "");
+                            FirebaseOps.getInstance().setTeamLeader(user.getRegistrationNumber(), null);
                             dialogInterface.dismiss();
                             Toast.makeText(v.getContext(), "User has been removed from the team", Toast.LENGTH_SHORT);
 

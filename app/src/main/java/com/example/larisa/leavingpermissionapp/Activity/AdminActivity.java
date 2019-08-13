@@ -4,15 +4,21 @@
 
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.larisa.leavingpermissionapp.Adapters.UsersForAdminAdapter;
+import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +46,6 @@ public class AdminActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Leaving Permission App");
 
 
-
         DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -51,7 +56,9 @@ public class AdminActivity extends AppCompatActivity {
                     usersList.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
-                        usersList.add(user);
+                        if (!user.getRole().equals("admin")) {
+                            usersList.add(user);
+                        }
                     }
                     recycleViewAdapter = new UsersForAdminAdapter(AdminActivity.this, usersList);
                     recyclerView.setAdapter(recycleViewAdapter);
@@ -63,7 +70,25 @@ public class AdminActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
 
+            case R.id.menu_logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(AdminActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.logout_menu, menu);
+        return true;
     }
 }

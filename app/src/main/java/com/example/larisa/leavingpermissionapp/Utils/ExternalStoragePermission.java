@@ -10,7 +10,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
 public class ExternalStoragePermission {
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static final int REQUEST_EXTERNAL_STORAGE = 666;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE

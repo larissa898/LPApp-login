@@ -4,9 +4,8 @@
 
 package com.example.larisa.leavingpermissionapp.Activity;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 import com.example.larisa.leavingpermissionapp.Adapters.UnassignedUserForTeamLeaderAdapter;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 
@@ -92,13 +92,13 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
         unassignedUsers = new ArrayList<>();
 
         for (User user : firebaseOps.getUsers()) {
-            if (user.getTeamLeader() != null) {
-                if (user.getTeamLeader().equals("")) {
+            if (user.getTeamLeader() == null && !user.getRole().equals("Team Leader")) {
+                {
                     unassignedUsers.add(user);
                 }
             }
-
         }
+
 
 
         adapter = new UnassignedUserForTeamLeaderAdapter(this, unassignedUsers);
@@ -110,20 +110,31 @@ public class UnassignedUsersActivity extends AppCompatActivity implements Fireba
 
     @Override
     public void onUsersCallback() {
-        Log.d(TAG, "onUsersCallback: xxxxxxxxxxxx = " + firebaseOps.getUsers());
-        adapter.setList(firebaseOps.getUsers());
+        unassignedUsers.clear();
+        for (User user : firebaseOps.getUsers()) {
+            if (user.getTeamLeader() == null && !user.getRole().equals("Team Leader")) {
+                {
+                    unassignedUsers.add(user);
+
+                }
+            }
+        }
+
+        Log.d(TAG, "onUsersCallback: all users updated, remaking unassigned users list: " + unassignedUsers);
+        adapter.setList(unassignedUsers);
     }
 
     @Override
     public void onRolesCallback() {
-
     }
 
     @Override
     public void onClick(View view) {
         for (User user : adapter.checkedUsers) {
+            Log.d(TAG, "onClick: checkedUsers = " + adapter.checkedUsers);
+            Log.d(TAG, "onClick: user = " + user);
             firebaseOps.setTeamLeader(user.getRegistrationNumber(),
-                    firebaseOps.getCurrentUser().getRegistrationNumber());
+                    CurrentUserManager.currentUser.getFullName());
         }
         finish();
     }

@@ -14,16 +14,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
-import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
-import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
+import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
 import com.example.larisa.leavingpermissionapp.Model.User;
+import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
+import com.example.larisa.leavingpermissionapp.Utils.Validator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -44,97 +47,72 @@ import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.
 import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.ROLE;
 import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.SHARED_PREFERENCES;
 
-public class MainActivity extends AppCompatActivity implements FirebaseOpsListener {
+public class MainActivity extends AppCompatActivity implements FirebaseOpsListener, CurrentUserManager.CurrentUserManagerListener {
 
     private final int REGISTER_REQUEST_CODE = 111;
     private static final String TAG = "MainActivity";
     private FirebaseOps firebaseOps;
+    private CurrentUserManager currentUserManager;
 
     // UI
-    private Button login;
-    private EditText userNM;
-    private EditText password;
+    private Button loginButton;
+    private EditText emailEditText;
+    private EditText passwordEditText;
     private TextView registerButton;
+    private ProgressBar progressBar;
 
     // Firebase
     private FirebaseAuth firebaseAuth;
-    FirebaseUser user;
+    private User user;
 
     private void initFirebase() {
         firebaseOps = FirebaseOps.getInstance();
         firebaseOps.setListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserManager = new CurrentUserManager(this);
+
     }
 
-    private void init() {
-        login = findViewById(R.id.loginButton);
-        userNM = findViewById(R.id.userNameET);
-        password = findViewById(R.id.passwordET);
+    private void initUI() {
+        loginButton = findViewById(R.id.loginButton);
+        emailEditText = findViewById(R.id.userNameET);
+        passwordEditText = findViewById(R.id.passwordET);
         registerButton = findViewById(R.id.registerButton);
-    }
+        progressBar = findViewById(R.id.loginProgressBar);
+        progressBar.setVisibility(View.GONE);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        getSupportActionBar().setTitle("Leaving Permission App");
-
-        initFirebase();
-        init();
-
-        if (isUserLoggedIn()) {
-
-            redirectUser(user.getUid());
-            finish();
-        }
-
-
-        login.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = userNM.getText().toString();
-                String pwd = password.getText().toString();
-                if (email.equals("") || pwd.equals("")) {
-                    Toast.makeText(MainActivity.this, "Please enter both your credentials", Toast.LENGTH_SHORT).show();
-                } else {
-                    firebaseAuth.signInWithEmailAndPassword(email, pwd)
+                String email = emailEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                if (Validator.validateNonEmptyField(emailEditText) && Validator.validateNonEmptyField(passwordEditText)) {
+                    firebaseAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-
                                     //check that the user has validated the email
                                     if (task.isSuccessful()) {
-                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                                        if (user.isEmailVerified()) {
-                                            Log.d(TAG, "onComplete: isEmailVerified = " + FirebaseAuth.getInstance().getCurrentUser().isEmailVerified());
-                                            createUser(user.getUid());
-                                            redirectUser(user.getUid());
+                                        FirebaseUser firebaseUser = firebaseOps.getCurrentFirebaseUser();
+                                        if (firebaseUser.isEmailVerified()) {
+                                            createUserObjectInDatabase(firebaseUser.getUid());
 
                                         } else {
-                                            Log.d(TAG, "onComplete: isEmailVerified = " + FirebaseAuth.getInstance().getCurrentUser().isEmailVerified());
-                                            Toast.makeText(MainActivity.this, "Please verify your Email first", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Please verify your email first", Toast.LENGTH_SHORT).show();
                                         }
-
                                     }
-
                                 }
-
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                    userNM.setText("");
-                                    password.setText("");
+                                    emailEditText.setText("");
+                                    passwordEditText.setText("");
 
                                 }
                             });
                 }
-
-
             }
         });
 
@@ -145,20 +123,25 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
                 startActivityForResult(registerIntent, REGISTER_REQUEST_CODE);
             }
         });
-
-
     }
 
 
-    /**
-     * @return true if user hasn't logged out from last session, false otherwise
-     */
-    public boolean isUserLoggedIn() {
-        return firebaseAuth.getCurrentUser() != null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        initFirebase();
+        initUI();
+        getSupportActionBar().hide();
+        if (firebaseOps.isUserLoggedIn()) {
+            toggleProgressBar();
+            currentUserManager.retrieveCurrentUserObj(firebaseOps.getCurrentFirebaseUser().getUid());
+        }
     }
 
-
-    public void createUser(String userId) {
+    public void createUserObjectInDatabase(String userId) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
         Query queryCurrentUser = usersRef.child(userId);
         queryCurrentUser.addValueEventListener(new ValueEventListener() {
@@ -168,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
 
                     User userToBeRegistered = new User();
+                    userToBeRegistered.setId(userId);
                     userToBeRegistered.setLastName(sharedPreferences.getString(LAST_NAME, ""));
                     userToBeRegistered.setFirstName(sharedPreferences.getString(FIRST_NAME, ""));
                     userToBeRegistered.setRegistrationNumber(sharedPreferences.getString(REGISTRATION_NO, ""));
@@ -175,53 +159,41 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
                     userToBeRegistered.setRole(sharedPreferences.getString(ROLE, ""));
 
                     FirebaseDatabase.getInstance().getReference("Users")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userToBeRegistered);
+                            .child(firebaseOps.getCurrentFirebaseUser().getUid())
+                            .setValue(userToBeRegistered);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
-
-    }
-
-
-    public void redirectUser(String userId) {
-
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
-        Query queryCurrentUser = usersRef.child(userId);
-
-        // addListenerForSingleValueEvent will be triggered once with the value of the data at the location.
-        queryCurrentUser.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String functie = dataSnapshot.child("role").getValue(String.class);
-                    if (functie.equals("admin")) {
-                        Intent intent = new Intent(MainActivity.this, AdminActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else if (functie.equals("Team Leader")) {
-                        Log.d("Query", "This is a team leader");
-                        Intent intent = new Intent(MainActivity.this, ViewTeamActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }
-
+                currentUserManager.retrieveCurrentUserObj(firebaseOps.getCurrentFirebaseUser().getUid());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
-        Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
+    }
 
+    public void openActivityForRole(String role) {
+        if (role.equals("admin")) {
+            Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (role.equals("Team Leader")) {
+            Log.d("Query", "This is a team leader");
+            Intent intent = new Intent(MainActivity.this, ViewTeamActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    public void toggleProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        emailEditText.setVisibility(View.GONE);
+        passwordEditText.setVisibility(View.GONE);
+        loginButton.setVisibility(View.GONE);
+        registerButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -241,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
     @Override
     public void onRolesCallback() {
 
+    }
+
+    @Override
+    public void onCurrentUserRetrieved(User user) {
+        toggleProgressBar();
+        openActivityForRole(user.getRole());
     }
 }
 

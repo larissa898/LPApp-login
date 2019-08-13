@@ -27,6 +27,7 @@ import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,8 +69,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
 
 
-        //TODO: finish this part after adding/finishing the UnassignedUsersActivity code.
-
         startBlinkingAnimation();
 
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +98,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         usersList = new ArrayList<>();
 
 
-        DatabaseReference currentUserRef = firebaseOps.getUsersRef();
+        DatabaseReference currentUserRef = firebaseOps.getAllUsersRef();
         currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -110,7 +109,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
 
                         // if user in list has Team Leader nrMatricol the same as the currently logged in user
-                        if (user.getTeamLeader() != null && user.getTeamLeader().equals(firebaseOps.getCurrentUser().getRegistrationNumber()))
+                        if (user.getTeamLeader() != null && user.getTeamLeader().equals(CurrentUserManager.currentUser.getFullName()))
                             usersList.add(user);
 
                     }

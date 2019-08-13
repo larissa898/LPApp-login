@@ -3,12 +3,11 @@ package com.example.larisa.leavingpermissionapp.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,12 +22,8 @@ import android.widget.Toast;
 import com.example.larisa.leavingpermissionapp.MainActivity;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,7 +59,6 @@ public class CalendarActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Leaving Permission App");
 
-
         //months of the year
         final String[] strMonths = {"January",
                 "February",
@@ -89,14 +83,12 @@ public class CalendarActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewUser);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
-
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
+            @SuppressLint("SimpleDateFormat")
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                String dateString = String.format("%d-%d-%d", year, month, dayOfMonth + 3);
+                @SuppressLint("DefaultLocale") String dateString = String.format("%d-%d-%d", year, month, dayOfMonth + 3);
                 Date date = null;
                 try {
                     date = new SimpleDateFormat("yyyy-M-d").parse(dateString);
@@ -116,7 +108,6 @@ public class CalendarActivity extends AppCompatActivity {
                                 , Toast.LENGTH_SHORT).show();
 
                     } else {
-
                         mHasDoubleClicked = true;
                         Intent intent = new Intent(CalendarActivity.this
                                 , LeavingPermissionList.class);
@@ -145,23 +136,6 @@ public class CalendarActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext()
                                         , "Press Double-Click to make a request or select Open Button",
                                         Toast.LENGTH_SHORT).show();
-//                                OpenDay.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        Intent intent = new Intent(CalendarActivity.this
-//                                                , LeavingPermissionList.class);
-//                                        actualM = strMonths[month];
-//                                        intent.putExtra("day", dayOfMonth);
-//                                        intent.putExtra("month", month);
-//                                        intent.putExtra("year", year);
-//                                        intent.putExtra("actualDay", actualDay);
-//                                        intent.putExtra("actualMonth", actualMonth);
-//                                        intent.putExtra("actualYear", actualYear);
-//                                        intent.putExtra("monthActual", actualM);
-//                                        Current = (actualDay + " " + actualMonth + " " + actualYear);
-//                                        startActivity(intent);
-//                                    }
-//                                });
                                 mYear = year;
                                 mDayOfMonth = dayOfMonth;
                                 mMonth = month;
@@ -194,7 +168,6 @@ public class CalendarActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -219,7 +192,6 @@ public class CalendarActivity extends AppCompatActivity {
                 return true;
 
         }
-
         return true;
     }
 

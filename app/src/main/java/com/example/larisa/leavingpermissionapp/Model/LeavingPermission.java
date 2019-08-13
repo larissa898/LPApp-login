@@ -34,8 +34,8 @@ public class LeavingPermission implements Serializable {
         this.data = data;
     }
 
-
-
+    public LeavingPermission() {
+    }
 
     public LeavingPermission(String id, String nume, String from, String to, Float total, String status) {
         this.id = id;
@@ -56,8 +56,6 @@ public class LeavingPermission implements Serializable {
         this.nume = nume;
         this.data = data;
     }
-
-
 
 
     public String getFrom() {
@@ -93,8 +91,6 @@ public class LeavingPermission implements Serializable {
         this.id = id;
     }
 
-    public LeavingPermission() {
-    }
     public User getUser() {
         return user;
     }
