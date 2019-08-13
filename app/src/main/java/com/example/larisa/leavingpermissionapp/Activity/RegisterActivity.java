@@ -42,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity
         firebaseOps = FirebaseOps.getInstance();
         firebaseOps.setListener(this);
 
+        getSupportActionBar().hide();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.registrationPage, credentialsFragment)
                 .commit();

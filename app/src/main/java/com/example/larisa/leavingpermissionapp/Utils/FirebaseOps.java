@@ -37,7 +37,6 @@ public class FirebaseOps {
     private StorageReference signatureRef;
 
     private List<User> users;
-    private User currentUser = null;
     private List<String> roles;
 
     public static FirebaseOps getInstance() {
@@ -54,7 +53,7 @@ public class FirebaseOps {
         users = new ArrayList<>();
         roles = new ArrayList<>();
         readUsers();
-        readRoles();
+
     }
 
     public void setListener(FirebaseOpsListener listener) {
@@ -120,6 +119,26 @@ public class FirebaseOps {
         return usersByRole;
     }
 
+    public void setTeamLeader(String registerNumber, String teamLeader) {
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        if (dataSnapshot1.child("registrationNumber").getValue().equals(registerNumber)) {
+                            dataSnapshot1.child("teamLeader").getRef().setValue(teamLeader);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     /**
      * The current User model corresponding to the logged in {@link FirebaseUser}
@@ -155,6 +174,7 @@ public class FirebaseOps {
         });
     }
 
+
     public List<User> getUsers() {
         return users;
     }
@@ -163,10 +183,6 @@ public class FirebaseOps {
         return mAuth.getCurrentUser() != null;
     }
 
-
-    public User getCurrentUserObject(){
-        return currentUser;
-    }
 
 
 }

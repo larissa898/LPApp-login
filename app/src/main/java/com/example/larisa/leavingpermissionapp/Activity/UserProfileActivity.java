@@ -102,6 +102,11 @@ public class UserProfileActivity extends AppCompatActivity {
         addEditSignatureButton = findViewById(R.id.addEditSignatureButton);
         editPhoneNumberButton = findViewById(R.id.editPhoneNumberButton);
 
+        userFullNameTV.setEnabled(false);
+        userFunctieTV.setEnabled(false);
+        userPhoneTV.setEnabled(false);
+        userNrMatricolTV.setEnabled(false);
+
         addEditSignatureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

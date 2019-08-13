@@ -69,8 +69,8 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
 
 
-        //TODO: finish this part after adding/finishing the UnassignedUsersActivity code.
         startBlinkingAnimation();
+
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,8 +107,9 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
 
+
                         // if user in list has Team Leader nrMatricol the same as the currently logged in user
-                        if (user.getTeamLeader() != null && user.getTeamLeader().equals(CurrentUserManager.currentUser.getRegistrationNumber()))
+                        if (user.getTeamLeader() != null && user.getTeamLeader().equals(CurrentUserManager.currentUser.getFullName()))
                             usersList.add(user);
 
                     }
@@ -117,7 +118,9 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     recyclerView.setAdapter(usersForTeamLeaderAdapter);
                     usersForTeamLeaderAdapter.notifyDataSetChanged();
 
+
                 }
+
 
             }
 
@@ -127,6 +130,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
             }
         });
+
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
 
