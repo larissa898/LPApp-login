@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
@@ -36,6 +37,7 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
     private EditText userRegistrationNumberEditText;
     private EditText userTeamLeaderEditText;
     private Button editSaveUserButton;
+    private ImageView deleteUser;
 
     // Firebase
     private DatabaseReference usersRef;
@@ -54,6 +56,7 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
         userRegistrationNumberEditText = findViewById(R.id.nr_matricol_admin);
         userTeamLeaderEditText = findViewById(R.id.admin_team_leader_user_profile_TV);
         editSaveUserButton = findViewById(R.id.adminEditUser);
+        deleteUser = findViewById(R.id.deleteUserButton);
 
         disableEditing(userFirstNameEditText);
         disableEditing(userLastNameEditText);
@@ -98,6 +101,14 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
                 editSaveUserButton.setText("Edit User");
             }
         });
+
+        deleteUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteUser();
+                finish();
+            }
+        });
     }
 
     public void setOnEditorActionListenerForEditText(EditText editText) {
@@ -132,6 +143,10 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
 
     private void changeValue(String field, String value) {
         usersRef.child(user.getId()).child(field).setValue(value);
+    }
+
+    private void deleteUser(){
+        usersRef.child(user.getId()).removeValue();
     }
 
     private void getUserData() {
