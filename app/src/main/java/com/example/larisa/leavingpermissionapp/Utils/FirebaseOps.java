@@ -53,7 +53,7 @@ public class FirebaseOps {
         users = new ArrayList<>();
         roles = new ArrayList<>();
         readUsers();
-
+        readRoles();
     }
 
     public void setListener(FirebaseOpsListener listener) {

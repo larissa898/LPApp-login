@@ -4,7 +4,9 @@
 
 package com.example.larisa.leavingpermissionapp.Activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.KeyListener;
@@ -17,15 +19,19 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class UserProfileAdminViewActivity extends AppCompatActivity {
 
-    private static final String TAG = "UserProfileActivity";
+    private static final String TAG = "UserProfileAdminViewAct";
     private final int SIGNATURE_REQUEST_CODE = 100;
 
     // UI
@@ -36,6 +42,7 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
     private EditText userRegistrationNumberEditText;
     private EditText userTeamLeaderEditText;
     private Button editSaveUserButton;
+    private ImageView deleteUser;
 
     // Firebase
     private DatabaseReference usersRef;
@@ -54,6 +61,7 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
         userRegistrationNumberEditText = findViewById(R.id.nr_matricol_admin);
         userTeamLeaderEditText = findViewById(R.id.admin_team_leader_user_profile_TV);
         editSaveUserButton = findViewById(R.id.adminEditUser);
+        deleteUser = findViewById(R.id.deleteUserButton);
 
         disableEditing(userFirstNameEditText);
         disableEditing(userLastNameEditText);
@@ -99,6 +107,31 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
                 editSaveUserButton.setText("Edit User");
             }
         });
+
+        deleteUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setMessage("Are you sure you want to delete this employee?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        deleteUser();
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create();
+                builder.show();
+            }
+        });
     }
 
     public void setOnEditorActionListenerForEditText(EditText editText) {
@@ -135,10 +168,16 @@ public class UserProfileAdminViewActivity extends AppCompatActivity {
         usersRef.child(user.getId()).child(field).setValue(value);
     }
 
+    private void deleteUser(){
+
+        usersRef.child(user.getId()).removeValue();
+
+    }
+
     private void getUserData() {
 
         user = (User) getIntent().getExtras().getSerializable("userData");
-        Log.d(TAG, "getUserData: andieprst" + user);
+        Log.d(TAG, "getUserData: " + user);
         userFirstNameEditText.setText(user.getFirstName());
         userLastNameEditText.setText(user.getLastName());
         userRoleEditText.setText(user.getRole());
