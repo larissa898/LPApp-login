@@ -60,9 +60,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     FirebaseOps firebaseOps;
 
 
-
-
-
     public void initUI() {
         recyclerView = findViewById(R.id.recycleViewActivity);
         recyclerView.setHasFixedSize(true);
@@ -71,12 +68,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         confirmButton = findViewById(R.id.confirmButton);
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
         unassignedUserIV.setVisibility(View.GONE);
-
-//        checkUnassignedUsersExist();
-
-
-
-
 
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +108,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
 
-
                         // if user in list has Team Leader fullName the same as the currently logged in user
                         if (user.getTeamLeader() != null && user.getTeamLeader().equals(CurrentUserManager.currentUser.getFullName()))
                             usersList.add(user);
@@ -131,9 +121,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
                 }
 
-
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -162,7 +150,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
                                     if (snapshot.child("lastName").getValue().equals(u.getLastName())
                                             && snapshot.child("firstName").getValue().equals(u.getFirstName())) {
                                         for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
@@ -170,17 +157,8 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                                                 LeavingPermission leavingPermission = snapshot2.getValue(LeavingPermission.class);
 
                                                 String date = snapshot1.getKey();
-                                                String lastName = snapshot.child("lastName").getValue(String.class);
-                                                String firstName = snapshot.child("firstName").getValue(String.class);
-
-                                                String role = snapshot.child("role").getValue(String.class);
-                                                String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
-                                                String registrationNumber = snapshot.child("registrationNumber").getValue(String.class);
-
-                                                User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
-
+                                                User user = snapshot.getValue(User.class);
                                                 leavingPermission.setUser(user);
-
                                                 leavingPermission.setData(date);
                                                 leavingPermissionList.add(leavingPermission);
 
@@ -189,12 +167,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                                     }
                                 }
                             }
-
-                            intent.putExtra("Lps", (Serializable) leavingPermissionList);
-                            startActivity(intent);
-
                         }
-
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -205,6 +178,10 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
                 }
 
+
+
+                intent.putExtra("Lps", (Serializable) leavingPermissionList);
+                startActivity(intent);
 
                 Log.d(TAG, String.valueOf(leavingPermissionList.size()));
                 dbReference.addChildEventListener(new ChildEventListener() {
@@ -283,7 +260,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         }
         return true;
     }
-
 
 
     @Override

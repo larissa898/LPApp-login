@@ -53,7 +53,7 @@ public class FirebaseOps {
         users = new ArrayList<>();
         roles = new ArrayList<>();
         readUsers();
-
+        readRoles();
     }
 
     public void setListener(FirebaseOpsListener listener) {
@@ -183,7 +183,6 @@ public class FirebaseOps {
     public boolean isUserLoggedIn() {
         return mAuth.getCurrentUser() != null;
     }
-
 
 
 }
