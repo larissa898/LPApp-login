@@ -28,15 +28,15 @@
 
 
     <TextView
-                android:id="@+id/numeEmployee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+        android:id="@+id/numeEmployee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/Nume_Angajat"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/Nume_Angajat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
@@ -44,31 +44,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/numeEmployee"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="@string/From"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/numeEmployee" />
 
-            <TextView
-                android:id="@+id/toLP"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/totalOre"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/To"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fromLP" />
+    <TextView
+        android:id="@+id/toLP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/totalOre"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/To"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fromLP" />
 
     <TextView
         android:id="@+id/totalOre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/TotalOre"
 
         app:layout_constraintStart_toStartOf="parent"
@@ -110,14 +109,15 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintStart_toEndOf="@+id/totalOre"
         app:layout_constraintTop_toBottomOf="@+id/textViewToLP" />
+
     <TextView
         android:id="@+id/statusLP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:text="@string/status"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -132,6 +132,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/statusLP"
         app:layout_constraintTop_toBottomOf="@+id/textViewTotal" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

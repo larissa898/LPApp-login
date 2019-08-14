@@ -1,11 +1,12 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp.Model;
 
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-
 import java.io.Serializable;
-import java.util.Date;
 
-public class LP implements Serializable {
+public class LeavingPermission implements Serializable {
 
 
     private String id;
@@ -33,10 +34,10 @@ public class LP implements Serializable {
         this.data = data;
     }
 
+    public LeavingPermission() {
+    }
 
-
-
-    public LP(String id,String nume, String from, String to, Float total, String status) {
+    public LeavingPermission(String id, String nume, String from, String to, Float total, String status) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -46,7 +47,7 @@ public class LP implements Serializable {
     }
 
 
-    public LP(String id,String from, String to, Float total, String status, String nume, String data) {
+    public LeavingPermission(String id, String from, String to, Float total, String status, String nume, String data) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -55,8 +56,6 @@ public class LP implements Serializable {
         this.nume = nume;
         this.data = data;
     }
-
-
 
 
     public String getFrom() {
@@ -92,8 +91,6 @@ public class LP implements Serializable {
         this.id = id;
     }
 
-    public LP() {
-    }
     public User getUser() {
         return user;
     }
@@ -110,5 +107,6 @@ public class LP implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }
 

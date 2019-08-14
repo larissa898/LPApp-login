@@ -1,27 +1,38 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-
-
-
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
-import com.example.larisa.leavingpermissionapp.Activity.ViewTeam;
+import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
 import com.example.larisa.leavingpermissionapp.Model.User;
+import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
+import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
+import com.example.larisa.leavingpermissionapp.Utils.Validator;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,285 +44,209 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.FIRST_NAME;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.LAST_NAME;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.PHONE_NO;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.REGISTRATION_NO;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.ROLE;
+import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.SHARED_PREFERENCES;
 
+public class MainActivity extends AppCompatActivity implements FirebaseOpsListener, CurrentUserManager.CurrentUserManagerListener {
 
-public class MainActivity extends AppCompatActivity {
-    private Button login;
-    private Button cancel;
-    private EditText userNM;
-    private EditText password;
-    private TextView register;
+    private final int REGISTER_REQUEST_CODE = 111;
+    private static final String TAG = "MainActivity";
+    private FirebaseOps firebaseOps;
+    private CurrentUserManager currentUserManager;
 
+    // UI
+    private Button loginButton;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private TextView registerButton;
+    private ProgressBar progressBar;
 
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
+    // Firebase
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mStateListener;
-   private TextView textView;
+    private User user;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        textView = findViewById(R.id.textView3);
-
-
-
-
-
-
-        login = findViewById(R.id.button);
-        cancel = findViewById(R.id.button2);
-        userNM = findViewById(R.id.editTextNM);
-        password = findViewById(R.id.editText);
-        register = findViewById(R.id.registerButton);
-
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("message");
-        databaseReference.setValue("Hello there");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("Message", "Reading from the database" + value);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("Message", "Failed to read from the database");
-            }
-        });
-
+    private void initFirebase() {
+        firebaseOps = FirebaseOps.getInstance();
+        firebaseOps.setListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
-        mStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.d("User", "is signed in");
+        currentUserManager = new CurrentUserManager(this);
 
-                } else
-                    Log.d("User", "is signed out");
+    }
 
+    private void initUI() {
+        loginButton = findViewById(R.id.loginButton);
+        emailEditText = findViewById(R.id.userNameET);
+        passwordEditText = findViewById(R.id.passwordET);
+        setOnEditorActionListenerForEditText(passwordEditText);
+        registerButton = findViewById(R.id.registerButton);
+        progressBar = findViewById(R.id.loginProgressBar);
+        progressBar.setVisibility(View.GONE);
 
-            }
-        };
-
-
-        login.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = userNM.getText().toString();
-                String pwd = password.getText().toString();
-                if (email.equals("") || pwd.equals("")) {
-                    Toast.makeText(MainActivity.this, "Please enter your credentials", Toast.LENGTH_SHORT).show();
-                } else {
-
-//
-//
-
-
-//Authenticate with fire basepa
-
-                    firebaseAuth.signInWithEmailAndPassword(email, pwd)
+                String email = emailEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                if (Validator.validateNonEmptyField(emailEditText) && Validator.validateNonEmptyField(passwordEditText)) {
+                    firebaseAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
                                     //check that the user has validated the email
-                                    if (task.isSuccessful() && user.isEmailVerified()) {
-                                        //check if the user is a team leader or not
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser firebaseUser = firebaseOps.getCurrentFirebaseUser();
+                                        if (firebaseUser.isEmailVerified()) {
+                                            createUserObjectInDatabase(firebaseUser.getUid());
 
-
-//                                        Intent intent = getIntent();
-//                                        if(intent.getExtras() != null)
-//                                        {
-//                                        if(intent.getExtras().containsKey("message")) {
-//                                            if (intent.getExtras().get("message").equals(
-//                                                    "Success")) {
-//                                                String registerFullName = intent.getExtras().getString("registerFullName");
-//                                                String registerFunction = intent.getExtras().getString("registerFunction");
-//                                                String registerNumber =  intent.getExtras().getString("registerNumber");
-//                                                String registerPhone =  intent.getExtras().getString("registerPhone");
-//
-//                                                User registerUser = new User(registerFullName, registerFunction,
-//                                                        registerPhone, registerNumber);
-//                                                FirebaseDatabase.getInstance().getReference("Users")
-//                                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-//                                                        addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                            @Override
-//                                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                                if (task.isSuccessful()) {
-//
-//                                                                    Toast.makeText(MainActivity.this, "User has been successfully created, please " +
-//                                                                            "verify your email adress", Toast.LENGTH_SHORT).show();
-//                                                                }
-//                                                            }
-//                                                        });
-//                                                redirectUser(userId);
-//                                            }
-//                                        }
-//
-//                                        } else {
-//                                            if(intent.getExtras() != null) {
-//                                                if (intent.getExtras().containsKey("message")) {
-//
-//                                                    if (intent.getExtras().get("message").equals("Failed")) {
-//                                                        Toast.makeText(MainActivity.this, "User has not been created " +
-//                                                                "please try again", Toast.LENGTH_SHORT).show();
-//
-//                                                    }
-//                                                }
-//                                            }
-//                                            if (intent.getExtras() == null)
-//                                            {
-                                                createUser(userId);
-                                                redirectUser(userId);
-
-//                                            }
-                                        }
-                                    else {
-                                        if (!user.isEmailVerified()) {
-                                            Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
                                         } else {
-                                            Toast.makeText(MainActivity.this, "Wrong Credentials", Toast.LENGTH_LONG).show();
-                                            userNM.setText("");
-                                            password.setText("");
+                                            Toast.makeText(MainActivity.this, "Please verify your email first", Toast.LENGTH_SHORT).show();
                                         }
                                     }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    emailEditText.setText("");
+                                    passwordEditText.setText("");
 
-
-                                    }
-
-
-
-
+                                }
                             });
                 }
-
-
-
-
-
-            }
-        });
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-                startActivity(intent);
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivityForResult(registerIntent, REGISTER_REQUEST_CODE);
             }
         });
     }
 
 
-           public void createUser(String userId)
-           {
-               DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
-               Query query = functionRef.child(userId);
-               query.addValueEventListener(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                       if(!dataSnapshot.exists()) {
-                           SharedPreferences sharedPref = getSharedPreferences("LPAppSharedPreferences", Context.MODE_PRIVATE);
-                           String registerFullName = sharedPref.getString("registerFullName", "");
-                           final String registerFunction = sharedPref.getString("registerFunction", "");
-                           String registerNumber = sharedPref.getString("registerNumber", "");
-                           String registerPhone = sharedPref.getString("registerPhone", "");
 
-                               User registerUser = new User(registerFullName, registerFunction,
-                                       registerPhone, registerNumber);
-                               FirebaseDatabase.getInstance().getReference("Users")
-                                       .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(registerUser).
-                                       addOnCompleteListener(new OnCompleteListener<Void>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<Void> task) {
-                                               if (task.isSuccessful()) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-                                                   Toast.makeText(MainActivity.this, "User has been successfully created", Toast.LENGTH_SHORT).show();
-                                                   if(registerFunction.equals("Team Leader"))
-                                                   {
-                                                       Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                                                       startActivity(intent);
-                                                       userNM.setText("");
-                                                       password.setText("");
-                                                   }
-                                                   else
-                                                   {
-                                                       Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                                                       startActivity(intent);
-                                                       userNM.setText("");
-                                                       password.setText("");
-                                                   }
+        initFirebase();
+        initUI();
+        getSupportActionBar().hide();
+        if (firebaseOps.isUserLoggedIn()) {
+            toggleProgressBar();
+            currentUserManager.retrieveCurrentUserObj(firebaseOps.getCurrentFirebaseUser().getUid());
+        }
+    }
 
+    public void createUserObjectInDatabase(String userId) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
+        Query queryCurrentUser = usersRef.child(userId);
+        queryCurrentUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
 
-                                               }
-                                           }
-                                       });
+                    User userToBeRegistered = new User();
+                    userToBeRegistered.setId(userId);
+                    userToBeRegistered.setLastName(sharedPreferences.getString(LAST_NAME, ""));
+                    userToBeRegistered.setFirstName(sharedPreferences.getString(FIRST_NAME, ""));
+                    userToBeRegistered.setRegistrationNumber(sharedPreferences.getString(REGISTRATION_NO, ""));
+                    userToBeRegistered.setPhoneNumber(sharedPreferences.getString(PHONE_NO, ""));
+                    userToBeRegistered.setRole(sharedPreferences.getString(ROLE, ""));
 
-                       }
-                   }
-
-                   @Override
-                   public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                   }
-               });
-
-           }
-
-
-            public void redirectUser(String userId) {
-
-                DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
-                Query query = functionRef.child(userId);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            String functie = dataSnapshot.child("functie").getValue(String.class);
-
-                            if (functie.equals("Team Leader")) {
-                                Log.d("Query", "This is a team leader");
-                                Intent intent = new Intent(MainActivity.this, ViewTeam.class);
-                                startActivity(intent);
-                                userNM.setText("");
-                                password.setText("");
-                            } else {
-                                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                                startActivity(intent);
-                                userNM.setText("");
-                                password.setText("");
-
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-                Toast.makeText(MainActivity.this, "User has signed in", Toast.LENGTH_LONG).show();
-
-
+                    FirebaseDatabase.getInstance().getReference("Users")
+                            .child(firebaseOps.getCurrentFirebaseUser().getUid())
+                            .setValue(userToBeRegistered);
+                }
+                currentUserManager.retrieveCurrentUserObj(firebaseOps.getCurrentFirebaseUser().getUid());
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void openActivityForRole(String role) {
+        if (role.equals("admin")) {
+            Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (role.equals("Team Leader")) {
+            Log.d("Query", "This is a team leader");
+            Intent intent = new Intent(MainActivity.this, ViewTeamActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+            startActivity(intent);
+            finish();
         }
+    }
+
+    public void toggleProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        emailEditText.setVisibility(View.GONE);
+        passwordEditText.setVisibility(View.GONE);
+        loginButton.setVisibility(View.GONE);
+        registerButton.setVisibility(View.GONE);
+    }
+
+    public void setOnEditorActionListenerForEditText(EditText editText) {
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT
+                    || actionId == EditorInfo.IME_ACTION_DONE
+                    || event.getAction() == KeyEvent.ACTION_DOWN
+                    || event.getAction() == KeyEvent.KEYCODE_ENTER) {
+                hideKeyboard();
+            }
+            return false;
+        });
+
+    }
+
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REGISTER_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Please check your email to activate your account", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onUsersCallback() {
+
+    }
+
+    @Override
+    public void onRolesCallback() {
+
+    }
+
+    @Override
+    public void onCurrentUserRetrieved(User user) {
+        toggleProgressBar();
+        openActivityForRole(user.getRole());
+    }
+}
 
 
 

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Activity.UserProfileActivity">
+
+    <RelativeLayout
+        android:id="@+id/adminRelLayout11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/lastNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Last name"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/adminUserLastNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@+id/lastNameTV"
+            android:text="Last Name"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/adminRelLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/adminRelLayout11"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="1dp">
+
+        <TextView
+            android:id="@+id/firstNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="First name"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/adminUserFirstNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@id/firstNameTV"
+            android:text="First name"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="135dp"
+        android:layout_height="97dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="45dp"
+        android:layout_toRightOf="@id/adminRelLayout1">
+
+        <ImageView
+            android:id="@+id/deleteUserButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="20dp"
+            android:src="@drawable/trashicon" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/adminRelLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adminRelLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:id="@+id/nr_matricol_admin_icon"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/ic_registration_number" />
+
+
+        <EditText
+            android:id="@+id/nr_matricol_admin"
+            android:layout_width="294dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/nr_matricol_admin_icon"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/adminRelLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adminRelLayout2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/adminStaticUserPhoneNumberTV"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/ic_phone" />
+
+        <EditText
+            android:id="@+id/adminUserPhoneTV"
+            android:layout_width="294dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/adminStaticUserPhoneNumberTV"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/adminRelLayout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adminRelLayout3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/adminStaticUserFunctieTV"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/ic_position" />
+
+        <EditText
+            android:id="@+id/adminUserFunctieTV"
+            android:layout_width="294dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/adminStaticUserFunctieTV"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/adminRelLayout5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adminRelLayout4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/admin_team_leader_user_profile_static_TV"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/ic_supervisor" />
+        />
+
+        <EditText
+            android:id="@+id/admin_team_leader_user_profile_TV"
+            android:layout_width="294dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/admin_team_leader_user_profile_static_TV"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+    <!--<ImageView-->
+    <!--android:id="@+id/adminUserSignatureIV"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="200sp"-->
+    <!--android:layout_below="@id/adminRelLayout2"-->
+    <!--android:layout_marginHorizontal="4dp"-->
+    <!--android:layout_marginTop="4dp"-->
+
+    <!--android:src="#fff"-->
+    <!--android:text="Nr Matricol" />-->
+
+    <Button
+        android:id="@+id/adminEditUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adminRelLayout5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/buttonColor"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="Edit User"
+        android:textColor="@color/textColor" />
+
+
+</RelativeLayout>

@@ -5,7 +5,7 @@
     <string name="LoginButton">Login</string>
     <string name="CancelButton">Cancel</string>
     <string name="Cancel">Cancel</string>
-    <string name="SelectZi">Selecteaza ziua</string>
+    <string name="SelectZi">Choose a day</string>
     <string name="CancelList">Cancel</string>
     <string name="AddItemList">Add</string>
     <string name="matricol_user_form">Numar Matricol</string>
@@ -15,21 +15,21 @@
     <string name="Parola_Angajat">Parola</string>
     <string name="save_angajat">Save</string>
     <string name="cancel_angajat">Cancel</string>
-    <string name="nume">Nume Angajat:</string>
+    <string name="lastName">Nume Angajat:</string>
     <string name="ok_button">OK</string>
     <string name="add_employee">Add new employee</string>
-    <string name="Total">Total ore</string>
+    <string name="Total">Total Hours</string>
     <string name="CancelButtonRaport">Cancel</string>
-    <string name="TotalOre">Total Ore:</string>
+    <string name="TotalOre">Total Hours for LP:</string>
     <string name="a">a</string>
     <string name="b">b</string>
     <string name="m">m</string>
-    <string name="From">De la:</string>
-    <string name="To">Pana la:</string>
+    <string name="From">From:</string>
+    <string name="To">To:</string>
     <string name="CancelRaport">Cancel</string>
     <string name="Totalore">Final:</string>
     <string name="Confirm">Confirm</string>
-    <string name="register_user_button"><u> Register </u></string>
+    <string name="register_user_button"><u> No account yet? Create one </u></string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="hint_email">Enter your email</string>
     <string name="register_password">Enter a password</string>
@@ -40,7 +40,7 @@
     <string name="register_cancel">Cancel</string>
     <string name="register_form_button"> Register </string>
     <string name="hint_email_login">Email</string>
-    <string name="confirm_button">Confirm</string>
+    <string name="confirm_button">Select</string>
     <string name="lista_angajati">Selectati angajatii pentru a putea vizualiza LP-urile.</string>
     <string name="BACK">BACK</string>
     <string name="sure_text">Are you sure?</string>
@@ -48,7 +48,7 @@
     <string name="yes">Yes</string>
     <string name="title_activity_lpcalendar_list">LPCalendarList</string>
     <string name="status">Status:</string>
-    <string name="TotalRes">Total Ore:</string>
+    <string name="TotalRes">Total Hours for day:</string>
     <string name="Status">Status:</string>
     <string name="back_to_team">Back</string>
     <string name="back_to_calendar">Back</string>
@@ -56,4 +56,13 @@
     <string name="hint_phone">Enter your mobile phone</string>
     <string name="register_number">Enter your register number</string>
     <string name="Add">Add</string>
+    <string name="Logout">Logout</string>
+    <string name="save">Save</string>
+    <string name="enter_new_phone_number">Enter new phone number</string>
+    <string name="detalii_angajati">Selectati un angajat pentru a ii vizualiza detaliile.</string>
+    <string name="nr_matricol">Nr Matricol:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="next">Next</string>
 </resources>

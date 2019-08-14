@@ -1,12 +1,15 @@
+/*
+ * Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
+ */
+
 package com.example.larisa.leavingpermissionapp.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
@@ -16,8 +19,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.larisa.leavingpermissionapp.Adapters.RecycleViewAdapterUser;
-import com.example.larisa.leavingpermissionapp.Model.LP;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +38,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.larisa.leavingpermissionapp.R.id.spinnerFrom;
+import static com.example.larisa.leavingpermissionapp.R.id.spinnerTo;
 import static java.lang.String.valueOf;
 
 public class RaportActivity extends AppCompatActivity {
@@ -47,7 +51,7 @@ public class RaportActivity extends AppCompatActivity {
     private TextView date;
     private TextView Nume;
     private Button Backraport;
-    public int minnn;
+    public int minutes;
     public int ora;
     private TextView TotalOre;
     private int day;
@@ -59,21 +63,22 @@ public class RaportActivity extends AppCompatActivity {
     private Float total;
     private String first = "";
     private String second = "";
-    private int minn;
     private String[] listFinal;
+    private String[] listFinalEdit;
     private boolean[] takenIntervals;
+    private boolean[] takenIntervalsEdit;
     private String monthActual;
     private String[] toListFirebase = new String[]{};
     private String[] fromListFirebase = new String[]{};
+    private String[] toListFirebaseEdit = new String[]{};
+    private String[] fromListFirebaseEdit = new String[]{};
     private String Flag;
     private int FromMinutes;
     private int FromHour;
     private String[] hourMinTo;
-    private  ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter;
     private ArrayAdapter<String> adapteredit;
-    private String LpTotal;
-    private String key ;
-    private LP LpList;
+    private String key;
     private Float TotalLpActual;
     private String[] hourMinFrom;
 
@@ -81,6 +86,7 @@ public class RaportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         listFinal = new String[24];
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raport);
         final String[] items = new String[]{"7:30", "8:00", "8:30", "9:00", "9:30",
@@ -90,14 +96,15 @@ public class RaportActivity extends AppCompatActivity {
 
         takenIntervals = new boolean[items.length];
         Arrays.fill(takenIntervals, false);
+        takenIntervalsEdit = new boolean[items.length];
+        Arrays.fill(takenIntervalsEdit, false);
         Confirm = findViewById(R.id.ConfirmButtonRaport);
-        From = findViewById(R.id.spinnerFrom);
-        To = findViewById(R.id.spinnerTo);
-        TotalOre = findViewById(R.id.TotalTextView);
+        From = findViewById(spinnerFrom);
+        To = findViewById(spinnerTo);
+        TotalOre = findViewById(R.id.lblUserRep);
         date = findViewById(R.id.editTextDate);
         Nume = findViewById(R.id.textViewNume);
         Backraport = findViewById(R.id.buttonBackRaport);
-        LpTotal = getIntent().getStringExtra("LpTotal");
         //If you get into this activity from editing you get "edit" in Flag
         //If you get into this activity from add you get "add" in the Flag
         Flag = getIntent().getStringExtra("Flag");
@@ -108,8 +115,8 @@ public class RaportActivity extends AppCompatActivity {
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total", 0);
         key = getIntent().getStringExtra("key");
-        TotalLpActual = getIntent().getFloatExtra("TotalLpActual",0);
-        monthActual =  getIntent().getStringExtra("monthActual");
+        TotalLpActual = getIntent().getFloatExtra("TotalLpActual", 0);
+        monthActual = getIntent().getStringExtra("monthActual");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         date.setText(day + " " + monthActual + " " + year);
 
@@ -117,10 +124,12 @@ public class RaportActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference functionRef = FirebaseDatabase.getInstance().getReference("Users");
         final DatabaseReference dbReference;
-        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
+        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
                 child(day + " " + monthActual + " " + year);
         final List<String> listFrom = new ArrayList<>();
         final List<String> listTo = new ArrayList<>();
+        final List<String> listFromEdit = new ArrayList<>();
+        final List<String> listToEdit = new ArrayList<>();
 
         //create listFrom and listTo from Firebase and generate listFinal
         dbReference.addValueEventListener(new ValueEventListener() {
@@ -129,25 +138,45 @@ public class RaportActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listFrom.clear();
                 listTo.clear();
+                listFromEdit.clear();
+                listToEdit.clear();
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         listFrom.add(valueOf(snapshot.child("from").getValue()));
                         listTo.add(valueOf(snapshot.child("to").getValue()));
+                        if (!snapshot.child("from").getValue().equals(fromEdit)) {
+                            listFromEdit.add(valueOf(snapshot.child("from").getValue()));
+                            listToEdit.add(valueOf(snapshot.child("to").getValue()));
+                        }
+
                     }
                 }
+
                 toListFirebase = new String[listFrom.size() + 1];
                 fromListFirebase = new String[listFrom.size() + 1];
-                takenIntervals = GetTakenInterval( listFrom,    listTo,  items );
-
-                    int i = 0;
-                    for (int j = 0; j < takenIntervals.length; j++) {
-                        if (takenIntervals[j] == false) {
-                            listFinal[i] = items[j];
-                            i++;
-                        }
+                toListFirebaseEdit = new String[listFrom.size() + 1];
+                fromListFirebaseEdit = new String[listFrom.size() + 1];
+                takenIntervals = GetTakenInterval(listFrom, listTo, items);
+                takenIntervalsEdit = GetTakenIntervalEdit(listFromEdit, listToEdit, items);
+                listFinalEdit = new String[takenIntervalsEdit.length];
+                int i = 0;
+                int k = 0;
+                for (int j = 0; j < takenIntervals.length; j++) {
+                    takenIntervalsEdit[j] = takenIntervals[j];
+                    if (takenIntervals[j] == false) {
+                        listFinal[i] = items[j];
+                        i++;
                     }
+                    if (takenIntervalsEdit[j] == false) {
+                        listFinalEdit[k] = items[j];
+                        k++;
+                    }
+                }
+
                 toListFirebase[listFrom.size()] = "20:00";
                 fromListFirebase[listFrom.size()] = "20:00";
+                toListFirebaseEdit[listFromEdit.size()] = "20:00";
+                fromListFirebaseEdit[listFromEdit.size()] = "20:00";
 
                 // create adapter
                 //If listFrom size = 0 then the adapter is made up of everything that contains items
@@ -155,24 +184,22 @@ public class RaportActivity extends AppCompatActivity {
                 if (listFrom.size() == 0) {
                     adapter = new ArrayAdapter<>(RaportActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, items);
-                }
-                else {
+                } else {
                     adapter = new ArrayAdapter<>(RaportActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, listFinal);
+
                 }
 
                 //Edit
-                if(Flag.equals("edit")){
+                if (Flag.equals("edit")) {
                     adapteredit = new ArrayAdapter<>(RaportActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, items);
                     From.setAdapter(adapteredit);
-                    To.setAdapter(adapteredit);
                     int positionFrom = indexOf(adapteredit, fromEdit);
-                    int positionTo = indexOf(adapteredit, toEdit);
+
                     From.setSelection(positionFrom);
-                    To.setSelection(positionTo);
-                    first=fromEdit;
-                    second=toEdit;
+                    first = fromEdit;
+                    second = toEdit;
                     Confirm.setText("EDIT");
                     //Select From Hour for LPEdit
                     From.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -183,6 +210,16 @@ public class RaportActivity extends AppCompatActivity {
                             FromMinutes = Integer.valueOf(hourMinFrom[1]);
                             FromHour = Integer.valueOf(hourMinFrom[0]);
                             hourMinTo = toEdit.split(":");
+                            List<String> ToListEdit = new ArrayList<>();
+                            //Generate ToList
+                            ToListEdit = GenerateList(listFromEdit, FromHour, FromMinutes, toListFirebaseEdit,
+                                    fromListFirebaseEdit);
+                            //create adapterTo
+                            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this,
+                                    android.R.layout.simple_spinner_dropdown_item, ToListEdit);
+                            To.setAdapter(adapterTo);
+                            final int positionTo = indexOf(adapterTo, toEdit);
+                            To.setSelection(positionTo);
                             SetTotal(hourMinFrom, hourMinTo);
                         }
 
@@ -193,7 +230,7 @@ public class RaportActivity extends AppCompatActivity {
 
                 }
                 //Add
-                else if (Flag.equals("add")){
+                else if (Flag.equals("add")) {
                     From.setAdapter(adapter);
                     Confirm.setText("ADD");
                     //Select From Hour from LPAdd
@@ -206,11 +243,13 @@ public class RaportActivity extends AppCompatActivity {
                             FromHour = Integer.valueOf(hourMinFrom[0]);
                             List<String> ToList = new ArrayList<>();
                             //Generate ToList
-                            ToList = GenerateList(listFrom, FromHour, FromMinutes);
+                            ToList = GenerateList(listFrom, FromHour, FromMinutes, toListFirebase, fromListFirebase);
                             //create adapterTo
-                            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this, android.R.layout.simple_spinner_dropdown_item, ToList);
+                            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(RaportActivity.this,
+                                    android.R.layout.simple_spinner_dropdown_item, ToList);
                             To.setAdapter(adapterTo);
                         }
+
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
                         }
@@ -227,10 +266,12 @@ public class RaportActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String nume = dataSnapshot.child("fullName").getValue(String.class);
+                    String nume = dataSnapshot.child("lastName").getValue(String.class) + " "
+                            + dataSnapshot.child("firstName").getValue(String.class);
                     Nume.setText(nume);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -245,42 +286,41 @@ public class RaportActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //Edit LP
-                if(Flag.equals("edit")) {
+                //Edit LeavingPermission
+                if (Flag.equals("edit")) {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     final DatabaseReference dbReference;
-                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LP").
-                            child(day+ " "+  monthActual+ " "+year);
+                    dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
+                            child(day + " " + monthActual + " " + year);
                     dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            //Create new LP after edit origin LP in Firebase
+                            //Create new LeavingPermission after edit origin LeavingPermission in Firebase
                             if (dataSnapshot.exists()) {
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
                                 Log.d("data", "exists");
                                 Float total;
-                                if (minnn == 30) {
+                                if (minutes == 30) {
                                     total = Float.valueOf(ora + ".5");
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
                                 }
-                                UUID id =  UUID.randomUUID();
-                                LP lp = new LP(id.toString(),nume, From.getSelectedItem().toString()
+                                UUID id = UUID.randomUUID();
+                                LeavingPermission leavingPermission = new LeavingPermission(id.toString(), nume, From.getSelectedItem().toString()
                                         , To.getSelectedItem().toString(), total, status);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance()
                                                 .getCurrentUser().getUid())
-                                        .child("LP").child(date.getText()
-                                        .toString()).child(time).setValue(lp);
+                                        .child("LeavingPermission").child(date.getText()
+                                        .toString()).child(time).setValue(leavingPermission);
                             }
-                            //Delete origin LP from Firebase
-                            if(dataSnapshot.exists()){
+                            //Delete origin LeavingPermission from Firebase
+                            if (dataSnapshot.exists()) {
 
-                                for(DataSnapshot snapshot : dataSnapshot.getChildren())
-                                {
-                                    if (snapshot.getKey().equals(key)){
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    if (snapshot.getKey().equals(key)) {
                                         snapshot.getRef().removeValue();
                                         return;
                                     }
@@ -297,23 +337,23 @@ public class RaportActivity extends AppCompatActivity {
 
                 }
                 //Add L
-                else if (Flag.equals("add")){
+                else if (Flag.equals("add")) {
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            //Add LP in Firebase
+                            //Add LeavingPermission in Firebase
                             if (dataSnapshot.exists()) {
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
                                 Log.d("data", "exists");
                                 Float total;
-                                if (minnn == 30) {
+                                if (minutes == 30) {
                                     total = Float.valueOf(valueOf(ora + ".5"));
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
                                 }
-                                UUID id =  UUID.randomUUID();
-                                LP lp = new LP(id.toString(),nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
-                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LP").child(date.getText().toString()).child(time).setValue(lp);
+                                UUID id = UUID.randomUUID();
+                                LeavingPermission leavingPermission = new LeavingPermission(id.toString(), nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("LeavingPermission").child(date.getText().toString()).child(time).setValue(leavingPermission);
                             }
                         }
 
@@ -338,11 +378,15 @@ public class RaportActivity extends AppCompatActivity {
         To.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 hourMinFrom = first.split(":");
-                               second = To.getSelectedItem().toString();
+                second = To.getSelectedItem().toString();
                 hourMinTo = second.split(":");
-                //Call Set Total to calculate the total hours on that LP
+                //Call Set Total to calculate the total hours on that LeavingPermission
                 SetTotal(hourMinFrom, hourMinTo);
+                if (first.equals(second)) {
+                    Confirm.setEnabled(false);
+                }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
 
@@ -366,7 +410,8 @@ public class RaportActivity extends AppCompatActivity {
     //The function to create a boolean list of the hours used
     //true-used
     //false-unused
-    boolean[] GetTakenInterval(List listFrom, List listTo , String[] items){
+    // and generate toListFirebase/ fromListFirebase for ADD
+    boolean[] GetTakenInterval(List listFrom, List listTo, String[] items) {
 
         if (listFrom.size() != 0) {
             boolean foundFirstEntry = false;
@@ -391,18 +436,48 @@ public class RaportActivity extends AppCompatActivity {
         return takenIntervals;
     }
 
+    //The function to create a boolean list of the hours used
+    //true-used
+    //false-unused
+    // and generate toListFirebase/ fromListFirebase for EDIT
+    boolean[] GetTakenIntervalEdit(List listFrom, List listTo, String[] items) {
+
+        if (listFrom.size() != 0) {
+            boolean foundFirstEntry = false;
+            for (int j = 0; j < listFrom.size(); j++) {
+                for (int i = 0; i < items.length; i++) {
+                    if (items[i].equals(listFrom.get(j))) {
+                        foundFirstEntry = true;
+                        takenIntervals[i] = true;
+                        fromListFirebaseEdit[j] = items[i];
+                    } else if (foundFirstEntry) {
+                        if (items[i].equals(listTo.get(j))) {
+                            foundFirstEntry = false;
+                            takenIntervals[i] = false;
+                            toListFirebaseEdit[j] = items[i];
+                        } else {
+                            takenIntervals[i] = true;
+                        }
+                    }
+                }
+            }
+        }
+        return takenIntervals;
+    }
+
     //Generate the To list based on existing time intervals
     //Removes existing time intervals in Firebase
-    List<String> GenerateList(List<String> listFrom, int FromHour, int FromMinutes) {
+    List<String> GenerateList(List<String> listFrom, int FromHour, int FromMinutes, String[] toListFirebase,
+                              String[] fromListFirebase) {
         Boolean ok = false;
         List<String> ToList = new ArrayList<>();
-        String[] FromListH = new String[listFrom.size()+1];
-        String[] FromListM = new String[listFrom.size()+1];
-        String[] ToListH = new String[listFrom.size()+1];
-        String[] ToListM = new String[listFrom.size()+1];
+        String[] FromListH = new String[listFrom.size() + 1];
+        String[] FromListM = new String[listFrom.size() + 1];
+        String[] ToListH = new String[listFrom.size() + 1];
+        String[] ToListM = new String[listFrom.size() + 1];
         int iterator;
         int index;
-        for (index = 0; index < listFrom.size()  +1 ; index++) {
+        for (index = 0; index < listFrom.size() + 1; index++) {
             String[] hourMinToListFirs = toListFirebase[index].split(":");
             String[] hourMinFromListFirst = fromListFirebase[index].split(":");
             FromListH[index] = hourMinFromListFirst[0];
@@ -430,13 +505,13 @@ public class RaportActivity extends AppCompatActivity {
                     FromHour++;
                 }
             }
-        }else if (listFrom.size() > 0){
-            for (iterator = 0; iterator < listFrom.size()+1; iterator++) {
-                for (index = 0; index < listFrom.size()+1 ; index++) {
-                    if ((FromHour < Integer.valueOf(FromListH[index]) && ok==false) ||
+        } else if (listFrom.size() > 0) {
+            for (iterator = 0; iterator < listFrom.size() + 1; iterator++) {
+                for (index = 0; index < listFrom.size() + 1; index++) {
+                    if ((FromHour < Integer.valueOf(FromListH[index]) && ok == false) ||
                             (FromHour == Integer.valueOf(FromListH[index]) &&
-                                    FromMinutes < Integer.valueOf(FromListM[index]) && ok==false) ) {
-                        ok=true;
+                                    FromMinutes < Integer.valueOf(FromListM[index]) && ok == false)) {
+                        ok = true;
                         while (FromHour < Integer.valueOf(FromListH[index])) {
                             if (((FromMinutes == Integer.valueOf(30)))) {
                                 ToList.add(FromHour + 1 + ":" + "00");
@@ -447,12 +522,12 @@ public class RaportActivity extends AppCompatActivity {
                                 ToList.add(FromHour + 1 + ":" + "00");
                                 FromHour++;
                             }
-                            if(FromMinutes != Integer.valueOf(30) &&
-                                    Integer.valueOf(FromListM[index]) == 30){
+                            if (FromMinutes != Integer.valueOf(30) &&
+                                    Integer.valueOf(FromListM[index]) == 30) {
                                 ToList.add(FromHour + ":" + 30);
                             }
                         }
-                   }
+                    }
                 }
             }
         }
@@ -460,19 +535,17 @@ public class RaportActivity extends AppCompatActivity {
     }
 
     //The function finds the index of the selected value
-    private int indexOf(final Adapter adapter, Object value)
-    {
-        for (int index = 0, count = adapter.getCount(); index < count; ++index)
-        {
-            if (adapter.getItem(index).equals(value))
-            {
+    private int indexOf(final Adapter adapter, Object value) {
+        for (int index = 0; index < adapter.getCount(); ++index) {
+            if (adapter.getItem(index).equals(value)) {
                 return index;
             }
         }
         return -1;
     }
+
     //Calculates the total hours on current Leaving Permission and does not allow to exceed 3 hours in total per day
-    void SetTotal (String[] hourMinFrom, String[] hourMinTo){
+    void SetTotal(String[] hourMinFrom, String[] hourMinTo) {
         int hourResult = 0;
         int minResult = 0;
         if (Integer.valueOf(hourMinTo[1]) < Integer.valueOf(hourMinFrom[1])) {
@@ -497,21 +570,26 @@ public class RaportActivity extends AppCompatActivity {
             minfin = 0;
         }
         Float result = null;
-        if(minResult==30){
+        if (minResult == 30) {
             result = Float.valueOf(hourResult + ".5");
-        }else
-        {
+        } else {
             result = Float.valueOf(hourResult);
         }
-        if ((((result + (total % 10) - TotalLpActual) > 3)||
+
+        if ((((result + (total % 10) - TotalLpActual) > 3) ||
                 ((((hourResult + (total % 10) + plus - TotalLpActual)) == 3)
                         && (minfin != 0)))) {
-            TotalOre.setText("Select again!");
+            TotalOre.setTextSize(14);
+            TotalOre.setText("You exceeded 3 hours a day. Choose another interval!");
             Confirm.setEnabled(false);
         } else {
+            TotalOre.setTextSize(18);
             TotalOre.setText(hourResult + " hours and " + minResult + " minutes");
+            if (hourResult == 0 && minResult == 0) {
+                Confirm.setEnabled(false);
+            }
             Confirm.setEnabled(true);
-            minnn = minResult;
+            minutes = minResult;
             ora = hourResult;
         }
 

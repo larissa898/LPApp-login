@@ -1,62 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ViewTeam">
+    tools:context=".Activity.ViewTeamActivity">
 
-    <TextView
-        android:id="@+id/welcomeText"
-        android:layout_width="405dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="216dp"
-        android:paddingBottom="3dp"
-        android:text="@string/lista_angajati"
-        android:textAlignment="gravity"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.056" />
+
+    <ImageView
+        android:id="@+id/unassignedUserIV"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_person_add"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleViewActivity"
-        android:layout_width="390dp"
-        android:layout_height="499dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.312"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.57" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/unassignedUserIV"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="14dp" />
 
 
     <Button
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
         android:id="@+id/confirmButton"
         android:layout_width="140dp"
         android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/confirm_button"
-        android:textStyle="bold"
-        android:textColor="@color/textColor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
         android:background="@color/buttonColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.958" />
+        android:text="@string/confirm_button"
+        android:textColor="@color/textColor"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
 
 
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
