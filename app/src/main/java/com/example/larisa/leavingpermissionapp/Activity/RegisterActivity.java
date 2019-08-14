@@ -45,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText registerNumber;
     private EditText phoneNumber;
     private FirebaseAuth mAuth;
+    private Button fileChooser;
 
 
     @Override
@@ -72,6 +73,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         function.setAdapter(adapter);
         confirmButton.setOnClickListener(this);
         cancelRegistration.setOnClickListener(this);
+
 
 
 
