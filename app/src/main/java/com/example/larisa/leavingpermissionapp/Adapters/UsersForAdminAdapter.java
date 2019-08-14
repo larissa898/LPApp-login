@@ -8,9 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.larisa.leavingpermissionapp.Activity.ItemClickListener;
@@ -21,15 +24,18 @@ import com.example.larisa.leavingpermissionapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersForAdminAdapter extends RecyclerView.Adapter<UsersForAdminAdapter.ViewHolder> {
+public class UsersForAdminAdapter extends RecyclerView.Adapter<UsersForAdminAdapter.ViewHolder> implements Filterable {
 
     private static final String TAG = "RecycleViewAdapterNoChe";
     private Context context;
     private List<User> users = new ArrayList<>();
+    private List<User> usersFull = new ArrayList<>();
 
     public UsersForAdminAdapter(Context context, List<User> users) {
         this.context = context;
         this.users = users;
+        usersFull = new ArrayList<>(users);
+
     }
 
 
@@ -49,14 +55,66 @@ public class UsersForAdminAdapter extends RecyclerView.Adapter<UsersForAdminAdap
             intent.putExtra("userData", user);
             context.startActivity(intent);
         });
-
-
     }
+
+
 
     @Override
     public int getItemCount() {
         return users.size();
     }
+
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+
+        // this method will return the filteredList to the publishResults methods
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<User> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(usersFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (User user : usersFull) {
+                    if (user.getFullName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(user);
+                    }
+                }
+            }
+
+//            Log.d(TAG, "@@@@@ performFiltering: filteredList = " + filteredList);
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            users.clear();
+            users.addAll((List) results.values);
+            Log.d(TAG, "@@@@@ publishResults: filteredList = " + results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+
+    public void setList(List<User> list) {
+        users.clear();
+        users.addAll(list);
+        Log.d(TAG, "@@@@@ setList: list=" + list);
+
+
+        this.notifyDataSetChanged();
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

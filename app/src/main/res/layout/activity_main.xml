@@ -13,9 +13,14 @@
         android:layout_height="100dp"
         android:layout_below="@id/iconIV"
         android:layout_centerHorizontal="true"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="209dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
 
     <ImageView
@@ -23,8 +28,8 @@
         android:layout_width="256dp"
         android:layout_height="94dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -40,8 +45,8 @@
         android:layout_below="@id/iconIV"
         android:layout_centerHorizontal="true"
 
-        android:layout_marginTop="32dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="32dp"
         android:hint="@string/hint_email"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,8 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/userNameET"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:hint="@string/password"
         android:importantForAutofill="no"
         android:inputType="textPassword"
@@ -76,8 +81,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@color/buttonColor"
         android:padding="10dp"
         android:text="@string/LoginButton"
