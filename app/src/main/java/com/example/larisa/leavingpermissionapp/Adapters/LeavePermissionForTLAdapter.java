@@ -60,8 +60,6 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter<LeavePermi
                 modifiedLP.put(leavingPermissions.get(position).getId(), leavingPermissions.get(position));
             }
         }));
-
-
     }
 
 

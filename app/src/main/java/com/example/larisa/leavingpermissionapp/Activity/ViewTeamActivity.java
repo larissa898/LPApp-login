@@ -60,9 +60,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     FirebaseOps firebaseOps;
 
 
-
-
-
     public void initUI() {
         recyclerView = findViewById(R.id.recycleViewActivity);
         recyclerView.setHasFixedSize(true);
@@ -73,9 +70,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         unassignedUserIV.setVisibility(View.GONE);
 
 //        checkUnassignedUsersExist();
-
-
-
 
 
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
@@ -104,10 +98,8 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         getSupportActionBar().setTitle("Leaving Permission App");
         usersList = new ArrayList<>();
 
-//        onUsersCallback();
 
-
-        // Fill recyclerView with team of currently loged in TeamLeader
+        // Fill recyclerView with team of currently logged in TeamLeader
         DatabaseReference currentUserRef = firebaseOps.getAllUsersRef();
         currentUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -116,7 +108,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
-
 
                         // if user in list has Team Leader fullName the same as the currently logged in user
                         if (user.getTeamLeader() != null && user.getTeamLeader().equals(CurrentUserManager.currentUser.getFullName()))
@@ -128,12 +119,9 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     recyclerView.setAdapter(usersForTeamLeaderAdapter);
                     usersForTeamLeaderAdapter.notifyDataSetChanged();
 
-
                 }
 
-
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -146,49 +134,43 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(ViewTeamActivity.this, FinalCalendar.class);
-                final List<LeavingPermission> leavingPermissionList = new ArrayList<>();
 
-                final DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
-                final int[] i = {0};
-                i[0] = 0;
+                Intent intent = new Intent(ViewTeamActivity.this, FinalCalendar.class);
+                List<LeavingPermission> leavingPermissionList = new ArrayList<>();
+                DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
 
-                for (final User u : usersForTeamLeaderAdapter.checkedUsers) {
-
-                    i[0]++;
+                for (User u : usersForTeamLeaderAdapter.checkedUsers) {
 
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                    if (snapshot.child("lastName").getValue().equals(u.getLastName())
-                                            && snapshot.child("firstName").getValue().equals(u.getFirstName())) {
-                                        for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
-                                            for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                                LeavingPermission leavingPermission = snapshot2.getValue(LeavingPermission.class);
+                                if (snapshot.child("lastName").getValue().equals(u.getLastName()) && snapshot.child("firstName").getValue().equals(u.getFirstName())) {
+                                    for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
+                                        for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
+                                            LeavingPermission leavingPermission = snapshot2.getValue(LeavingPermission.class);
 
-                                                String date = snapshot1.getKey();
-                                                String lastName = snapshot.child("lastName").getValue(String.class);
-                                                String firstName = snapshot.child("firstName").getValue(String.class);
+                                            String date = snapshot1.getKey();
+                                            String lastName = snapshot.child("lastName").getValue(String.class);
+                                            String firstName = snapshot.child("firstName").getValue(String.class);
 
-                                                String role = snapshot.child("role").getValue(String.class);
-                                                String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
-                                                String registrationNumber = snapshot.child("registrationNumber").getValue(String.class);
+                                            String role = snapshot.child("role").getValue(String.class);
+                                            String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
+                                            String registrationNumber = snapshot.child("registrationNumber").getValue(String.class);
 
-                                                User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
+                                            User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
 
-                                                leavingPermission.setUser(user);
+                                            leavingPermission.setUser(user);
 
-                                                leavingPermission.setData(date);
-                                                leavingPermissionList.add(leavingPermission);
+                                            leavingPermission.setData(date);
+                                            leavingPermissionList.add(leavingPermission);
 
-                                            }
                                         }
                                     }
                                 }
                             }
+
 
                             intent.putExtra("Lps", (Serializable) leavingPermissionList);
                             startActivity(intent);
@@ -285,7 +267,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     }
 
 
-
     @Override
     public void onUsersCallback() {
         List unassignedUsersList = new ArrayList();
@@ -309,10 +290,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     protected void onResume() {
         firebaseOps = FirebaseOps.getInstance();
         firebaseOps.setListener(this);
-
-        // when returning to this activity from UnassignedUsersActivity, onUsersCallback must be set back to this
-        // class's listener. It will trigger before it will be set. That's why it's called again here
-        //TODO: fix??
         onUsersCallback();
 
         super.onResume();

@@ -28,6 +28,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  Activity with calendar showing LeavingPermission requests for users selected by Team Leader in {@link ViewTeamActivity}
+ *  <br>
+ *  LeavingPermission neconfirmat = RED DOT
+ *  <br>
+ *  LeavingPermission confirmat = GREEN CIRCLE
+ */
 public class FinalCalendar extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private List<LeavingPermission> sendLeavingPermission = new ArrayList<>();

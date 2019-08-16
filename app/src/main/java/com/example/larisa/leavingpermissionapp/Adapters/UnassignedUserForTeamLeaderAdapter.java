@@ -19,6 +19,7 @@ import com.example.larisa.leavingpermissionapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class UnassignedUserForTeamLeaderAdapter extends RecyclerView.Adapter<UnassignedUserForTeamLeaderAdapter.ViewHolder> {
 
@@ -58,10 +59,8 @@ public class UnassignedUserForTeamLeaderAdapter extends RecyclerView.Adapter<Una
     }
 
     public void setList(List<User> newUsersList) {
-        Log.d(TAG, "setList: newUserList = " + newUsersList);
         users.clear();
         users.addAll(newUsersList);
-        Log.d(TAG, "setList: users = " + users);
         this.notifyDataSetChanged();
     }
 
@@ -83,9 +82,6 @@ public class UnassignedUserForTeamLeaderAdapter extends RecyclerView.Adapter<Una
             numeAngajat = v.findViewById(R.id.numeAngajat);
             checkBox = v.findViewById(R.id.checkAngajat);
             checkBox.setOnClickListener(this);
-//
-
-
         }
 
         public void setItemClickListener(ItemClickListener ic) {
