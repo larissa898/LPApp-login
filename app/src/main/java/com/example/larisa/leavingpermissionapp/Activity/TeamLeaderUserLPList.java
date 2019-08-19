@@ -43,9 +43,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LPCalendarList extends AppCompatActivity implements View.OnClickListener {
+public class TeamLeaderUserLPList extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "LPCalendarList";
+    private static final String TAG = "TeamLeaderUserLPList";
 
     private RecyclerView recyclerView;
     private LeavePermissionForTLAdapter leavePermissionForTLAdapter;
@@ -74,7 +74,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
             listDate.setText(leavingPermissionList.get(0).getData());
         }
 
-        leavePermissionForTLAdapter = new LeavePermissionForTLAdapter(LPCalendarList.this, leavingPermissionList);
+        leavePermissionForTLAdapter = new LeavePermissionForTLAdapter(TeamLeaderUserLPList.this, leavingPermissionList);
 
         recyclerView.setAdapter(leavePermissionForTLAdapter);
         leavePermissionForTLAdapter.notifyDataSetChanged();
@@ -105,7 +105,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                 search:
                                 {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        if (snapshot.child("fullName").getValue(String.class).equals(leavingPermission.getNume())) {
+                                        if (snapshot.child("fullName").getValue(String.class).equals(leavingPermission.getFullName())) {
                                             for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
                                                 if (snapshot1.getKey().equals(leavingPermission.getData())) {
                                                     for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
@@ -164,7 +164,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
 
 
                                                                     final InputStream stream =
-                                                                            LPCalendarList.this.getAssets().open(fullNume[0] + fullNume[1] + ".png");
+                                                                            TeamLeaderUserLPList.this.getAssets().open(fullNume[0] + fullNume[1] + ".png");
                                                                     byte[] imageBytes = IOUtils.toByteArray(stream);
                                                                     final int pictureIndex =
                                                                             myWorkBook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
@@ -184,7 +184,7 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                                     final Picture pict = drawing.createPicture(anchor, pictureIndex);
 
 
-                                                                    File path = LPCalendarList.this.getFilesDir();
+                                                                    File path = TeamLeaderUserLPList.this.getFilesDir();
 
                                                                     FileOutputStream outFile =
                                                                             new FileOutputStream(new File(path, "/" +

@@ -32,13 +32,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeavingPermissionList extends AppCompatActivity {
+/**
+ *
+ * Will open {@link RaportActivity} with the corresponding Flag.
+ * <br>
+ * Flag can be "add" or "edit".
+ */
+public class UserLeavingPermissionList extends AppCompatActivity {
+
+    private static final String TAG = "UserLeavingPermissionLi";
 
     // UI
-    public Button editButton;
-    private Button AddButton;
-    private TextView CurrentDay;
-    private LeavePermissionForUserAdapter recycleViewAdapter;
+    private Button AddBtn;
+    private TextView currentDayTV;
+    private LeavePermissionForUserAdapter adapter;
     private RecyclerView recyclerView;
     private TextView TotalOreZi;
 
@@ -55,10 +62,9 @@ public class LeavingPermissionList extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        CurrentDay = findViewById(R.id.textViewDayCurrent);
-        AddButton = findViewById(R.id.buttonAddList);
+        currentDayTV = findViewById(R.id.textViewDayCurrent);
+        AddBtn = findViewById(R.id.buttonAddList);
         TotalOreZi = findViewById(R.id.totalResult);
-        editButton = findViewById(R.id.editButton);
     }
 
     @Override
@@ -75,98 +81,69 @@ public class LeavingPermissionList extends AppCompatActivity {
 
         leavingPermissionList = new ArrayList<>();
 
+        actualDay = getIntent().getIntExtra("currentDayTV", 0);
+        actualMonth = getIntent().getIntExtra("currentMonth", 0);
+        actualYear = getIntent().getIntExtra("currentYear", 0);
+
         day = getIntent().getIntExtra("day", 0);
-        actualDay = getIntent().getIntExtra("actualDay", 0);
-        actualMonth = getIntent().getIntExtra("actualMonth", 0);
-        actualYear = getIntent().getIntExtra("actualYear", 0);
         month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
         monthActual = getIntent().getStringExtra("monthActual");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        CurrentDay.setText(day + " " + monthActual + " " + year);
+        currentDayTV.setText(day + " " + monthActual + " " + year);
 
-        final DatabaseReference dbReference;
-        dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
-                child(day + " " + monthActual + " " + year);
+        DatabaseReference LPSelectedDateRef = FirebaseDatabase.getInstance().getReference("Users")
+                .child(user.getUid()).child("LeavingPermission")
+                .child(day + " " + monthActual + " " + year);
 
-        //update with Firebase
-        dbReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                leavingPermissionList.clear();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                leavingPermissionList.clear();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                leavingPermissionList.clear();
-                if (leavingPermissionList.size() == 0) {
-                    Intent intent = new Intent(LeavingPermissionList.this, LeavingPermissionList.class);
-                    intent.putExtra("day", day);
-                    intent.putExtra("total", total);
-                    intent.putExtra("month", month);
-                    intent.putExtra("year", year);
-                    intent.putExtra("monthActual", monthActual);
-                    startActivity(intent);
-                    finish();
-                }
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
 
         //total H+M and LPList for this day from Firebase
-        dbReference.addValueEventListener(new ValueEventListener() {
+        LPSelectedDateRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    leavingPermissionList.clear();
                     float sum = 0;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         LeavingPermission leavingPermission = snapshot.getValue(LeavingPermission.class);
                         leavingPermissionList.add(leavingPermission);
-                        Log.i(LeavingPermissionList.class.getSimpleName(), "List Size: " + leavingPermissionList.size());
+
                         String h = snapshot.child("total").getValue().toString();
                         sum = sum + Float.parseFloat(h);
                         total = sum;
                     }
+
                     TotalOreZi.setText(String.valueOf(total));
                     if (total == 3.0) {
-                        AddButton.setEnabled(false);
+                        AddBtn.setEnabled(false);
                     }
-                    Current = String.valueOf(CurrentDay);
-                    recycleViewAdapter = new LeavePermissionForUserAdapter(LeavingPermissionList.this, leavingPermissionList, day, month,
-                            year, monthActual);
-                    recyclerView.setAdapter(recycleViewAdapter);
-                    recycleViewAdapter.notifyDataSetChanged();
+
+                    Current = String.valueOf(currentDayTV);
+                    adapter = new LeavePermissionForUserAdapter(UserLeavingPermissionList.this, leavingPermissionList, day, month, year, monthActual);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+                else {
+                    leavingPermissionList.clear();
+                    adapter = new LeavePermissionForUserAdapter(UserLeavingPermissionList.this, leavingPermissionList, day, month, year, monthActual);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: databaseError = " + databaseError.getDetails());
             }
 
         });
 
-        //AddButton
-        if ((day < actualDay && month < actualMonth && year < actualYear) || (month < actualMonth) || (year < actualYear) || (day < actualDay && month == actualMonth)) {
-            AddButton.setEnabled(false);
-        } else {
-            AddButton.setOnClickListener(new View.OnClickListener() {
+
+            AddBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String Flag = "add";
-                    Intent intent = new Intent(LeavingPermissionList.this, RaportActivity.class);
+                    Intent intent = new Intent(UserLeavingPermissionList.this, RaportActivity.class);
                     intent.putExtra("Flag", Flag);
                     intent.putExtra("day", day);
                     intent.putExtra("total", total);
@@ -175,10 +152,8 @@ public class LeavingPermissionList extends AppCompatActivity {
                     intent.putExtra("monthActual", monthActual);
                     Log.d("luna", String.valueOf(month));
                     startActivity(intent);
-                    finish();
                 }
             });
-        }
     }
 
 

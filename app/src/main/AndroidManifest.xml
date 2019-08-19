@@ -19,20 +19,20 @@
             android:theme="@style/AppTheme.NoActionBar.UnassignedUsersForTLActivity"></activity>
         <activity android:name=".Activity.RegisterActivity"></activity>
         <activity android:name=".Activity.AdminActivity" />
-        <activity android:name=".Activity.LPCalendarList" />
+        <activity android:name=".Activity.TeamLeaderUserLPList" />
         <activity android:name=".Activity.UserProfileActivity" />
         <activity android:name=".Activity.UserProfileAdminViewActivity" />
         <activity
             android:name=".Activity.SignatureActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".Activity.FinalCalendar" />
-        <activity android:name=".Activity.CalendarActivity" />
+        <activity android:name=".Activity.TeamLeaderCalendar" />
+        <activity android:name=".Activity.UserCalendarActivity" />
         <activity
             android:name=".Activity.ViewTeamActivity"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleTask" />
         <activity android:name=".Activity.RaportActivity" />
-        <activity android:name=".Activity.LeavingPermissionList" />
+        <activity android:name=".Activity.UserLeavingPermissionList" />
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize">

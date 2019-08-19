@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
-import com.example.larisa.leavingpermissionapp.Activity.CalendarActivity;
+import com.example.larisa.leavingpermissionapp.Activity.UserCalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
 import com.example.larisa.leavingpermissionapp.Model.User;
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
             startActivity(intent);
             finish();
         } else {
-            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+            Intent intent = new Intent(MainActivity.this, UserCalendarActivity.class);
             startActivity(intent);
             finish();
         }

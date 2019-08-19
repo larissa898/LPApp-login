@@ -15,15 +15,15 @@ public class LeavingPermission implements Serializable {
     private Float total;
     private String status;
     private String data;
-    private String nume;
+    private String fullName;
     private User user;
 
-    public String getNume() {
-        return nume;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setNume(String nume) {
-        this.nume = nume;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getData() {
@@ -37,34 +37,34 @@ public class LeavingPermission implements Serializable {
     public LeavingPermission() {
     }
 
-    public LeavingPermission(String id, String nume, String from, String to, Float total, String status) {
+    public LeavingPermission(String id, String fullName, String from, String to, Float total, String status) {
         this.id = id;
         this.from = from;
         this.to = to;
         this.total = total;
         this.status = status;
-        this.nume = nume;
+        this.fullName = fullName;
     }
 
 
-    public LeavingPermission(String id, String from, String to, Float total, String status, String nume, String data) {
+    public LeavingPermission(String id, String from, String to, Float total, String status, String fullName, String data) {
         this.id = id;
         this.from = from;
         this.to = to;
         this.total = total;
         this.status = status;
-        this.nume = nume;
+        this.fullName = fullName;
         this.data = data;
     }
 
-    public LeavingPermission(String id, String from, String to, Float total, String status, String data, String nume, User user) {
+    public LeavingPermission(String id, String from, String to, Float total, String status, String data, String fullName, User user) {
         this.id = id;
         this.from = from;
         this.to = to;
         this.total = total;
         this.status = status;
         this.data = data;
-        this.nume = nume;
+        this.fullName = fullName;
         this.user = user;
     }
 

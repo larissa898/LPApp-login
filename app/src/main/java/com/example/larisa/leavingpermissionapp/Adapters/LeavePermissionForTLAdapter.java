@@ -47,7 +47,7 @@ public class LeavePermissionForTLAdapter extends RecyclerView.Adapter<LeavePermi
     public void onBindViewHolder(LeavePermissionForTLAdapter.ViewHolder holder, final int position) {
 
         LeavingPermission leavingPermission = leavingPermissions.get(position);
-        holder.numeAngajat.setText(leavingPermission.getNume());
+        holder.numeAngajat.setText(leavingPermission.getFullName());
         holder.fromTime.setText(leavingPermission.getFrom());
         holder.toTime.setText(leavingPermission.getTo());
         holder.totalHours.setText(leavingPermission.getTotal().toString());

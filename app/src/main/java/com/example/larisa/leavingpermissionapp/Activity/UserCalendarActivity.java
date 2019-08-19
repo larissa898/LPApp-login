@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +32,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class CalendarActivity extends AppCompatActivity {
+public class UserCalendarActivity extends AppCompatActivity {
+
+    private static final String TAG = "UserCalendarActivity";
 
     private static final long DOUBLE_PRESS_INTERVAL = 250; // in millis
     private long lastPressTime;
@@ -39,9 +42,7 @@ public class CalendarActivity extends AppCompatActivity {
     private CalendarView calendarView;
     private boolean mHasDoubleClicked = false;
     private TextView Angajat;
-    int actualDay;
-    int actualMonth;
-    int actualYear;
+
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
     public String Current;
@@ -56,28 +57,16 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
         getSupportActionBar().setTitle("Leaving Permission App");
 
         //months of the year
-        final String[] strMonths = {"January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December"};
+        final String[] strMonths = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
         Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DATE);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentYear = calendar.get(Calendar.YEAR);
 
-        actualDay = calendar.get(Calendar.DATE);
-        actualMonth = calendar.get(Calendar.MONTH);
-        actualYear = calendar.get(Calendar.YEAR);
         calendarView = findViewById(R.id.calendarViewID);
         OpenDay = findViewById(R.id.OpenDay);
         recyclerView = findViewById(R.id.recyclerViewUser);
@@ -88,7 +77,9 @@ public class CalendarActivity extends AppCompatActivity {
             @SuppressLint("SimpleDateFormat")
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                @SuppressLint("DefaultLocale") String dateString = String.format("%d-%d-%d", year, month, dayOfMonth + 3);
+                @SuppressLint("DefaultLocale")
+                String dateString = String.format("%d-%d-%d", year, month, dayOfMonth + 3);
+
                 Date date = null;
                 try {
                     date = new SimpleDateFormat("yyyy-M-d").parse(dateString);
@@ -104,24 +95,21 @@ public class CalendarActivity extends AppCompatActivity {
                     //If it is weekend you can not add LPs
                     //Otherwise double click will send you the next activity <<Leaving Permission List>>
                     if (dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday"))) {
-                        Toast.makeText(getApplicationContext(), "It's weekend, choose a working day"
-                                , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "It's weekend, choose a working day", Toast.LENGTH_SHORT).show();
 
                     } else {
                         mHasDoubleClicked = true;
-                        Intent intent = new Intent(CalendarActivity.this
-                                , LeavingPermissionList.class);
-
+                        Intent intent = new Intent(UserCalendarActivity.this, UserLeavingPermissionList.class);
                         //Calculates the month according to the month number
                         actualM = strMonths[month];
                         intent.putExtra("day", dayOfMonth);
                         intent.putExtra("month", month);
                         intent.putExtra("year", year);
-                        intent.putExtra("actualDay", actualDay);
-                        intent.putExtra("actualMonth", actualMonth);
-                        intent.putExtra("actualYear", actualYear);
+                        intent.putExtra("currentDay", currentDay);
+                        intent.putExtra("currentMonth", currentMonth);
+                        intent.putExtra("currentYear", currentYear);
                         intent.putExtra("monthActual", actualM);
-                        Current = (actualDay + " " + actualMonth + " " + actualYear);
+                        Current = (currentDay + " " + currentMonth + " " + currentYear);
                         startActivity(intent);
                     }
                 } else {     // If not double click....
@@ -154,17 +142,17 @@ public class CalendarActivity extends AppCompatActivity {
         OpenDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CalendarActivity.this
-                        , LeavingPermissionList.class);
+                Intent intent = new Intent(UserCalendarActivity.this
+                        , UserLeavingPermissionList.class);
                 actualM = strMonths[mMonth];
                 intent.putExtra("day", mDayOfMonth);
                 intent.putExtra("month", mMonth);
                 intent.putExtra("year", mYear);
-                intent.putExtra("actualDay", actualDay);
-                intent.putExtra("actualMonth", actualMonth);
-                intent.putExtra("actualYear", actualYear);
+                intent.putExtra("currentDay", currentDay);
+                intent.putExtra("currentMonth", currentMonth);
+                intent.putExtra("currentYear", currentYear);
                 intent.putExtra("monthActual", actualM);
-                Current = (actualDay + " " + actualMonth + " " + actualYear);
+                Current = (currentDay + " " + currentMonth + " " + currentYear);
                 startActivity(intent);
             }
         });
@@ -181,12 +169,12 @@ public class CalendarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_userProfile:
-                startActivity(new Intent(CalendarActivity.this, UserProfileActivity.class));
+                startActivity(new Intent(UserCalendarActivity.this, UserProfileActivity.class));
                 return true;
 
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
+                Intent intent = new Intent(UserCalendarActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

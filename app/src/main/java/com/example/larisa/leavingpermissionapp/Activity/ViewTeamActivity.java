@@ -69,7 +69,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
         unassignedUserIV.setVisibility(View.GONE);
 
-//        checkUnassignedUsersExist();
 
 
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +134,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(ViewTeamActivity.this, FinalCalendar.class);
+                Intent intent = new Intent(ViewTeamActivity.this, TeamLeaderCalendar.class);
                 List<LeavingPermission> leavingPermissionList = new ArrayList<>();
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -144,24 +143,30 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            for (DataSnapshot USERss : dataSnapshot.getChildren()) {
 
-                                User userr = snapshot.getValue(User.class);
-                                Log.d(TAG, "onDataChange: userr = " + userr);
+                                User dbUser = USERss.getValue(User.class);
 
-                                if (userr.getId().equals(checkedUser.getId())) {
-                                    Log.d(TAG, "onDataChange: LP =" + userr.getLeavingPermissionList());
-                                    for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
-                                        for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
-                                            LeavingPermission leavingPermission = snapshot2.getValue(LeavingPermission.class);
+                                if (dbUser.getId().equals(checkedUser.getId())) {
 
-                                            String date = snapshot1.getKey();
-                                            String lastName = snapshot.child("lastName").getValue(String.class);
-                                            String firstName = snapshot.child("firstName").getValue(String.class);
+                                    // e goala pt ca nu e structurata baza de date incat sa aiba o lista de LP-uri
+                                    Log.d(TAG, "onDataChange: LP =" + dbUser.getLeavingPermissionList());
 
-                                            String role = snapshot.child("role").getValue(String.class);
-                                            String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
-                                            String registrationNumber = snapshot.child("registrationNumber").getValue(String.class);
+                                    // for each DATE format in db : day-month-year
+                                    for (DataSnapshot DATEss : USERss.child("LeavingPermission").getChildren()) {
+
+                                        // for each TIME (hh:mm:ss) in a DATE. this represents a LeavingPermission
+                                        for (DataSnapshot TIMEss : DATEss.getChildren()) {
+
+                                            LeavingPermission leavingPermission = TIMEss.getValue(LeavingPermission.class);
+
+                                            String date = DATEss.getKey();
+                                            String lastName = USERss.child("lastName").getValue(String.class);
+                                            String firstName = USERss.child("firstName").getValue(String.class);
+
+                                            String role = USERss.child("role").getValue(String.class);
+                                            String phoneNumber = USERss.child("phoneNumber").getValue(String.class);
+                                            String registrationNumber = USERss.child("registrationNumber").getValue(String.class);
 
                                             User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
 

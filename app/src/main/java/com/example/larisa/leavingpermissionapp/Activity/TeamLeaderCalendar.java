@@ -34,8 +34,13 @@ import java.util.List;
  *  LeavingPermission neconfirmat = RED DOT
  *  <br>
  *  LeavingPermission confirmat = GREEN CIRCLE
+ *  <br>
+ *  Long-clicking a date with a {@link LeavingPermission} object inside it will open {@link TeamLeaderUserLPList} Activity
  */
-public class FinalCalendar extends AppCompatActivity {
+public class TeamLeaderCalendar extends AppCompatActivity {
+
+    private static final String TAG = "TeamLeaderCalendar";
+    
     private MaterialCalendarView calendarView;
     private List<LeavingPermission> sendLeavingPermission = new ArrayList<>();
     private Button backToTeam;
@@ -45,6 +50,7 @@ public class FinalCalendar extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        Log.d(TAG, "onCreate: zzzzzzzzzzzz" + TAG);
 
         final List<LeavingPermission> leavingPermissions = (List<LeavingPermission>) intent.getSerializableExtra("Lps");
         setContentView(R.layout.activity_final_calendar);
@@ -96,7 +102,7 @@ public class FinalCalendar extends AppCompatActivity {
                 @Override
                 public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
                     if (EventDays.contains(date)) {
-                        Intent intent = new Intent(FinalCalendar.this, LPCalendarList.class);
+                        Intent intent = new Intent(TeamLeaderCalendar.this, TeamLeaderUserLPList.class);
                         for (LeavingPermission leavingPermission : leavingPermissions) {
                             if (dayConverter(leavingPermission.getData()).equals(date)) {
                                 sendLeavingPermission.add(leavingPermission);
@@ -115,7 +121,7 @@ public class FinalCalendar extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(FinalCalendar.this, ViewTeamActivity.class);
+                Intent intent = new Intent(TeamLeaderCalendar.this, ViewTeamActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
