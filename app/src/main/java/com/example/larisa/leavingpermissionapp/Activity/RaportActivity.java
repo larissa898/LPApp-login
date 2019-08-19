@@ -361,7 +361,7 @@ public class RaportActivity extends AppCompatActivity {
                 }
                 //Create new Intent
                 //When press Confirm Button redirection in Leaving Permission List
-//                Intent intent = new Intent(RaportActivity.this, UserLeavingPermissionList.class);
+//                Intent intent = new Intent(RaportActivity.this, UserLPList.class);
 //                intent.putExtra("day", day);
 //                intent.putExtra("month", month);
 //                intent.putExtra("year", year);
@@ -394,7 +394,7 @@ public class RaportActivity extends AppCompatActivity {
         Backraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RaportActivity.this, UserLeavingPermissionList.class);
+                Intent intent = new Intent(RaportActivity.this, UserLPList.class);
                 intent.putExtra("day", day);
                 intent.putExtra("month", month);
                 intent.putExtra("year", year);

@@ -8,10 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
@@ -28,13 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  Activity with calendar showing LeavingPermission requests for users selected by Team Leader in {@link ViewTeamActivity}
+ *  Activity with calendar showing LeavingPermission requests for users selected by Team Leader in {@link TeamLeaderViewTeam}
  *  <br>
  *  LeavingPermission neconfirmat = RED DOT
  *  <br>
  *  LeavingPermission confirmat = GREEN CIRCLE
  *  <br>
- *  Long-clicking a date with a {@link LeavingPermission} object inside it will open {@link TeamLeaderUserLPList} Activity
+ *  Long-clicking a date with a {@link LeavingPermission} object inside it will open {@link TeamLeaderLPList} Activity
  */
 public class TeamLeaderCalendar extends AppCompatActivity {
 
@@ -103,7 +100,7 @@ public class TeamLeaderCalendar extends AppCompatActivity {
                 @Override
                 public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
                     if (EventDays.contains(date)) {
-                        Intent intent = new Intent(TeamLeaderCalendar.this, TeamLeaderUserLPList.class);
+                        Intent intent = new Intent(TeamLeaderCalendar.this, TeamLeaderLPList.class);
                         for (LeavingPermission leavingPermission : leavingPermissions) {
                             if (dayConverter(leavingPermission.getData()).equals(date)) {
                                 sendLeavingPermission.add(leavingPermission);

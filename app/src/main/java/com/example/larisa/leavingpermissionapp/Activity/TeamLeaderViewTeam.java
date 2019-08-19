@@ -42,14 +42,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewTeamActivity extends AppCompatActivity implements Serializable, FirebaseOpsListener {
+public class TeamLeaderViewTeam extends AppCompatActivity implements Serializable, FirebaseOpsListener {
 
-    private static final String TAG = "ViewTeamActivity";
+    private static final String TAG = "TeamLeaderViewTeam";
 
     // UI
     private RecyclerView recyclerView;
     private UsersForTeamLeaderAdapter usersForTeamLeaderAdapter;
-    private Button confirmButton;
+    private Button selectButton;
     private ImageView unassignedUserIV;
 
     // Vars
@@ -65,7 +65,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        confirmButton = findViewById(R.id.confirmButton);
+        selectButton = findViewById(R.id.confirmButton);
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
         unassignedUserIV.setVisibility(View.GONE);
 
@@ -74,7 +74,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ViewTeamActivity.this, UnassignedUsersActivity.class));
+                startActivity(new Intent(TeamLeaderViewTeam.this, TeamLeaderUnassignedUsersList.class));
 
             }
         });
@@ -114,7 +114,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
                     }
 
-                    usersForTeamLeaderAdapter = new UsersForTeamLeaderAdapter(ViewTeamActivity.this, usersList);
+                    usersForTeamLeaderAdapter = new UsersForTeamLeaderAdapter(TeamLeaderViewTeam.this, usersList);
                     recyclerView.setAdapter(usersForTeamLeaderAdapter);
                     usersForTeamLeaderAdapter.notifyDataSetChanged();
 
@@ -129,12 +129,10 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         });
 
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-
+        selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(ViewTeamActivity.this, TeamLeaderCalendar.class);
+                Intent intent = new Intent(TeamLeaderViewTeam.this, TeamLeaderCalendar.class);
                 List<LeavingPermission> leavingPermissionList = new ArrayList<>();
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -142,17 +140,14 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot USERss : dataSnapshot.getChildren()) {
-
-                                User dbUser = USERss.getValue(User.class);
-
+                            leavingPermissionList.clear();
+                            for (DataSnapshot userDataSnapshot : dataSnapshot.getChildren()) {
+                                User dbUser = userDataSnapshot.getValue(User.class);
                                 if (dbUser.getId().equals(checkedUser.getId())) {
-
                                     // e goala pt ca nu e structurata baza de date incat sa aiba o lista de LP-uri
                                     Log.d(TAG, "onDataChange: LP =" + dbUser.getLeavingPermissionList());
-
                                     // for each DATE format in db : day-month-year
-                                    for (DataSnapshot DATEss : USERss.child("LeavingPermission").getChildren()) {
+                                    for (DataSnapshot DATEss : userDataSnapshot.child("LeavingPermission").getChildren()) {
 
                                         // for each TIME (hh:mm:ss) in a DATE. this represents a LeavingPermission
                                         for (DataSnapshot TIMEss : DATEss.getChildren()) {
@@ -160,31 +155,26 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                                             LeavingPermission leavingPermission = TIMEss.getValue(LeavingPermission.class);
 
                                             String date = DATEss.getKey();
-                                            String lastName = USERss.child("lastName").getValue(String.class);
-                                            String firstName = USERss.child("firstName").getValue(String.class);
+                                            String lastName = userDataSnapshot.child("lastName").getValue(String.class);
+                                            String firstName = userDataSnapshot.child("firstName").getValue(String.class);
 
-                                            String role = USERss.child("role").getValue(String.class);
-                                            String phoneNumber = USERss.child("phoneNumber").getValue(String.class);
-                                            String registrationNumber = USERss.child("registrationNumber").getValue(String.class);
+                                            String role = userDataSnapshot.child("role").getValue(String.class);
+                                            String phoneNumber = userDataSnapshot.child("phoneNumber").getValue(String.class);
+                                            String registrationNumber = userDataSnapshot.child("registrationNumber").getValue(String.class);
 
                                             User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
 
                                             leavingPermission.setUser(user);
-
                                             leavingPermission.setData(date);
                                             leavingPermissionList.add(leavingPermission);
-
                                         }
                                     }
                                 }
                             }
-
-
+                            //TODO: move INTENT into selectButton on click AND/OR move onDataChange into TeamLeaderLPList
                             intent.putExtra("Lps", (Serializable) leavingPermissionList);
                             startActivity(intent);
-
                         }
-
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -194,36 +184,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                     });
 
                 }
-
-
-                dbReference.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        leavingPermissionList.clear();
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
             }
 
 
@@ -259,13 +219,13 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_userProfile:
-                startActivity(new Intent(ViewTeamActivity.this, UserProfileActivity.class));
+                startActivity(new Intent(TeamLeaderViewTeam.this, UserProfileActivity.class));
                 return true;
 
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
 
-                Intent intent = new Intent(ViewTeamActivity.this, MainActivity.class);
+                Intent intent = new Intent(TeamLeaderViewTeam.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

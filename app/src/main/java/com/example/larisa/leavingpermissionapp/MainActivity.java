@@ -22,10 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.larisa.leavingpermissionapp.Activity.AdminActivity;
 import com.example.larisa.leavingpermissionapp.Activity.UserCalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
-import com.example.larisa.leavingpermissionapp.Activity.ViewTeamActivity;
+import com.example.larisa.leavingpermissionapp.Activity.TeamLeaderViewTeam;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
@@ -178,13 +177,9 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
     }
 
     public void openActivityForRole(String role) {
-        if (role.equals("admin")) {
-            openActivityForRoleIntent = new Intent(MainActivity.this, AdminActivity.class);
-            startActivity(openActivityForRoleIntent);
-            finish();
-        } else if (role.equals("Team Leader")) {
+       if (role.equals("Team Leader")) {
             Log.d("Query", "This is a team leader");
-            openActivityForRoleIntent = new Intent(MainActivity.this, ViewTeamActivity.class);
+            openActivityForRoleIntent = new Intent(MainActivity.this, TeamLeaderViewTeam.class);
             startActivity(openActivityForRoleIntent);
             finish();
         } else {

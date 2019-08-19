@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -99,7 +98,7 @@ public class UserCalendarActivity extends AppCompatActivity {
 
                     } else {
                         mHasDoubleClicked = true;
-                        Intent intent = new Intent(UserCalendarActivity.this, UserLeavingPermissionList.class);
+                        Intent intent = new Intent(UserCalendarActivity.this, UserLPList.class);
                         //Calculates the month according to the month number
                         actualM = strMonths[month];
                         intent.putExtra("day", dayOfMonth);
@@ -142,7 +141,7 @@ public class UserCalendarActivity extends AppCompatActivity {
         OpenDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(UserCalendarActivity.this, UserLeavingPermissionList.class);
+                Intent intent = new Intent(UserCalendarActivity.this, UserLPList.class);
                 actualM = strMonths[mMonth];
                 intent.putExtra("day", mDayOfMonth);
                 intent.putExtra("month", mMonth);

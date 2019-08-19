@@ -29,9 +29,9 @@ import java.util.List;
 /**
  *
  */
-public class UnassignedUsersActivity extends AppCompatActivity implements FirebaseOpsListener, View.OnClickListener {
+public class TeamLeaderUnassignedUsersList extends AppCompatActivity implements FirebaseOpsListener, View.OnClickListener {
 
-    private static final String TAG = "UnassignedUsersActivity";
+    private static final String TAG = "TeamLeaderUnassignedUsersList";
 
     // UI
     private RelativeLayout rL;

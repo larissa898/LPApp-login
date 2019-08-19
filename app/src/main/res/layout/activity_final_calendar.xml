@@ -27,18 +27,4 @@
         app:mcv_selectionColor="#d1c4e9"
         app:mcv_showOtherDates="all" />
 
-    <!--<Button-->
-        <!--android:id="@+id/backToTeam"-->
-        <!--android:layout_width="98dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_below="@id/calendarView"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:background="@color/buttonColor"-->
-        <!--android:text="@string/back_to_team"-->
-        <!--android:textColor="@color/textColor"-->
-        <!--android:textStyle="bold" />-->
-
-
-
-
 </RelativeLayout>
