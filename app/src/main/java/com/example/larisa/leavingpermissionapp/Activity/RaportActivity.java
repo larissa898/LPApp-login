@@ -118,7 +118,7 @@ public class RaportActivity extends AppCompatActivity {
         month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total", 0);
-        key = getIntent().getStringExtra("key");
+        key = getIntent().getStringExtra("key");    //TODO: never used. delete ?
         LPid = getIntent().getStringExtra("idLp");
         TotalLpActual = getIntent().getFloatExtra("TotalLpActual", 0);
         monthActual = getIntent().getStringExtra("monthActual");

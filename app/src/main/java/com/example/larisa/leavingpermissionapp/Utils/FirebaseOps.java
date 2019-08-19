@@ -70,6 +70,7 @@ public class FirebaseOps {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         User someUser = issue.getValue(User.class);
                         users.add(someUser);
+                        Log.d(TAG, "www onDataChange: users = " + users);
 
                     }
 

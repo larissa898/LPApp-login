@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
     private static final String TAG = "MainActivity";
     private FirebaseOps firebaseOps;
     private CurrentUserManager currentUserManager;
+    private Intent openActivityForRoleIntent = null;
 
     // UI
     private Button loginButton;
@@ -178,17 +179,17 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
 
     public void openActivityForRole(String role) {
         if (role.equals("admin")) {
-            Intent intent = new Intent(MainActivity.this, AdminActivity.class);
-            startActivity(intent);
+            openActivityForRoleIntent = new Intent(MainActivity.this, AdminActivity.class);
+            startActivity(openActivityForRoleIntent);
             finish();
         } else if (role.equals("Team Leader")) {
             Log.d("Query", "This is a team leader");
-            Intent intent = new Intent(MainActivity.this, ViewTeamActivity.class);
-            startActivity(intent);
+            openActivityForRoleIntent = new Intent(MainActivity.this, ViewTeamActivity.class);
+            startActivity(openActivityForRoleIntent);
             finish();
         } else {
-            Intent intent = new Intent(MainActivity.this, UserCalendarActivity.class);
-            startActivity(intent);
+            openActivityForRoleIntent = new Intent(MainActivity.this, UserCalendarActivity.class);
+            startActivity(openActivityForRoleIntent);
             finish();
         }
     }
@@ -243,8 +244,12 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
 
     @Override
     public void onCurrentUserRetrieved(User user) {
-        toggleProgressBar();
-        openActivityForRole(user.getRole());
+
+        if (openActivityForRoleIntent == null) {
+            toggleProgressBar();
+            openActivityForRole(user.getRole());
+        }
+
     }
 }
 

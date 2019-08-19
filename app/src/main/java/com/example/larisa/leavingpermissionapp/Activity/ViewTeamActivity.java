@@ -139,7 +139,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
 
                 for (User checkedUser : usersForTeamLeaderAdapter.checkedUsers) {
-
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -197,7 +196,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                 }
 
 
-                Log.d(TAG, String.valueOf(leavingPermissionList.size()));
                 dbReference.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

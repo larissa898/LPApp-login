@@ -142,8 +142,7 @@ public class UserCalendarActivity extends AppCompatActivity {
         OpenDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(UserCalendarActivity.this
-                        , UserLeavingPermissionList.class);
+                Intent intent = new Intent(UserCalendarActivity.this, UserLeavingPermissionList.class);
                 actualM = strMonths[mMonth];
                 intent.putExtra("day", mDayOfMonth);
                 intent.putExtra("month", mMonth);

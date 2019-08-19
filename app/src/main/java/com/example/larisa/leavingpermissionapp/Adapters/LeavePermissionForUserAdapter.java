@@ -178,37 +178,14 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePer
                         }
                     });
 
-//                    dbReference.addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            if (dataSnapshot.exists()) {
-//                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                    if (snapshot.child("from").getValue()
-//                                            .equals(lplp.getFrom()) && snapshot.child("to").getValue().equals(lplp.getTo())) {
-//                                        Log.d(TAG, "onDataChange: calling REMOVE VALUE");
-//
-//                                        snapshot.getRef().removeValue();
-//                                        dialog.dismiss();
-//                                        permissionArrayList.clear();
-//                                    }
-//                                }
-//                                notifyDataSetChanged();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                            Log.d(TAG, "onCancelled: dbErroe = " + databaseError.getDetails());
-//                        }
-//
-//                    });
+
                 }
             });
         }
 
         //Edit Lp
         //When editing an item you are redirected to report activity
-        //Submit a Flag= "edit" that says you are editing and sending the necessary data from this activity
+        //Submit a Flag = "edit" that says you are editing and sending the necessary data from this activity
         public void editLp(final int id, final LeavingPermission leavingPermission, final View view) {
 
             String[] key = new String[6];
@@ -244,7 +221,7 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePer
                     intent.putExtra("fromEdit", leavingPermission.getFrom());
                     intent.putExtra("toEdit", leavingPermission.getTo());
                     intent.putExtra("LpTotal", LpTotal);
-                    intent.putExtra("key", keyLP);
+                    intent.putExtra("key", keyLP);      //TODO: never used. delete ?
                     intent.putExtra("total", total);
                     intent.putExtra("idLp", leavingPermission.getId());
                     intent.putExtra("TotalLpActual", leavingPermission.getTotal());
