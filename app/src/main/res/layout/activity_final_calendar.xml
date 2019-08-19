@@ -38,17 +38,6 @@
         <!--android:textColor="@color/textColor"-->
         <!--android:textStyle="bold" />-->
 
-    <Button
-        android:id="@+id/backtoTeamButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/buttonColor"
-        android:text="@string/back_to_team"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textColor="@color/textColor"
-        android:layout_marginBottom="30dp"/>
 
 
 

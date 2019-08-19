@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -49,8 +50,6 @@ public class TeamLeaderUserLPList extends AppCompatActivity implements View.OnCl
 
     private RecyclerView recyclerView;
     private LeavePermissionForTLAdapter leavePermissionForTLAdapter;
-    private List<LeavingPermission> leavingPermissionList;
-    private Button backToCalendar;
     private Button doneConfirming;
     private TextView listDate;
 
@@ -58,6 +57,11 @@ public class TeamLeaderUserLPList extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_lpcalendar_list);
 
         listDate = findViewById(R.id.lpListDate);
@@ -65,7 +69,6 @@ public class TeamLeaderUserLPList extends AppCompatActivity implements View.OnCl
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        this.leavingPermissionList = new ArrayList<>();
         Intent intent = getIntent();
         List<LeavingPermission> leavingPermissionList = (List<LeavingPermission>) intent.getSerializableExtra("TodayLP");
 
@@ -78,11 +81,9 @@ public class TeamLeaderUserLPList extends AppCompatActivity implements View.OnCl
 
         recyclerView.setAdapter(leavePermissionForTLAdapter);
         leavePermissionForTLAdapter.notifyDataSetChanged();
-        backToCalendar = findViewById(R.id.backToCalendar);
         doneConfirming = findViewById(R.id.finishedReviewing);
 
 
-        backToCalendar.setOnClickListener(this);
         doneConfirming.setOnClickListener(this);
 
 
@@ -198,43 +199,18 @@ public class TeamLeaderUserLPList extends AppCompatActivity implements View.OnCl
                                                                     e.printStackTrace();
                                                                 }
                                                                 snapshot2.child("status").getRef().setValue("confirmat");
-//
-
-//
-
                                                             } else {
-//                                                               snapshot2.child("status").getRef().setValue("");
                                                                 snapshot2.child("status").getRef().setValue("refuzat");
-//
-//
-//
 
                                                             }
-
-
                                                         }
-
-//
-//
                                                     }
                                                 }
-
-//
-
                                             }
-//
-
                                         }
-//
-
-//
-//
                                     }
-
                                 }
                             }
-
-
                         }
 
                         @Override
@@ -245,14 +221,17 @@ public class TeamLeaderUserLPList extends AppCompatActivity implements View.OnCl
                 }
                 finish();
                 break;
-
-
-            case R.id.backToCalendar:
-                finish();
-                break;
-
-
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

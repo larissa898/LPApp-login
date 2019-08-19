@@ -5,11 +5,11 @@
 package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,7 +20,6 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
-import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -43,56 +42,58 @@ public class TeamLeaderCalendar extends AppCompatActivity {
     
     private MaterialCalendarView calendarView;
     private List<LeavingPermission> sendLeavingPermission = new ArrayList<>();
-    private Button backToTeam;
     public CalendarDay newDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        Log.d(TAG, "onCreate: zzzzzzzzzzzz" + TAG);
+
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final List<LeavingPermission> leavingPermissions = (List<LeavingPermission>) intent.getSerializableExtra("Lps");
         setContentView(R.layout.activity_final_calendar);
         calendarView = findViewById(R.id.calendarView);
         final List<CalendarDay> EventDays = new ArrayList<>();
-        backToTeam = findViewById(R.id.backtoTeamButton);
 
-
+        boolean flag[]={false};
         for (final LeavingPermission leavingPermission : leavingPermissions) {
 
             if (leavingPermission.getStatus().equals("neconfirmat")) {
                 String dateFormat = leavingPermission.getData();
-                final CalendarDay newDate = dayConverter(dateFormat);
-                Log.d("Avfdvgsfs", newDate.toString());
+                final CalendarDay date = dayConverter(dateFormat);
                 calendarView.addDecorator(new DayViewDecorator() {
                     @Override
                     public boolean shouldDecorate(CalendarDay day) {
-                        if (newDate.equals(day)) {
+                        if (date.equals(day)) {
                             EventDays.add(day);
                         }
-                        return newDate.equals(day);
+                        return date.equals(day);
                     }
 
                     @Override
                     public void decorate(DayViewFacade view) {
-                        view.addSpan(new DotSpan(Color.RED));
+                        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.redcircle));
+                        flag[date.describeContents()] = true;
                     }
                 });
             } else {
                 String dateFormat = leavingPermission.getData();
-                final CalendarDay newDate = dayConverter(dateFormat);
+                final CalendarDay date = dayConverter(dateFormat);
                 calendarView.addDecorator(new DayViewDecorator() {
                     public boolean shouldDecorate(CalendarDay day) {
-                        if (newDate.equals(day)) {
+                        if (date.equals(day)) {
                             EventDays.add(day);
                         }
-                        return newDate.equals(day);
+                        return date.equals(day);
                     }
 
                     public void decorate(DayViewFacade view) {
-                        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.greencircle2));
-
+                        if(!flag[date.describeContents()]) {
+                            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.greencircle));
+                        }
                     }
                 });
             }
@@ -117,16 +118,6 @@ public class TeamLeaderCalendar extends AppCompatActivity {
         }
 
 
-        backToTeam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(TeamLeaderCalendar.this, ViewTeamActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
     }
 
     CalendarDay dayConverter(String date) {
@@ -143,11 +134,14 @@ public class TeamLeaderCalendar extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        finish();
-        Intent intent = new Intent(this, ViewTeamActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

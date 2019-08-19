@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
-  -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,15 +8,15 @@
     tools:context=".Activity.LPCalendarList">
 
     <TextView
-            android:id="@+id/lpListDate"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginTop="12dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_centerHorizontal="true"
-            />
+        android:id="@+id/lpListDate"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="12dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleViewLP"
@@ -30,36 +28,20 @@
         android:layout_marginStart="14dp"
         android:layout_above="@+id/backToCalendar"
         android:layout_marginTop="8dp"
-       />
-
-    <Button
-        android:id="@+id/backToCalendar"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="40dp"
-        android:text="@string/back_to_calendar"
-        android:textStyle="bold"
-        android:textColor="@color/textColor"
-        android:layout_alignParentBottom="true"
-        android:background="@color/buttonColor"
         />
 
     <Button
-        android:layout_alignParentEnd="true"
         android:id="@+id/finishedReviewing"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="8dp"
-        android:text="@string/done_confirming"
-        android:textStyle="bold"
-        android:textColor="@color/textColor"
-        android:background="@color/buttonColor"
+
         android:layout_alignParentBottom="true"
-         />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp"
+        android:background="@color/buttonColor"
+        android:text="@string/done_confirming"
+        android:textColor="@color/textColor"
+        android:textStyle="bold" />
 
 
 
