@@ -35,8 +35,8 @@ import java.util.List;
 public class LeavingPermissionList extends AppCompatActivity {
 
     // UI
-    private Button AddButton;
     public Button editButton;
+    private Button AddButton;
     private TextView CurrentDay;
     private LeavePermissionForUserAdapter recycleViewAdapter;
     private RecyclerView recyclerView;
@@ -44,15 +44,11 @@ public class LeavingPermissionList extends AppCompatActivity {
 
     // Vars
     public String Current;
-    private int day;
-    private int month;
-    private int year;
-    private int actualDay;
-    private int actualMonth;
-    private List<LeavingPermission> leavingPermissionList;
-    private int actualYear;
-    private Float total;
     private String monthActual;
+    private int day, month, year, actualDay, actualMonth, actualYear;
+    private List<LeavingPermission> leavingPermissionList;
+    private Float total;
+
 
     private void initUI() {
         recyclerView = findViewById(R.id.recyclerViewUser);

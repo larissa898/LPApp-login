@@ -139,14 +139,18 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
                 List<LeavingPermission> leavingPermissionList = new ArrayList<>();
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
 
-                for (User u : usersForTeamLeaderAdapter.checkedUsers) {
+                for (User checkedUser : usersForTeamLeaderAdapter.checkedUsers) {
 
                     dbReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                                if (snapshot.child("lastName").getValue().equals(u.getLastName()) && snapshot.child("firstName").getValue().equals(u.getFirstName())) {
+                                User userr = snapshot.getValue(User.class);
+                                Log.d(TAG, "onDataChange: userr = " + userr);
+
+                                if (userr.getId().equals(checkedUser.getId())) {
+                                    Log.d(TAG, "onDataChange: LP =" + userr.getLeavingPermissionList());
                                     for (DataSnapshot snapshot1 : snapshot.child("LeavingPermission").getChildren()) {
                                         for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
                                             LeavingPermission leavingPermission = snapshot2.getValue(LeavingPermission.class);

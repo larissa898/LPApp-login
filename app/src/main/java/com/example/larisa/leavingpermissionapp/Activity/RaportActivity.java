@@ -44,6 +44,8 @@ import static java.lang.String.valueOf;
 
 public class RaportActivity extends AppCompatActivity {
 
+    private static final String TAG = "RaportActivity";
+
     private DatabaseReference mDatabase;
     private Button Confirm;
     private Spinner From;
@@ -85,8 +87,9 @@ public class RaportActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        listFinal = new String[24];
 
+
+        listFinal = new String[24];
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raport);
         final String[] items = new String[]{"7:30", "8:00", "8:30", "9:00", "9:30",
@@ -292,14 +295,16 @@ public class RaportActivity extends AppCompatActivity {
                     final DatabaseReference dbReference;
                     dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
                             child(day + " " + monthActual + " " + year);
-                    dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
+                    dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            //Create new LeavingPermission after edit origin LeavingPermission in Firebase
+                            //Create new LeavingPermission after edit original LeavingPermission in Firebase
                             if (dataSnapshot.exists()) {
-                                String nume = dataSnapshot.child("fullName").getValue(String.class);
+                                Log.d(TAG, "onDataChange: ds = " + dataSnapshot);
+                                String nume = dataSnapshot.child("nume").getValue(String.class);
+                                Log.d(TAG, "xxxxxxx onDataChange: nume =" + nume);
                                 Log.d("data", "exists");
                                 Float total;
                                 if (minutes == 30) {
@@ -307,12 +312,11 @@ public class RaportActivity extends AppCompatActivity {
                                 } else {
                                     total = Float.valueOf(valueOf(ora));
                                 }
-                                UUID id = UUID.randomUUID();
-                                LeavingPermission leavingPermission = new LeavingPermission(id.toString(), nume, From.getSelectedItem().toString()
+                                String id = UUID.randomUUID().toString();
+                                LeavingPermission leavingPermission = new LeavingPermission(id, nume, From.getSelectedItem().toString()
                                         , To.getSelectedItem().toString(), total, status);
                                 FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(FirebaseAuth.getInstance()
-                                                .getCurrentUser().getUid())
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .child("LeavingPermission").child(date.getText()
                                         .toString()).child(time).setValue(leavingPermission);
                             }
@@ -370,6 +374,7 @@ public class RaportActivity extends AppCompatActivity {
                 intent.putExtra("year", year);
                 intent.putExtra("monthActual", monthActual);
                 startActivity(intent);
+                finish();
 
             }
 
@@ -402,6 +407,7 @@ public class RaportActivity extends AppCompatActivity {
                 intent.putExtra("year", year);
                 intent.putExtra("monthActual", monthActual);
                 startActivity(intent);
+                finish();
             }
         });
 

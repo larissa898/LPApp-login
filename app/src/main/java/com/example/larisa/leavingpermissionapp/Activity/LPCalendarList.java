@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LPCalendarList extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "LPCalendarList";
 
     private RecyclerView recyclerView;
     private LeavePermissionForTLAdapter leavePermissionForTLAdapter;
@@ -89,8 +92,6 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.finishedReviewing:
-//
-
                 DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
                 for (final String key : leavePermissionForTLAdapter.modifiedLP.keySet()) {
 
@@ -112,10 +113,9 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                                                         if (snapshot2.child("id").getValue().equals(key)) {
                                                             if (leavingPermission.getStatus().equals("confirmat")) {
 
-
+                                                                Log.d(TAG, "onDataChange: leavingPermission.getId() = " + leavingPermission.getId());
                                                                 AssetManager assetManager = getAssets();
                                                                 InputStream myInput;
-
 
                                                                 try {
 
@@ -243,12 +243,10 @@ public class LPCalendarList extends AppCompatActivity implements View.OnClickLis
                         }
                     });
                 }
-
-
                 finish();
-
-
                 break;
+
+
             case R.id.backToCalendar:
                 finish();
                 break;

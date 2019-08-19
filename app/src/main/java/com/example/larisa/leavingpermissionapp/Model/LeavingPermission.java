@@ -57,6 +57,16 @@ public class LeavingPermission implements Serializable {
         this.data = data;
     }
 
+    public LeavingPermission(String id, String from, String to, Float total, String status, String data, String nume, User user) {
+        this.id = id;
+        this.from = from;
+        this.to = to;
+        this.total = total;
+        this.status = status;
+        this.data = data;
+        this.nume = nume;
+        this.user = user;
+    }
 
     public String getFrom() {
         return from;
