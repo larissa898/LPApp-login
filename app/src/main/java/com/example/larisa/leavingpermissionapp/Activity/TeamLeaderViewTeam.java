@@ -7,7 +7,6 @@ package com.example.larisa.leavingpermissionapp.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +30,6 @@ import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,7 +63,7 @@ public class TeamLeaderViewTeam extends AppCompatActivity implements Serializabl
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        selectButton = findViewById(R.id.confirmButton);
+        selectButton = findViewById(R.id.select_button);
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
         unassignedUserIV.setVisibility(View.GONE);
 
