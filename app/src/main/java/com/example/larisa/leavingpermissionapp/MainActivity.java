@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.larisa.leavingpermissionapp.Activity.UserCalendarActivity;
 import com.example.larisa.leavingpermissionapp.Activity.RegisterActivity;
 import com.example.larisa.leavingpermissionapp.Activity.TeamLeaderViewTeam;
+import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
@@ -42,6 +43,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.FIRST_NAME;
 import static com.example.larisa.leavingpermissionapp.Activity.RegisterActivity.LAST_NAME;
@@ -244,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
             toggleProgressBar();
             openActivityForRole(user.getRole());
         }
+
+    }
+
+    @Override
+    public void onLeavingPermissionListRetrieved(List<LeavingPermission> leavingPermissionList) {
 
     }
 }
