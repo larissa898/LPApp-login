@@ -2,6 +2,7 @@ package com.example.larisa.leavingpermissionapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,7 +25,9 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -156,9 +159,9 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
     }
 
     private void initMaterialCalendarView(List<LeavingPermission> leavingPermissions) {
-        final List<CalendarDay> EventDays = new ArrayList<>();
+        final List<CalendarDay> eventDays = new ArrayList<>();
 
-        boolean flag[] = {false};
+        boolean flag[] = new boolean[100000];
         for (final LeavingPermission leavingPermission : leavingPermissions) {
             Log.d(TAG, "initMaterialCalendarView: " + leavingPermission);
             if (leavingPermission.getStatus().equals("neconfirmat")) {
@@ -168,7 +171,7 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
                     @Override
                     public boolean shouldDecorate(CalendarDay day) {
                         if (date.equals(day)) {
-                            EventDays.add(day);
+                            eventDays.add(day);
                         }
                         return date.equals(day);
                     }
@@ -176,7 +179,8 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
                     @Override
                     public void decorate(DayViewFacade view) {
                         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.redcircle));
-                        flag[date.describeContents()] = true;
+                        int index = date.hashCode() % 100000;
+                        flag[index] = true;
                     }
                 });
             } else {
@@ -185,13 +189,14 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
                 calendarView.addDecorator(new DayViewDecorator() {
                     public boolean shouldDecorate(CalendarDay day) {
                         if (date.equals(day)) {
-                            EventDays.add(day);
+                            eventDays.add(day);
                         }
                         return date.equals(day);
                     }
 
                     public void decorate(DayViewFacade view) {
-                        if (!flag[date.describeContents()]) {
+                        int index = date.hashCode() % 100000;
+                        if (!flag[index]) {
                             view.setBackgroundDrawable(getResources().getDrawable(R.drawable.greencircle));
                         }
                     }
@@ -203,18 +208,20 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
 //            calendarView.setOnDateLongClickListener(new OnDateLongClickListener() {
 //                @Override
 //                public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
-//                    if (EventDays.contains(date)) {
-//                        Intent intent = new Intent(TeamLeaderCalendar.this, TeamLeaderLPList.class);
-//                        for (LeavingPermission leavingPermission : leavingPermissions) {
-//                            if (dayConverter(leavingPermission.getData()).equals(date)) {
-//                                sendLeavingPermission.add(leavingPermission);
-//                            }
-//                        }
-//                        intent.putExtra("TodayLP", (Serializable) sendLeavingPermission);
-//                        startActivity(intent);
-//                        sendLeavingPermission.clear();
-//                    }
+//
+//                    Intent intent = new Intent(UserCalendarActivity.this, UserLPList.class);
+//                    actualM = strMonths[mMonth];
+//                    intent.putExtra("day", mDayOfMonth);
+//                    intent.putExtra("month", mMonth);
+//                    intent.putExtra("year", mYear);
+//                    intent.putExtra("currentDay", currentDay);
+//                    intent.putExtra("currentMonth", currentMonth);
+//                    intent.putExtra("currentYear", currentYear);
+//                    intent.putExtra("monthActual", actualM);
+//                    Current = (currentDay + " " + currentMonth + " " + currentYear);
+//                    startActivity(intent);
 //                }
+//
 //            });
         }
     }
@@ -267,7 +274,7 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
 
     @Override
     public void onLeavingPermissionListRetrieved(List<LeavingPermission> leavingPermissionList) {
-        Log.d(TAG, "onCurrentUserRetrieved: "+ leavingPermissionList);
+        Log.d(TAG, "onCurrentUserRetrieved: " + leavingPermissionList);
         initMaterialCalendarView(leavingPermissionList);
     }
 }
