@@ -38,9 +38,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewTeamActivity extends AppCompatActivity implements Serializable, FirebaseOpsListener {
+public class TeamLeaderViewTeam extends AppCompatActivity implements Serializable, FirebaseOpsListener {
 
-    private static final String TAG = "ViewTeamActivity";
+    private static final String TAG = "TeamLeaderViewTeam";
 
     // UI
     private RecyclerView recyclerView;
@@ -61,7 +61,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        confirmButton = findViewById(R.id.confirmButton);
+        confirmButton = findViewById(R.id.select_button);
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
         unassignedUserIV.setVisibility(View.GONE);
 
@@ -70,7 +70,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ViewTeamActivity.this, UnassignedUsersActivity.class));
+                startActivity(new Intent(TeamLeaderViewTeam.this, TeamLeaderUnassignedUsersList.class));
 
             }
         });
@@ -110,7 +110,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
                     }
 
-                    adapter = new UsersForTeamLeaderAdapter(ViewTeamActivity.this, usersList);
+                    adapter = new UsersForTeamLeaderAdapter(TeamLeaderViewTeam.this, usersList);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
@@ -130,7 +130,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
             @Override
             public void onClick(View v) {
 
-                Intent teamLeaderIntent = new Intent(ViewTeamActivity.this, TeamLeaderCalendar.class);
+                Intent teamLeaderIntent = new Intent(TeamLeaderViewTeam.this, TeamLeaderCalendar.class);
                 teamLeaderIntent.putExtra("checkedUsers", (Serializable) adapter.checkedUsers);
                 startActivity(teamLeaderIntent);
 
@@ -231,13 +231,13 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_userProfile:
-                startActivity(new Intent(ViewTeamActivity.this, UserProfileActivity.class));
+                startActivity(new Intent(TeamLeaderViewTeam.this, UserProfileActivity.class));
                 return true;
 
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
 
-                Intent intent = new Intent(ViewTeamActivity.this, MainActivity.class);
+                Intent intent = new Intent(TeamLeaderViewTeam.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -265,7 +265,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
     }
 
     /**
-     * Set firebaseOps listener back to this, when returning from {@link UnassignedUsersActivity}
+     * Set firebaseOps listener back to this, when returning from {@link TeamLeaderUnassignedUsersList}
      */
     @Override
     protected void onResume() {

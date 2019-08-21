@@ -4,42 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ViewTeamActivity">
+    tools:context=".Activity.TeamLeaderViewTeam">
 
 
     <ImageView
         android:id="@+id/unassignedUserIV"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_person_add"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"/>
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/ic_person_add" />
+
+    <Button
+        android:id="@+id/select_all_button"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/buttonColor"
+        android:text="@string/select_all"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleViewActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="100dp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/unassignedUserIV"
+        android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="14dp" />
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="100dp" />
 
 
     <Button
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="32dp"
-        android:id="@+id/confirmButton"
+        android:id="@+id/select_button"
         android:layout_width="140dp"
         android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
+        android:layout_marginBottom="32dp"
         android:background="@color/buttonColor"
         android:text="@string/confirm_button"
         android:textColor="@color/textColor"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

@@ -81,9 +81,9 @@ public class RaportActivity extends AppCompatActivity {
     private String[] hourMinTo;
     private ArrayAdapter<String> adapter;
     private ArrayAdapter<String> adapteredit;
-    private String key;
     private Float TotalLpActual;
     private String[] hourMinFrom;
+    String[] strMonths = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -118,19 +118,18 @@ public class RaportActivity extends AppCompatActivity {
         month = getIntent().getIntExtra("month", 0);
         year = getIntent().getIntExtra("year", 0);
         total = getIntent().getFloatExtra("total", 0);
-        key = getIntent().getStringExtra("key");    //TODO: never used. delete ?
         LPid = getIntent().getStringExtra("idLp");
         TotalLpActual = getIntent().getFloatExtra("TotalLpActual", 0);
         monthActual = getIntent().getStringExtra("monthActual");
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        date.setText(day + " " + monthActual + " " + year);
+        date.setText(day + " " + strMonths[month-1] + " " + year);
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
         final DatabaseReference dbReference;
         dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
-                child(day + " " + monthActual + " " + year);
+                child(day + " " + strMonths[month-1] + " " + year);
         final List<String> listFrom = new ArrayList<>();
         final List<String> listTo = new ArrayList<>();
         final List<String> listFromEdit = new ArrayList<>();
@@ -297,7 +296,7 @@ public class RaportActivity extends AppCompatActivity {
                     Log.d(TAG, "xxxxxxx onClick: LPid = " + LPid);
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid()).child("LeavingPermission").
-                            child(day + " " + monthActual + " " + year).child(LPid);
+                            child(day + " " + strMonths[month-1] + " " + year).child(LPid);
 
                     dbReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -305,14 +304,12 @@ public class RaportActivity extends AppCompatActivity {
 
                             //Create new LeavingPermission after edit original LeavingPermission in Firebase
                             if (dataSnapshot.exists()) {
-                                Log.d(TAG, "xxxxxxx onDataChange: ds = " + dataSnapshot);
                                 String nume = dataSnapshot.child("fullName").getValue(String.class);
-                                Log.d(TAG, "xxxxxxx onDataChange: nume = " + nume);
 
                                 Float total = minutes == 30 ? Float.valueOf(ora + ".5") : Float.valueOf(valueOf(ora));
 
 
-                                LeavingPermission leavingPermission = new LeavingPermission(LPid, nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                LeavingPermission leavingPermission = new LeavingPermission(LPid, nume, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status, date.getText().toString());
 
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -344,7 +341,7 @@ public class RaportActivity extends AppCompatActivity {
                                 Float total = minutes == 30 ? Float.valueOf(valueOf(ora + ".5")) : Float.valueOf(valueOf(ora));
 
                                 String id = UUID.randomUUID().toString();
-                                LeavingPermission leavingPermission = new LeavingPermission(id, fullName, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status);
+                                LeavingPermission leavingPermission = new LeavingPermission(id, fullName, From.getSelectedItem().toString(), To.getSelectedItem().toString(), total, status, date.getText().toString());
                                 FirebaseDatabase.getInstance()
                                         .getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .child("LeavingPermission")
@@ -361,7 +358,7 @@ public class RaportActivity extends AppCompatActivity {
                 }
                 //Create new Intent
                 //When press Confirm Button redirection in Leaving Permission List
-//                Intent intent = new Intent(RaportActivity.this, UserLeavingPermissionList.class);
+//                Intent intent = new Intent(RaportActivity.this, UserLPList.class);
 //                intent.putExtra("day", day);
 //                intent.putExtra("month", month);
 //                intent.putExtra("year", year);
@@ -394,7 +391,7 @@ public class RaportActivity extends AppCompatActivity {
         Backraport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RaportActivity.this, UserLeavingPermissionList.class);
+                Intent intent = new Intent(RaportActivity.this, UserLPList.class);
                 intent.putExtra("day", day);
                 intent.putExtra("month", month);
                 intent.putExtra("year", year);

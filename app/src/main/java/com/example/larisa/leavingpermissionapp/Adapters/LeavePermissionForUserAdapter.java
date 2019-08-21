@@ -49,6 +49,8 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePer
     private int month;
     private int year;
 
+    String[] strMonths = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
 
     public LeavePermissionForUserAdapter(Context context, List<LeavingPermission> permissionArrayList, int day, int month, int year, String monthActual) {
         this.context = context;
@@ -156,11 +158,12 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePer
             yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d(TAG, "onClick: monthactual ===" + monthActual);
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users")
                             .child(user.getUid())
                             .child("LeavingPermission")
-                            .child(day + " " + monthActual + " " + year)
+                            .child(day + " " + strMonths[month - 1] + " " + year)
                             .child(lplp.getId());
 
 
@@ -171,12 +174,12 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePer
                             notifyDataSetChanged();
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "onFailure: e = " + e.getMessage() + "\n" + e.getLocalizedMessage());
-                        }
-                    });
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "onFailure: e = " + e.getMessage() + "\n" + e.getLocalizedMessage());
+                                }
+                            });
 
 
                 }
@@ -193,7 +196,7 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePer
             DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users")
                     .child(user.getUid())
                     .child("LeavingPermission")
-                    .child(day + " " + monthActual + " " + year);
+                    .child(day + " " + strMonths[month - 1] + " " + year);
 
 
             dbReference.addListenerForSingleValueEvent(new ValueEventListener() {

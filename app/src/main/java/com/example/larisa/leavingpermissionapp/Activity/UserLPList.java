@@ -7,7 +7,6 @@ package com.example.larisa.leavingpermissionapp.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,6 @@ import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,9 +36,9 @@ import java.util.List;
  * <br>
  * Flag can be "add" or "edit".
  */
-public class UserLeavingPermissionList extends AppCompatActivity {
+public class UserLPList extends AppCompatActivity {
 
-    private static final String TAG = "UserLeavingPermissionLi";
+    private static final String TAG = "UserLPList";
 
     // UI
     private Button AddBtn;
@@ -48,6 +46,8 @@ public class UserLeavingPermissionList extends AppCompatActivity {
     private LeavePermissionForUserAdapter adapter;
     private RecyclerView recyclerView;
     private TextView TotalOreZi;
+
+    String[] strMonths = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     // Vars
     public String Current;
@@ -75,7 +75,7 @@ public class UserLeavingPermissionList extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
-        setContentView(R.layout.activity_leaving_permission_list);
+        setContentView(R.layout.activity_user_lp_list);
 
         initUI();
 
@@ -86,15 +86,15 @@ public class UserLeavingPermissionList extends AppCompatActivity {
         actualYear = getIntent().getIntExtra("currentYear", 0);
 
         day = getIntent().getIntExtra("day", 0);
-        month = getIntent().getIntExtra("month", 0);
+        month = getIntent().getIntExtra("month", 1);
         year = getIntent().getIntExtra("year", 0);
         monthActual = getIntent().getStringExtra("monthActual");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        currentDayTV.setText(day + " " + monthActual + " " + year);
+        currentDayTV.setText(day + " " + strMonths[month -1]  + " " + year);
 
         DatabaseReference LPSelectedDateRef = FirebaseDatabase.getInstance().getReference("Users")
                 .child(user.getUid()).child("LeavingPermission")
-                .child(day + " " + monthActual + " " + year);
+                .child(day + " " + strMonths[month-1] + " " + year);
 
 
         //total H+M and LPList for this day from Firebase
@@ -119,13 +119,13 @@ public class UserLeavingPermissionList extends AppCompatActivity {
                     }
 
                     Current = String.valueOf(currentDayTV);
-                    adapter = new LeavePermissionForUserAdapter(UserLeavingPermissionList.this, leavingPermissionList, day, month, year, monthActual);
+                    adapter = new LeavePermissionForUserAdapter(UserLPList.this, leavingPermissionList, day, month, year, monthActual);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }
                 else {
                     leavingPermissionList.clear();
-                    adapter = new LeavePermissionForUserAdapter(UserLeavingPermissionList.this, leavingPermissionList, day, month, year, monthActual);
+                    adapter = new LeavePermissionForUserAdapter(UserLPList.this, leavingPermissionList, day, month, year, monthActual);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }
@@ -143,7 +143,7 @@ public class UserLeavingPermissionList extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     String Flag = "add";
-                    Intent intent = new Intent(UserLeavingPermissionList.this, RaportActivity.class);
+                    Intent intent = new Intent(UserLPList.this, RaportActivity.class);
                     intent.putExtra("Flag", Flag);
                     intent.putExtra("day", day);
                     intent.putExtra("total", total);

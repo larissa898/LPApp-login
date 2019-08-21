@@ -36,13 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Activity with calendar showing LeavingPermission requests for users selected by Team Leader in {@link ViewTeamActivity}
+ * Activity with calendar showing LeavingPermission requests for users selected by Team Leader in {@link TeamLeaderViewTeam}
  * <br>
  * LeavingPermission neconfirmat = RED DOT
  * <br>
  * LeavingPermission confirmat = GREEN CIRCLE
  * <br>
- * Long-clicking a date with a {@link LeavingPermission} object inside it will open {@link TeamLeaderUserLPList} Activity
+ * Long-clicking a date with a {@link LeavingPermission} object inside it will open {@link TeamLeaderLPList} Activity
  */
 public class TeamLeaderCalendar extends AppCompatActivity {
 
@@ -122,6 +122,7 @@ public class TeamLeaderCalendar extends AppCompatActivity {
                                             leavingPermissionList.add(lp);
                                         }
                                     }
+
                                     decorateCalendar();
                                 });
                     }
@@ -139,7 +140,7 @@ public class TeamLeaderCalendar extends AppCompatActivity {
             @Override
             public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
                 if (eventDays.contains(date)) {
-                    Intent intent = new Intent(TeamLeaderCalendar.this, TeamLeaderUserLPList.class);
+                    Intent intent = new Intent(TeamLeaderCalendar.this, TeamLeaderLPList.class);
                     for (LeavingPermission leavingPermission : leavingPermissionList) {
                         if (dayConverter(leavingPermission.getData()).equals(date)) {
                             sendLeavingPermission.add(leavingPermission);
@@ -153,11 +154,10 @@ public class TeamLeaderCalendar extends AppCompatActivity {
         });
 
 
-
-
     }
 
-    public void decorateCalendar(){
+    public void decorateCalendar() {
+
         boolean flag[] = {false};
         Log.d(TAG, "decorateCalendar: " + leavingPermissionList);
 
@@ -165,6 +165,7 @@ public class TeamLeaderCalendar extends AppCompatActivity {
 
             if (leavingPermission.getStatus().equals("neconfirmat")) {
                 String dateFormat = leavingPermission.getData();
+                Log.d(TAG, "decorateCalendar: dateFormat  =" + dateFormat);
                 CalendarDay date = dayConverter(dateFormat);
                 calendarView.addDecorator(new DayViewDecorator() {
                     @Override
