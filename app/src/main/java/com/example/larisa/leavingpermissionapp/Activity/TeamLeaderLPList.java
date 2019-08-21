@@ -105,82 +105,82 @@ public class TeamLeaderLPList extends AppCompatActivity implements View.OnClickL
                                                             AssetManager assetManager = getAssets();
                                                             InputStream myInput;
 
-                                                            try {
-
-                                                                myInput = assetManager.open("abc.xls");
-                                                                POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
-
-                                                                HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
-
-                                                                HSSFSheet mySheet = myWorkBook.getSheetAt(0);
-
-                                                                String fullNume[] = leavingPermission.getUser().getFullName().split(" ");
-
-                                                                HSSFCell cell;
-                                                                //Nume
-                                                                cell = mySheet.getRow(6).getCell(2);
-                                                                cell.setCellValue(fullNume[1].toUpperCase());
-                                                                //Prenume
-                                                                cell = mySheet.getRow(6).getCell(6);
-                                                                cell.setCellValue(fullNume[0]);
-
-
-                                                                //Matricol
-                                                                cell = mySheet.getRow(8).getCell(2);
-                                                                cell.setCellValue(leavingPermission.getUser().getRegistrationNumber());
-                                                                //Absent de la
-                                                                cell = mySheet.getRow(8).getCell(5);
-                                                                cell.setCellValue(leavingPermission.getData());
-                                                                //Absent pana la
-                                                                cell = mySheet.getRow(8).getCell(7);
-                                                                cell.setCellValue(leavingPermission.getData());
-                                                                //De la ora
-                                                                cell = mySheet.getRow(12).getCell(5);
-                                                                cell.setCellValue(leavingPermission.getFrom());
-                                                                //Pana la ora
-                                                                cell = mySheet.getRow(12).getCell(7);
-                                                                cell.setCellValue(leavingPermission.getTo());
-                                                                //Data depunere
-                                                                cell = mySheet.getRow(18).getCell(3);
-                                                                cell.setCellValue(leavingPermission.getData());
-                                                                //Data confirmare
-                                                                cell = mySheet.getRow(18).getCell(8);
-                                                                cell.setCellValue(leavingPermission.getData());
-                                                                //            //Adresa si numar de telefon
-                                                                cell = mySheet.getRow(21).getCell(1);
-                                                                cell.setCellValue(leavingPermission.getUser().getPhoneNumber());
-
-
-                                                                final InputStream stream =
-                                                                        TeamLeaderLPList.this.getAssets().open(fullNume[0] + fullNume[1] + ".png");
-                                                                byte[] imageBytes = IOUtils.toByteArray(stream);
-                                                                final int pictureIndex =
-                                                                        myWorkBook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
-                                                                stream.close();
-                                                                final CreationHelper helper = myWorkBook.getCreationHelper();
-                                                                final Drawing drawing = mySheet.createDrawingPatriarch();
-
-                                                                final ClientAnchor anchor = helper.createClientAnchor();
-                                                                anchor.setAnchorType(ClientAnchor.AnchorType.MOVE_AND_RESIZE);
-                                                                anchor.setCol1(3);
-                                                                anchor.setCol2(5);
-                                                                anchor.setRow1(15); // same row is okay
-                                                                anchor.setRow2(18);
-
-                                                                drawing.createPicture(anchor, pictureIndex);
-                                                                File path = TeamLeaderLPList.this.getFilesDir();
-
-                                                                FileOutputStream outFile =
-                                                                        new FileOutputStream(new File(path, "/" +
-                                                                                "Cerere_Absenta_" + fullNume[1].toUpperCase() + "_" + fullNume[0] + "_"
-                                                                                + leavingPermission.getData() + "_" + leavingPermission.getFrom() + "_991" +
-                                                                                ".xls"));
-                                                                myWorkBook.write(outFile);
-                                                                outFile.close();
-
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }
+//                                                            try {
+//
+//                                                                myInput = assetManager.open("abc.xls");
+//                                                                POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+//
+//                                                                HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
+//
+//                                                                HSSFSheet mySheet = myWorkBook.getSheetAt(0);
+//
+//                                                                String fullNume[] = leavingPermission.getFullName().split(" ");
+//
+//                                                                HSSFCell cell;
+//                                                                //Nume
+//                                                                cell = mySheet.getRow(6).getCell(2);
+//                                                                cell.setCellValue(fullNume[1].toUpperCase());
+//                                                                //Prenume
+//                                                                cell = mySheet.getRow(6).getCell(6);
+//                                                                cell.setCellValue(fullNume[0]);
+//
+//
+//                                                                //Matricol
+//                                                                cell = mySheet.getRow(8).getCell(2);
+//                                                                cell.setCellValue(leavingPermission.getUser().getRegistrationNumber());
+//                                                                //Absent de la
+//                                                                cell = mySheet.getRow(8).getCell(5);
+//                                                                cell.setCellValue(leavingPermission.getData());
+//                                                                //Absent pana la
+//                                                                cell = mySheet.getRow(8).getCell(7);
+//                                                                cell.setCellValue(leavingPermission.getData());
+//                                                                //De la ora
+//                                                                cell = mySheet.getRow(12).getCell(5);
+//                                                                cell.setCellValue(leavingPermission.getFrom());
+//                                                                //Pana la ora
+//                                                                cell = mySheet.getRow(12).getCell(7);
+//                                                                cell.setCellValue(leavingPermission.getTo());
+//                                                                //Data depunere
+//                                                                cell = mySheet.getRow(18).getCell(3);
+//                                                                cell.setCellValue(leavingPermission.getData());
+//                                                                //Data confirmare
+//                                                                cell = mySheet.getRow(18).getCell(8);
+//                                                                cell.setCellValue(leavingPermission.getData());
+//                                                                //            //Adresa si numar de telefon
+//                                                                cell = mySheet.getRow(21).getCell(1);
+//                                                                cell.setCellValue(leavingPermission.getUser().getPhoneNumber());
+//
+//
+//                                                                final InputStream stream =
+//                                                                        TeamLeaderLPList.this.getAssets().open(fullNume[0] + fullNume[1] + ".png");
+//                                                                byte[] imageBytes = IOUtils.toByteArray(stream);
+//                                                                final int pictureIndex =
+//                                                                        myWorkBook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
+//                                                                stream.close();
+//                                                                final CreationHelper helper = myWorkBook.getCreationHelper();
+//                                                                final Drawing drawing = mySheet.createDrawingPatriarch();
+//
+//                                                                final ClientAnchor anchor = helper.createClientAnchor();
+//                                                                anchor.setAnchorType(ClientAnchor.AnchorType.MOVE_AND_RESIZE);
+//                                                                anchor.setCol1(3);
+//                                                                anchor.setCol2(5);
+//                                                                anchor.setRow1(15); // same row is okay
+//                                                                anchor.setRow2(18);
+//
+//                                                                drawing.createPicture(anchor, pictureIndex);
+//                                                                File path = TeamLeaderLPList.this.getFilesDir();
+//
+//                                                                FileOutputStream outFile =
+//                                                                        new FileOutputStream(new File(path, "/" +
+//                                                                                "Cerere_Absenta_" + fullNume[1].toUpperCase() + "_" + fullNume[0] + "_"
+//                                                                                + leavingPermission.getData() + "_" + leavingPermission.getFrom() + "_991" +
+//                                                                                ".xls"));
+//                                                                myWorkBook.write(outFile);
+//                                                                outFile.close();
+//
+//                                                            } catch (IOException e) {
+//                                                                e.printStackTrace();
+//                                                            }
                                                             snapshot2.child("status").getRef().setValue("confirmat");
                                                         } else {
                                                             snapshot2.child("status").getRef().setValue("refuzat");
