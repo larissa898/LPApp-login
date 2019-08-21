@@ -230,7 +230,6 @@ public class LeavePermissionForUserAdapter extends RecyclerView.Adapter<LeavePer
                     intent.putExtra("year", year);
                     intent.putExtra("monthActual", monthActual);
                     view.getContext().startActivity(intent);
-//                    ((Activity) context).finish();
 
 
                 }

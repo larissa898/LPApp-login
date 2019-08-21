@@ -101,12 +101,14 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "lastName='" + lastName + '\'' +
+                "id='" + id + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", role='" + role + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", registrationNumber='" + registrationNumber + '\'' +
                 ", teamLeader='" + teamLeader + '\'' +
+                ", leavingPermissionList=" + leavingPermissionList +
                 '}';
     }
 }

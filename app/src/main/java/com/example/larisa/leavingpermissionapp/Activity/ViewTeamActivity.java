@@ -7,7 +7,6 @@ package com.example.larisa.leavingpermissionapp.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,18 +23,15 @@ import android.widget.ImageView;
 
 import com.example.larisa.leavingpermissionapp.Adapters.UsersForTeamLeaderAdapter;
 import com.example.larisa.leavingpermissionapp.MainActivity;
-import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.Model.User;
 import com.example.larisa.leavingpermissionapp.R;
 import com.example.larisa.leavingpermissionapp.Utils.CurrentUserManager;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOps;
 import com.example.larisa.leavingpermissionapp.Utils.FirebaseOpsListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
@@ -48,7 +44,7 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
     // UI
     private RecyclerView recyclerView;
-    private UsersForTeamLeaderAdapter usersForTeamLeaderAdapter;
+    private UsersForTeamLeaderAdapter adapter;
     private Button confirmButton;
     private ImageView unassignedUserIV;
 
@@ -99,8 +95,8 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
 
         // Fill recyclerView with team of currently logged in TeamLeader
-        DatabaseReference currentUserRef = firebaseOps.getAllUsersRef();
-        currentUserRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference usersReff = firebaseOps.getAllUsersRef();
+        usersReff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
@@ -114,9 +110,9 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
                     }
 
-                    usersForTeamLeaderAdapter = new UsersForTeamLeaderAdapter(ViewTeamActivity.this, usersList);
-                    recyclerView.setAdapter(usersForTeamLeaderAdapter);
-                    usersForTeamLeaderAdapter.notifyDataSetChanged();
+                    adapter = new UsersForTeamLeaderAdapter(ViewTeamActivity.this, usersList);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
 
                 }
 
@@ -134,95 +130,71 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(ViewTeamActivity.this, TeamLeaderCalendar.class);
-                List<LeavingPermission> leavingPermissionList = new ArrayList<>();
-                DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("Users");
+                Intent teamLeaderIntent = new Intent(ViewTeamActivity.this, TeamLeaderCalendar.class);
+                teamLeaderIntent.putExtra("checkedUsers", (Serializable) adapter.checkedUsers);
+                startActivity(teamLeaderIntent);
 
-                for (User checkedUser : usersForTeamLeaderAdapter.checkedUsers) {
-                    dbReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot USERss : dataSnapshot.getChildren()) {
+//                List<LeavingPermission> leavingPermissionList = new ArrayList<>();
+//                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
+//
+//                for (User checkedUser : adapter.checkedUsers) {
+//
+//                    usersRef.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            leavingPermissionList.clear();
+//                            for (DataSnapshot USERss : dataSnapshot.getChildren()) {
+//
+//                                User dbUser = USERss.getValue(User.class);
+//
+//                                if (dbUser.getId().equals(checkedUser.getId())) {
+//
+//                                    // e goala pt ca nu e structurata baza de date incat sa aiba o lista de LP-uri
+//                                    Log.d(TAG, "onDataChange: LP =" + dbUser.getLeavingPermissionList());
+//
+//                                    // for each DATE format in db : day-month-year
+//                                    for (DataSnapshot DATEss : USERss.child("LeavingPermission").getChildren()) {
+//
+//                                        // for each TIME (hh:mm:ss) in a DATE. this represents a LeavingPermission
+//                                        for (DataSnapshot TIMEss : DATEss.getChildren()) {
+//
+//                                            LeavingPermission leavingPermission = TIMEss.getValue(LeavingPermission.class);
+//
+//                                            String date = DATEss.getKey();
+//                                            String lastName = USERss.child("lastName").getValue(String.class);
+//                                            String firstName = USERss.child("firstName").getValue(String.class);
+//
+//                                            String role = USERss.child("role").getValue(String.class);
+//                                            String phoneNumber = USERss.child("phoneNumber").getValue(String.class);
+//                                            String registrationNumber = USERss.child("registrationNumber").getValue(String.class);
+//
+//                                            User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
+//
+//                                            leavingPermission.setUser(user);
+//
+//                                            leavingPermission.setData(date);
+//                                            leavingPermissionList.add(leavingPermission);
+//
+//                                        }
+//                                    }
+//                                }
+//                            }
+//
+//
+//                            teamLeaderIntent.putExtra("Lps", (Serializable) leavingPermissionList);
+//                            startActivity(teamLeaderIntent);
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//
+//                    });
+//
+//                }
 
-                                User dbUser = USERss.getValue(User.class);
-
-                                if (dbUser.getId().equals(checkedUser.getId())) {
-
-                                    // e goala pt ca nu e structurata baza de date incat sa aiba o lista de LP-uri
-                                    Log.d(TAG, "onDataChange: LP =" + dbUser.getLeavingPermissionList());
-
-                                    // for each DATE format in db : day-month-year
-                                    for (DataSnapshot DATEss : USERss.child("LeavingPermission").getChildren()) {
-
-                                        // for each TIME (hh:mm:ss) in a DATE. this represents a LeavingPermission
-                                        for (DataSnapshot TIMEss : DATEss.getChildren()) {
-
-                                            LeavingPermission leavingPermission = TIMEss.getValue(LeavingPermission.class);
-
-                                            String date = DATEss.getKey();
-                                            String lastName = USERss.child("lastName").getValue(String.class);
-                                            String firstName = USERss.child("firstName").getValue(String.class);
-
-                                            String role = USERss.child("role").getValue(String.class);
-                                            String phoneNumber = USERss.child("phoneNumber").getValue(String.class);
-                                            String registrationNumber = USERss.child("registrationNumber").getValue(String.class);
-
-                                            User user = new User(lastName, firstName, role, phoneNumber, registrationNumber);
-
-                                            leavingPermission.setUser(user);
-
-                                            leavingPermission.setData(date);
-                                            leavingPermissionList.add(leavingPermission);
-
-                                        }
-                                    }
-                                }
-                            }
-
-
-                            intent.putExtra("Lps", (Serializable) leavingPermissionList);
-                            startActivity(intent);
-
-                        }
-
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-
-                    });
-
-                }
-
-
-                dbReference.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        leavingPermissionList.clear();
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
 
             }
 
@@ -276,7 +248,6 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
     @Override
     public void onUsersCallback() {
-        List unassignedUsersList = new ArrayList();
         for (User user : firebaseOps.getUsers()) {
             if (user.getTeamLeader() == null && !user.getRole().equals("Team Leader")) {
                 Log.d(TAG, "onUsersCallback: found unassigned user.");
@@ -293,6 +264,9 @@ public class ViewTeamActivity extends AppCompatActivity implements Serializable,
 
     }
 
+    /**
+     * Set firebaseOps listener back to this, when returning from {@link UnassignedUsersActivity}
+     */
     @Override
     protected void onResume() {
         firebaseOps = FirebaseOps.getInstance();

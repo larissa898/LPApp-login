@@ -118,5 +118,18 @@ public class LeavingPermission implements Serializable {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return "LeavingPermission{" +
+                "id='" + id + '\'' +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", total=" + total +
+                ", status='" + status + '\'' +
+                ", data='" + data + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }
 
