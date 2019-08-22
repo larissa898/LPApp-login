@@ -23,20 +23,14 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="75dp"
-        android:textColor="#000"
+        android:text="Select all"
+        android:textStyle="bold"
+        android:textColor="#777474"
+        android:layoutDirection="rtl"
         android:textSize="16sp"
         />
 
-    <TextView
-        android:id="@+id/selectAllTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select All"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginTop="29dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toLeftOf="@id/selectAllCheckbox"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleViewActivity"
