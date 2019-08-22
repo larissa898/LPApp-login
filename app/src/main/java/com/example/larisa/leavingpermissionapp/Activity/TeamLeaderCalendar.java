@@ -160,7 +160,7 @@ public class TeamLeaderCalendar extends AppCompatActivity implements LPListListe
     public void initCalendar() {
         calendarView.removeDecorators();
 
-        boolean flag[] = {false};
+        boolean[] isUnconfirmed = new boolean[100000];
 
         for (LeavingPermission leavingPermission : leavingPermissionList) {
 
@@ -180,7 +180,8 @@ public class TeamLeaderCalendar extends AppCompatActivity implements LPListListe
                     @Override
                     public void decorate(DayViewFacade view) {
                         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.redcircle));
-                        flag[date.describeContents()] = true;
+                        int index = date.hashCode() % 100000;
+                        isUnconfirmed[index] = true;
                     }
                 });
             } else {
@@ -195,7 +196,8 @@ public class TeamLeaderCalendar extends AppCompatActivity implements LPListListe
                     }
 
                     public void decorate(DayViewFacade view) {
-                        if (!flag[date.describeContents()]) {
+                        int index = date.hashCode() % 100000;
+                        if (!isUnconfirmed[index]) {
                             view.setBackgroundDrawable(getResources().getDrawable(R.drawable.greencircle));
                         }
                     }
