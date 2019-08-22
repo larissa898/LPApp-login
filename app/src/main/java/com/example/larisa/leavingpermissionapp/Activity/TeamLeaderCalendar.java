@@ -226,27 +226,10 @@ public class TeamLeaderCalendar extends AppCompatActivity implements LPListListe
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.profile_logout_menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.menu_userProfile:
-                startActivity(new Intent(TeamLeaderCalendar.this, UserProfileActivity.class));
-                return true;
 
-            case R.id.menu_logout:
-                FirebaseAuth.getInstance().signOut();
-
-                Intent intent = new Intent(TeamLeaderCalendar.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
             case android.R.id.home:
                 finish();
                 return true;

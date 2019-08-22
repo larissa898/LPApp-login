@@ -42,19 +42,21 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
     private String actualM;
     private ImageView userProfileIV;
     private int mYear, mMonth, mDayOfMonth;
+    private String role;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new CurrentUserManager(this).retrieveUserLeavingPermissionList(FirebaseAuth.getInstance().getUid());
+        CurrentUserManager currentUserManager = new CurrentUserManager(this);
+        currentUserManager.retrieveCurrentUserObj(FirebaseAuth.getInstance().getUid());
+        currentUserManager.retrieveUserLeavingPermissionList(FirebaseAuth.getInstance().getUid());
         setContentView(R.layout.activity_calendar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         calendarView = findViewById(R.id.calendarViewID);
-        openButton = findViewById(R.id.openButton);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
@@ -86,95 +88,6 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
             }
         });
 
-    }
-
-    //TODO: DELETE THIS ONCE DONE --- initOldCalendar contains the code for handling date clicks for the old type of calendar
-    private void initOldCalendar() {
-
-
-//        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-//
-//            @SuppressLint("SimpleDateFormat")
-//            @Override
-//            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-//                @SuppressLint("DefaultLocale")
-//                String dateString = String.format("%d-%d-%d", year, month, dayOfMonth + 3);
-//
-//                Date date = null;
-//                try {
-//                    date = new SimpleDateFormat("yyyy-M-d").parse(dateString);
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//                final String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
-//                view.getFirstDayOfWeek();
-//                final long pressTime = System.currentTimeMillis();
-//
-//                // If double click...
-//                if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
-//                    //If it is weekend you can not add LPs
-//                    //Otherwise double click will send you the next activity <<Leaving Permission List>>
-//                    if (dayOfWeek.equals("Sunday") || (dayOfWeek.equals("Saturday"))) {
-//                        Toast.makeText(getApplicationContext(), "It's weekend, choose a working day", Toast.LENGTH_SHORT).show();
-//
-//                    } else {
-//                        mHasDoubleClicked = true;
-//                        Intent intent = new Intent(UserCalendarActivity.this, UserLPList.class);
-//                        //Calculates the month according to the month number
-//                        actualM = strMonths[month];
-//                        intent.putExtra("day", dayOfMonth);
-//                        intent.putExtra("month", month);
-//                        intent.putExtra("year", year);
-//                        intent.putExtra("currentDay", currentDay);
-//                        intent.putExtra("currentMonth", currentMonth);
-//                        intent.putExtra("currentYear", currentYear);
-//                        intent.putExtra("monthActual", actualM);
-//                        Current = (currentDay + " " + currentMonth + " " + currentYear);
-//                        startActivity(intent);
-//                    }
-//                } else {     // If not double click....
-//                    mHasDoubleClicked = false;
-//                    @SuppressLint("HandlerLeak") final Handler myHandler = new Handler() {
-//                        public void handleMessage(Message m) {
-//                            if (!mHasDoubleClicked && (dayOfWeek.equals("Sunday")
-//                                    || (dayOfWeek.equals("Saturday")))) {
-//                                Toast.makeText(getApplicationContext()
-//                                        , "It's weekend, choose a working day", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(getApplicationContext()
-//                                        , "Press Double-Click to make a request or select Open Button",
-//                                        Toast.LENGTH_SHORT).show();
-//                                mYear = year;
-//                                mDayOfMonth = dayOfMonth;
-//                                mMonth = month;
-//                            }
-//                        }
-//                    };
-//                    Message m = new Message();
-//                    myHandler.sendMessageDelayed(m, DOUBLE_PRESS_INTERVAL);
-//                }
-//
-//                lastPressTime = pressTime;
-//            }
-//        });
-//
-//
-//        openButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(UserCalendarActivity.this, UserLPList.class);
-//                actualM = strMonths[mMonth];
-//                intent.putExtra("day", mDayOfMonth);
-//                intent.putExtra("month", mMonth);
-//                intent.putExtra("year", mYear);
-//                intent.putExtra("currentDay", currentDay);
-//                intent.putExtra("currentMonth", currentMonth);
-//                intent.putExtra("currentYear", currentYear);
-//                intent.putExtra("monthActual", actualM);
-//                Current = (currentDay + " " + currentMonth + " " + currentYear);
-//                startActivity(intent);
-//            }
-//        });
     }
 
     private void initMaterialCalendarView(List<LeavingPermission> leavingPermissions) {
@@ -221,28 +134,6 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
                     }
                 });
             }
-
-            //TODO: handle on long click
-//            calendarView.setOnDateLongClickListener(new OnDateLongClickListener() {
-//                @Override
-//                public void onDateLongClick(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date) {
-//
-//                    Intent intent = new Intent(UserCalendarActivity.this, UserLPList.class);
-//                    actualM = strMonths[mMonth];
-//                    intent.putExtra("day", mDayOfMonth);
-//                    intent.putExtra("month", mMonth);
-//                    intent.putExtra("year", mYear);
-//                    intent.putExtra("currentDay", currentDay);
-//                    intent.putExtra("currentMonth", currentMonth);
-//                    intent.putExtra("currentYear", currentYear);
-//                    intent.putExtra("monthActual", actualM);
-//                    Current = (currentDay + " " + currentMonth + " " + currentYear);
-//                    startActivity(intent);
-//                }
-//
-//            });
-
-
         }
     }
 
@@ -260,10 +151,11 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
         return newDate;
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.profile_logout_menu, menu);
+            inflater.inflate(R.menu.profile_logout_menu, menu);
         return true;
     }
 
@@ -290,6 +182,8 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
 
     @Override
     public void onCurrentUserRetrieved(User user) {
+        role = user.getRole();
+        invalidateOptionsMenu();
     }
 
     @Override

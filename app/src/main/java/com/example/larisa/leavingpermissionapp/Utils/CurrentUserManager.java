@@ -5,7 +5,6 @@
 package com.example.larisa.leavingpermissionapp.Utils;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.larisa.leavingpermissionapp.Model.LeavingPermission;
 import com.example.larisa.leavingpermissionapp.Model.User;
@@ -31,8 +30,6 @@ public class CurrentUserManager {
     }
 
     public void retrieveCurrentUserObj(String id) {
-
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(id);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
