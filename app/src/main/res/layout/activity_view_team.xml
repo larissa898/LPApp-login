@@ -11,33 +11,41 @@
         android:id="@+id/unassignedUserIV"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="12dp"
         android:src="@drawable/ic_person_add" />
 
-    <Button
-        android:id="@+id/select_all_button"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
+    <CheckBox
+        android:id="@+id/selectAllCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="32dp"
-        android:background="@color/buttonColor"
-        android:text="@string/select_all"
-        android:textColor="@color/textColor"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="75dp"
+        android:textColor="#000"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        />
+
+    <TextView
+        android:id="@+id/selectAllTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select All"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toLeftOf="@id/selectAllCheckbox"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleViewActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/unassignedUserIV"
+        android:layout_below="@+id/selectAllCheckbox"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="100dp" />
 
 
@@ -50,7 +58,7 @@
         android:layout_marginTop="18dp"
         android:layout_marginBottom="32dp"
         android:background="@color/buttonColor"
-        android:text="@string/confirm_button"
+        android:text="View Requests"
         android:textColor="@color/textColor"
         android:textSize="16sp"
         android:textStyle="bold" />

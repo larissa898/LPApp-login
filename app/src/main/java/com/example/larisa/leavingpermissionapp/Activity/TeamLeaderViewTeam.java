@@ -19,6 +19,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.example.larisa.leavingpermissionapp.Adapters.UsersForTeamLeaderAdapter;
@@ -45,7 +47,10 @@ public class TeamLeaderViewTeam extends AppCompatActivity implements Serializabl
     // UI
     private RecyclerView recyclerView;
     private UsersForTeamLeaderAdapter adapter;
-    private Button confirmButton;
+
+    private CheckBox checkAllCB;
+
+    private Button selectButton;
     private ImageView unassignedUserIV;
 
     // Vars
@@ -55,23 +60,37 @@ public class TeamLeaderViewTeam extends AppCompatActivity implements Serializabl
     // Firebase
     FirebaseOps firebaseOps;
 
+    public CheckBox getCheckAllCB() {
+        return checkAllCB;
+    }
 
     public void initUI() {
         recyclerView = findViewById(R.id.recycleViewActivity);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        confirmButton = findViewById(R.id.select_button);
+        selectButton = findViewById(R.id.select_button);
+        checkAllCB = findViewById(R.id.selectAllCheckbox);
         unassignedUserIV = findViewById(R.id.unassignedUserIV);
         unassignedUserIV.setVisibility(View.GONE);
 
-
+        checkAllCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    Log.d(TAG, "onCheckedChanged: b = true");
+                    adapter.selectAll();
+                } else {
+                    Log.d(TAG, "onCheckedChanged: b = false");
+                    adapter.unselectall();
+                }
+            }
+        });
 
         unassignedUserIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(TeamLeaderViewTeam.this, TeamLeaderUnassignedUsersList.class));
-
             }
         });
 
@@ -125,8 +144,7 @@ public class TeamLeaderViewTeam extends AppCompatActivity implements Serializabl
         });
 
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-
+        selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!adapter.checkedUsers.isEmpty()) {
@@ -137,7 +155,12 @@ public class TeamLeaderViewTeam extends AppCompatActivity implements Serializabl
 
             }
         });
+        checkAllCB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 
 
