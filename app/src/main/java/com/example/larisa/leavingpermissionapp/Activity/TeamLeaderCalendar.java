@@ -39,21 +39,19 @@ import java.util.List;
  * Activity with calendar showing LeavingPermission requests for users selected by Team Leader in {@link TeamLeaderViewTeam}
  * <br>
  * LeavingPermission neconfirmat = RED DOT
- * <br>
+ * <br> impl
  * LeavingPermission confirmat = GREEN CIRCLE
  * <br>
  * Long-clicking a date with a {@link LeavingPermission} object inside it will open {@link TeamLeaderLPList} Activity
  */
-public class TeamLeaderCalendar extends AppCompatActivity {
+public class TeamLeaderCalendar extends AppCompatActivity implements LPListListener {
 
     private static final String TAG = "TeamLeaderCalendar";
-
-    private MaterialCalendarView calendarView;
-    private List<LeavingPermission> sendLeavingPermission = new ArrayList<>();
     public CalendarDay newDate;
     List<LeavingPermission> leavingPermissionList = new ArrayList<>();
     List<CalendarDay> eventDays = new ArrayList<>();
-
+    private MaterialCalendarView calendarView;
+    private List<LeavingPermission> sendLeavingPermission = new ArrayList<>();
 
     public void addLPForUser(String userId, LPListListener listener) {
 
@@ -73,6 +71,7 @@ public class TeamLeaderCalendar extends AppCompatActivity {
                         }
                     }
                 }
+
                 Log.d(TAG, "addLPForUser outside of if: lp_list = " + leavingPermissionList);
                 LPRef.removeEventListener(this);
 
@@ -123,9 +122,11 @@ public class TeamLeaderCalendar extends AppCompatActivity {
                                         }
                                     }
 
-                                    decorateCalendar();
+
                                 });
                     }
+                    initCalendar();
+
                 }
             }
 
@@ -156,16 +157,16 @@ public class TeamLeaderCalendar extends AppCompatActivity {
 
     }
 
-    public void decorateCalendar() {
+    public void initCalendar() {
+        calendarView.removeDecorators();
 
         boolean flag[] = {false};
-        Log.d(TAG, "decorateCalendar: " + leavingPermissionList);
 
         for (LeavingPermission leavingPermission : leavingPermissionList) {
 
             if (leavingPermission.getStatus().equals("neconfirmat")) {
                 String dateFormat = leavingPermission.getData();
-                Log.d(TAG, "decorateCalendar: dateFormat  =" + dateFormat);
+                Log.d(TAG, "initCalendar: dateFormat  =" + dateFormat);
                 CalendarDay date = dayConverter(dateFormat);
                 calendarView.addDecorator(new DayViewDecorator() {
                     @Override
@@ -216,6 +217,12 @@ public class TeamLeaderCalendar extends AppCompatActivity {
         return newDate;
     }
 
+
+    @Override
+    public void onLpListChanged() {
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -244,11 +251,6 @@ public class TeamLeaderCalendar extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    private interface LPListListener {
-        void onCallBack();
     }
 
 

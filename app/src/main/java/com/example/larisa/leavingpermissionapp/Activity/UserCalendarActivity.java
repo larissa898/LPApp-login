@@ -181,7 +181,7 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
         final List<CalendarDay> eventDays = new ArrayList<>();
         calendarView.removeDecorators();
 
-//        boolean[] flag = new boolean[100000];
+        boolean[] flag = new boolean[100000];
         for (final LeavingPermission leavingPermission : leavingPermissions) {
             Log.d(TAG, "initMaterialCalendarView: " + leavingPermission);
             if (leavingPermission.getStatus().equals("neconfirmat")) {
@@ -199,8 +199,8 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
                     @Override
                     public void decorate(DayViewFacade view) {
                         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.redcircle));
-//                        int index = date.hashCode() % 100000;
-//                        flag[index] = true;
+                        int index = date.hashCode() % 100000;
+                        flag[index] = true;
                     }
                 });
             } else {
@@ -215,10 +215,10 @@ public class UserCalendarActivity extends AppCompatActivity implements CurrentUs
                     }
 
                     public void decorate(DayViewFacade view) {
-//                        int index = date.hashCode() % 100000;
-//                        if (!flag[index]) {
+                        int index = date.hashCode() % 100000;
+                        if (!flag[index]) {
                             view.setBackgroundDrawable(getResources().getDrawable(R.drawable.greencircle));
-//                        }
+                        }
                     }
                 });
             }
