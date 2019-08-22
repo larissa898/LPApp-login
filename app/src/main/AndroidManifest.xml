@@ -13,11 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".ResetPasswordActivity"></activity>
         <activity
             android:name=".Activity.TeamLeaderUnassignedUsersList"
-            android:theme="@style/AppTheme.NoActionBar.UnassignedUsersForTLActivity"></activity>
-        <activity android:name=".Activity.RegisterActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar.UnassignedUsersForTLActivity" />
+        <activity android:name=".Activity.RegisterActivity" />
         <activity android:name=".Activity.TeamLeaderLPList" />
         <activity android:name=".Activity.UserProfileActivity" />
         <activity

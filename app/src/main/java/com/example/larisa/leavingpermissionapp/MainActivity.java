@@ -62,11 +62,12 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
     private Intent openActivityForRoleIntent = null;
 
     // UI
-    private Button loginButton;
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private TextView registerButton;
+    private Button loginBtn;
+    private EditText emailET;
+    private EditText passwordET;
+    private TextView registerBtn;
     private ProgressBar progressBar;
+    private TextView forgotPasswordTV;
 
     // Firebase
     private FirebaseAuth firebaseAuth;
@@ -81,20 +82,29 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
     }
 
     private void initUI() {
-        loginButton = findViewById(R.id.loginButton);
-        emailEditText = findViewById(R.id.userNameET);
-        passwordEditText = findViewById(R.id.passwordET);
-        setOnEditorActionListenerForEditText(passwordEditText);
-        registerButton = findViewById(R.id.registerButton);
+        loginBtn = findViewById(R.id.loginButton);
+        emailET = findViewById(R.id.userNameET);
+        passwordET = findViewById(R.id.passwordET);
+        setOnEditorActionListenerForEditText(passwordET);
+        registerBtn = findViewById(R.id.registerButton);
         progressBar = findViewById(R.id.loginProgressBar);
         progressBar.setVisibility(View.GONE);
+        forgotPasswordTV = findViewById(R.id.forgotPasswordTV);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        forgotPasswordTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent resetPasswordIntent = new Intent(MainActivity.this, ResetPasswordActivity.class);
+                startActivity(resetPasswordIntent);
+            }
+        });
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-                if (Validator.validateNonEmptyField(emailEditText) && Validator.validateNonEmptyField(passwordEditText)) {
+                String email = emailET.getText().toString();
+                String password = passwordET.getText().toString();
+                if (Validator.validateNonEmptyField(emailET) && Validator.validateNonEmptyField(passwordET)) {
                     firebaseAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -115,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                    emailEditText.setText("");
-                                    passwordEditText.setText("");
+                                    emailET.setText("");
+                                    passwordET.setText("");
 
                                 }
                             });
@@ -124,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
             }
         });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
@@ -194,10 +204,10 @@ public class MainActivity extends AppCompatActivity implements FirebaseOpsListen
 
     public void toggleProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
-        emailEditText.setVisibility(View.GONE);
-        passwordEditText.setVisibility(View.GONE);
-        loginButton.setVisibility(View.GONE);
-        registerButton.setVisibility(View.GONE);
+        emailET.setVisibility(View.GONE);
+        passwordET.setVisibility(View.GONE);
+        loginBtn.setVisibility(View.GONE);
+        registerBtn.setVisibility(View.GONE);
     }
 
     public void setOnEditorActionListenerForEditText(EditText editText) {
